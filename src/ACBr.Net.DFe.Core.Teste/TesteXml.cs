@@ -95,7 +95,7 @@ namespace ACBr.Net.DFe.Core.Teste
 		[DFeElement(TipoCampo.De3, "DC2", "decimal2", 0, 9, 0)]
 		public decimal TestDecimal { get; set; }
 
-		private object SerializeTestString()
+		private string SerializeTestString()
 		{
 			return $"{TestString} || SerializeTestString {Id:00}";
 		}
@@ -146,7 +146,7 @@ namespace ACBr.Net.DFe.Core.Teste
 		[DFeElement(TipoCampo.De3, "DC2", "decimal2", 0, 9, 0)]
 		public decimal TestDecimal { get; set; }
 
-		private object SerializeTestString()
+		private string SerializeTestString()
 		{
 			return $"{TestString} || SerializeTestString {Id:00}";
 		}
@@ -197,7 +197,7 @@ namespace ACBr.Net.DFe.Core.Teste
 		[DFeElement(TipoCampo.De3, "DC2", "decimal2", 0, 9, 0)]
 		public decimal TestDecimal { get; set; }
 
-		private object SerializeTestString()
+		private string SerializeTestString()
 		{
 			return $"{TestString} || SerializeTestString {Id:00}";
 		}

@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Interfaces;
@@ -14,20 +13,22 @@ namespace ACBr.Net.DFe.Core.Serializer
 	internal static class PrimitiveSerializer
 	{
 		#region Serialize
-		
+
 		/// <summary>
 		/// Serializes a fundamental primitive object (e.g. string, int etc.) into a XElement using options.
 		/// </summary>
-		/// <param name="value">The primitive to serialize.</param>
 		/// <param name="tag">The name of the primitive to serialize.</param>
+		/// <param name="item">The item.</param>
+		/// <param name="prop">The property.</param>
 		/// <param name="options">Indicates how the output is formatted or serialized.</param>
 		/// <returns>The XElement representation of the primitive.</returns>
-		public static XObject Serialize(object value, IDFeElement tag, SerializerOptions options)
+		public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options)
 		{
 			try
 			{
+				var value = prop.GetValue(item, null);
 				var estaVazio = value == null;
-				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Max);
+				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Max, prop, item);
 
 				string alerta;
 				if (tag.Ocorrencias == 1 && estaVazio && tag.Min > 0)
@@ -65,7 +66,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			}
 		}
 
-		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, int max)
+		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, int max, PropertyInfo prop, object item)
 		{
 			var conteudoProcessado = string.Empty;
 			// ReSharper disable once SwitchStatementMissingSomeCases
@@ -130,7 +131,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 					if (!estaVazio)
 					{
 						var numberFormat = CultureInfo.InvariantCulture.NumberFormat;
-
 						decimal vDecimal;
 						if (decimal.TryParse(valor.ToString(), NumberStyles.Any, CultureInfo.CurrentCulture, out vDecimal))
 						{
@@ -164,6 +164,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				case TipoCampo.Int:
+					if (!estaVazio)
+						conteudoProcessado = valor.ToString().OnlyNumbers();
+					break;
+
 				case TipoCampo.StrNumberFill:
 					if (!estaVazio)
 						conteudoProcessado = valor.ToString().ZeroFill(max);
@@ -182,6 +186,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 						var enumValue = enumAttribute?.Value;
 						conteudoProcessado = enumValue ?? valor.ToString();
 					}
+					break;
+
+				case TipoCampo.Custom:
+					var serialize = item.GetSerializer(prop);
+						conteudoProcessado = serialize();
 					break;
 
 				default:
@@ -271,12 +280,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				case TipoCampo.Custom:
-					var serialize = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-					var parameters = new object[] { valor };
-					if (serialize != null && serialize.ReturnType == typeof(object))
-						ret = serialize.Invoke(item, parameters);
-					else
-						ret = null;
+					var deserialize = item.GetDeserializer(prop);
+					ret = deserialize(valor);
 					break;
 
 				default:

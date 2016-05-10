@@ -11,7 +11,7 @@ namespace ACBr.Net.DFe.Core.Teste
 			{
 				Id = 1,
 				TestDate = DateTime.Now,
-				TestDecimal = 1000M,
+				TestDecimal = 100000M,
 				TesteEnum = TesteEnum.Value3
 			};
 

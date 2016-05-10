@@ -68,11 +68,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 				type.GetGenericArguments().Any() ? type.GetGenericArguments()[0] : type.BaseType?.GetGenericArguments()[0];
 			var listType = typeof(List<>).MakeGenericType(listItemType);
 			var list = (IList)Activator.CreateInstance(listType);
-
-			var elements = parent.Length > 1 ? parent : parent.Elements();
+			
 			if (prop.HasAttribute<DFeItemAttribute>())
 			{
 				var itemTags = prop.GetAttributes<DFeItemAttribute>();
+				var elements = parent.Elements();
 				foreach (var element in elements)
 				{
 					var itemTag = itemTags.SingleOrDefault(x => x.Name == element.Name) ?? itemTags[0];
@@ -82,7 +82,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			}
 			else
 			{
-				foreach (var element in elements)
+				foreach (var element in parent)
 				{
 					var obj = ObjectSerializer.Deserialize(listItemType, element, options);
 					list.Add(obj);

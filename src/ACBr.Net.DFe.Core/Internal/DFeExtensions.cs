@@ -1,10 +1,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Interfaces;
+using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Internal
 {
-    internal static class AttributeExtensions
+    internal static class DFeExtensions
     {
         internal static TValue GetAttributeValue<TAttribute, TValue>(
             this ICustomAttributeProvider type,
@@ -38,5 +41,29 @@ namespace ACBr.Net.DFe.Core.Internal
             var atts = provider.GetCustomAttributes(typeof(T), true);
             return atts.Length > 0;
         }
+
+	    internal static IDFeElement GetTag(this PropertyInfo prop)
+	    {
+			return prop.HasAttribute<DFeElementAttribute>()
+					? (IDFeElement)prop.GetAttribute<DFeElementAttribute>()
+					: prop.GetAttribute<DFeAttributeAttribute>();
+		}
+
+	    internal static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
+	    {
+			return Delegate.CreateDelegate(typeof(TDelegate), item, method) as TDelegate;
+		}
+
+		internal static Func<string> GetSerializer<T>(this T item, PropertyInfo prop) where T : class
+		{
+			var method = item.GetType().GetMethod($"Serialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+			return method.ToDelegate<Func<string>>(item);
+		}
+
+		internal static Func<object, string> GetDeserializer<T>(this T item, PropertyInfo prop) where T : class
+		{
+			var method = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+			return method.ToDelegate<Func<object, string>>(item);
+		}
 	}
 }
