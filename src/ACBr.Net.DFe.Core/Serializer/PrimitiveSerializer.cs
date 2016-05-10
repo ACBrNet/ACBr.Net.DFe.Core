@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Extensions;
 using ACBr.Net.DFe.Core.Interfaces;
 using ACBr.Net.DFe.Core.Internal;
 

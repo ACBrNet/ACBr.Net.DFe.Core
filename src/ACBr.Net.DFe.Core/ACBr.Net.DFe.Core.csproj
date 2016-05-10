@@ -72,7 +72,7 @@
     <Compile Include="Interfaces\IDFeElement.cs" />
     <Compile Include="CertificadoDigital.cs" />
     <Compile Include="Collection\DFeCollection.cs" />
-    <Compile Include="Internal\DFeExtensions.cs" />
+    <Compile Include="Extensions\DFeExtensions.cs" />
     <Compile Include="Attributes\DFeAttributeAttribute.cs" />
     <Compile Include="Attributes\DFeItemAttribute.cs" />
     <Compile Include="Attributes\DFeRootAttribute.cs" />

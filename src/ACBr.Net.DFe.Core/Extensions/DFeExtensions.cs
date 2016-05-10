@@ -5,7 +5,7 @@ using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Interfaces;
 using ExtraConstraints;
 
-namespace ACBr.Net.DFe.Core.Internal
+namespace ACBr.Net.DFe.Core.Extensions
 {
     internal static class DFeExtensions
     {
@@ -60,10 +60,10 @@ namespace ACBr.Net.DFe.Core.Internal
 			return method.ToDelegate<Func<string>>(item);
 		}
 
-		internal static Func<object, string> GetDeserializer<T>(this T item, PropertyInfo prop) where T : class
+		internal static Func<string, object> GetDeserializer<T>(this T item, PropertyInfo prop) where T : class
 		{
 			var method = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			return method.ToDelegate<Func<object, string>>(item);
+			return method.ToDelegate<Func<string, object>>(item);
 		}
 	}
 }

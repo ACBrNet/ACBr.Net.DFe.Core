@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Xml.Linq;
 using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Internal
 {
