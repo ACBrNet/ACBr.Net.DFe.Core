@@ -153,7 +153,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			var rootName = rooTag != null && !rooTag.Name.IsEmpty()
 				? rooTag.Name : tipoDFe.Name;
 
-			var rootElement = ObjectSerializer.Serialize(item, rootName, Options);
+			var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, Options);
 			xmldoc.Add(rootElement);
 			xmldoc.RemoveEmptyNamespace();
 			return xmldoc;

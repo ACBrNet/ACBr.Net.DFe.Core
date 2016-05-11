@@ -29,32 +29,31 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// Serializes the specified object to a XElement using options.
 		/// </summary>
 		/// <param name="value">The object to serialize.</param>
+		/// <param name="tipo">The tipo.</param>
 		/// <param name="name">The name of the object to serialize.</param>
 		/// <param name="options">Indicates how the output is formatted or serialized.</param>
 		/// <returns>The XElement representation of the object.</returns>
-		public static XElement Serialize(object value, string name, SerializerOptions options)
+		/// <exception cref="ACBrDFeException"></exception>
+		public static XElement Serialize(object value, Type tipo, string name, SerializerOptions options)
 		{
 			try
 			{
-				if (value == null)
-					return null;
-
 				XNamespace aw = "";
-				if (value.GetType().HasAttribute<DFeRootAttribute>())
+				if (tipo.HasAttribute<DFeRootAttribute>())
 				{
-					var attribute = value.GetType().GetAttribute<DFeRootAttribute>();
+					var attribute = tipo.GetAttribute<DFeRootAttribute>();
 					if (!attribute.Namespace.IsEmpty())
 						aw = attribute.Namespace;
 				}
-				else if (value.GetType().HasAttribute<DFeElementAttribute>())
+				else if (tipo.HasAttribute<DFeElementAttribute>())
 				{
-					var attribute = value.GetType().GetAttribute<DFeElementAttribute>();
+					var attribute = tipo.GetAttribute<DFeElementAttribute>();
 					if (!attribute.Namespace.IsEmpty())
 						aw = attribute.Namespace;
 				}
 
 				var objectElement = new XElement(aw + name);
-				var properties = value.GetType().GetProperties();
+				var properties = tipo.GetProperties();
 				foreach (var prop in properties)
 				{
 					if (Utilities.ShouldIgnoreProperty(prop) ||
@@ -97,9 +96,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 	        try
 	        {
 		        var value = prop.GetValue(parentObject, null);
-		        if (value == null)
-			        return null;
-
 		        var objectType = ObjectType.From(prop.PropertyType);
 
 		        if (objectType == ObjectType.Dictionary)
@@ -113,21 +109,24 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		        if (objectType == ObjectType.InterfaceObject)
 		        {
-			        var itemTags = prop.GetAttributes<DFeItemAttribute>();
-			        var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType()) ?? itemTags[0];
-			        return new XObject[] { Serialize(value, itemTag.Name, options) };
+			        if (value == null)
+				        return null;
+
+			        var attributes = prop.GetAttributes<DFeItemAttribute>();
+			        var attribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType()) ?? attributes[0];
+			        return new XObject[] { Serialize(value, value.GetType(), attribute.Name, options) };
 		        }
 
 		        if (objectType == ObjectType.ClassObject)
 		        {
-			        var elementAttribute = prop.GetAttribute<DFeElementAttribute>();
-			        return new XObject[] { Serialize(value, elementAttribute.Name, options) };
+			        var attribute = prop.GetAttribute<DFeElementAttribute>();
+			        return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
 		        }
 
 		        if (objectType == ObjectType.RootObject)
 		        {
-			        var attribute = value.GetType().GetAttribute<DFeRootAttribute>();
-			        var rootElement = Serialize(value, attribute.Name, options);
+					var attribute = prop.PropertyType.GetAttribute<DFeRootAttribute>();
+			        var rootElement = Serialize(value, prop.PropertyType, attribute.Name, options);
 			        return new XObject[] { rootElement };
 		        }
 

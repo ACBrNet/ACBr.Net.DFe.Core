@@ -35,14 +35,14 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 
 			if (!prop.HasAttribute<DFeItemAttribute>())
-				return values.Select(value => ObjectSerializer.Serialize(value, tag.Name, options)).Cast<XObject>().ToArray();
+				return values.Select(value => ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
 
 			var arrayElement = new XElement(tag.Name);
 			foreach (var value in values)
 			{
 				var itemTags = prop.GetAttributes<DFeItemAttribute>();
 				var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType()) ?? itemTags[0];
-				var childElement = ObjectSerializer.Serialize(value, itemTag.Name, options);
+				var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, options);
 				Utilities.AddChild(childElement, arrayElement);
 			}
 

@@ -24,36 +24,28 @@ namespace ACBr.Net.DFe.Core.Serializer
 		public static XObject[] Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
 		{
 			var tag = prop.GetAttribute<DFeElementAttribute>();
-			var values = ((IEnumerable<object>)prop.GetValue(parentObject, null) ?? new object[0]).ToArray();
+			var values = ((IEnumerable<object>) prop.GetValue(parentObject, null) ?? new object[0]).ToArray();
 			if (values.Length == 0 && tag.Min == 0 && tag.Ocorrencias == 0)
 				return null;
 
 			if (values.Length < tag.Min || values.Length > tag.Max)
-				options.WAlerta(tag.Id, tag.Name, tag.Descricao, values.Length > tag.Max ? SerializerOptions.ErrMsgMaiorMaximo : SerializerOptions.ErrMsgMenorMinimo);
+				options.WAlerta(tag.Id, tag.Name, tag.Descricao,
+					values.Length > tag.Max ? SerializerOptions.ErrMsgMaiorMaximo : SerializerOptions.ErrMsgMenorMinimo);
 
 
-			if (prop.HasAttribute<DFeItemAttribute>())
-			{
-				var arrayElement = new XElement(tag.Name);
-				foreach (var value in values)
-				{
-					var itemTags = prop.GetAttributes<DFeItemAttribute>();
-					var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType()) ?? itemTags[0];
-					var childElement = ObjectSerializer.Serialize(value, itemTag.Name, options);
-					Utilities.AddChild(childElement, arrayElement);
-				}
+			if (!prop.HasAttribute<DFeItemAttribute>())
+				return values.Select(value => ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
 
-				return new XObject[] { arrayElement };
-			}
-
-			var list = new List<XObject>();
+			var arrayElement = new XElement(tag.Name);
 			foreach (var value in values)
 			{
-				var childElement = ObjectSerializer.Serialize(value, tag.Name, options);
-				list.Add(childElement);
+				var itemTags = prop.GetAttributes<DFeItemAttribute>();
+				var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType()) ?? itemTags[0];
+				var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, options);
+				Utilities.AddChild(childElement, arrayElement);
 			}
 
-			return list.ToArray();
+			return new XObject[] {arrayElement};
 		}
 
 		#endregion Serialize

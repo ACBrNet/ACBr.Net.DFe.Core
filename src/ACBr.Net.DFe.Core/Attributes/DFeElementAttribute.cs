@@ -43,54 +43,32 @@ namespace ACBr.Net.DFe.Core.Attributes
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DFeElementAttribute"/> class.
 		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <param name="name">The name.</param>
-		public DFeElementAttribute(TipoCampo tipo, string name):this()
-		{
-			Tipo = tipo;
-			Name = name;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
-		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <param name="id">The identifier.</param>
-		/// <param name="name">The Name.</param>
-		/// <param name="min">The minimum.</param>
-		/// <param name="max">The maximum.</param>
-		/// <param name="ocorrencias">The ocorrencias.</param>
-		/// <param name="descricao">The descricao.</param>
-		public DFeElementAttribute(TipoCampo tipo, string id, string name, int min,
-			int max, int ocorrencias, string descricao = "") : this()
-		{
-			Tipo = tipo;
-			Id = id;
-			Name = name;
-			Min = min;
-			Max = max;
-			Ocorrencias = ocorrencias;
-			Descricao = descricao;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeElementAttribute"/> class.
-		/// </summary>
 		/// <param name="tag">The Name.</param>
 		public DFeElementAttribute(string tag) : this()
 		{
 			Name = tag;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DFeElementAttribute"/> class.
+		/// </summary>
+		/// <param name="tipo">The tipo.</param>
+		/// <param name="name">The name.</param>
+		public DFeElementAttribute(TipoCampo tipo, string name) : this()
+		{
+			Tipo = tipo;
+			Name = name;
+		}
+
 		#endregion Constructors
 
 		#region Propriedades
 
-	    /// <summary>
-	    /// Gets or sets the tipo.
-	    /// </summary>
-	    /// <value>The tipo.</value>
-	    public TipoCampo Tipo { get; set; }
+		/// <summary>
+		/// Gets or sets the tipo.
+		/// </summary>
+		/// <value>The tipo.</value>
+		public TipoCampo Tipo { get; set; }
 
 	    /// <summary>
 	    /// Gets or sets the identifier.

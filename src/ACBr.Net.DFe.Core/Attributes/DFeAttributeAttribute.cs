@@ -40,6 +40,16 @@ namespace ACBr.Net.DFe.Core.Attributes
 			Ocorrencias = 0;
 			Descricao = string.Empty;
 		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
+		/// </summary>
+		/// <param name="name">The Name.</param>
+		public DFeAttributeAttribute(string name) : this()
+		{
+			Name = name;
+		}
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
@@ -50,37 +60,6 @@ namespace ACBr.Net.DFe.Core.Attributes
 		{
 			Tipo = tipo;
 			Name = name;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
-		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <param name="id">The identifier.</param>
-		/// <param name="name">The Name.</param>
-		/// <param name="min">The minimum.</param>
-		/// <param name="max">The maximum.</param>
-		/// <param name="ocorrencias">The ocorrencias.</param>
-		/// <param name="descricao">The descricao.</param>
-		public DFeAttributeAttribute(TipoCampo tipo, string id, string name, int min,
-			int max, int ocorrencias, string descricao = "") : this()
-		{
-			Tipo = tipo;
-			Id = id;
-			Name = name;
-			Min = min;
-			Max = max;
-			Ocorrencias = ocorrencias;
-			Descricao = descricao;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
-		/// </summary>
-		/// <param name="tag">The Name.</param>
-		public DFeAttributeAttribute(string tag) : this()
-		{
-			Name = tag;
 		}
 
 		#endregion Constructors

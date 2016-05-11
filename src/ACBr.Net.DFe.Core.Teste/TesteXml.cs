@@ -20,14 +20,17 @@ namespace ACBr.Net.DFe.Core.Teste
 			Signature = new Signature();
 		}
 
-		[DFeAttribute(TipoCampo.Int, "AT1", "id", 2, 2, 0)]
+		[DFeAttribute(TipoCampo.Int, "id", Id = "AT1", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.HorCFe, "DT1", "dateTime1", 0, 19, 0)]
+		[DFeElement(TipoCampo.HorCFe, "dateTime1", Id = "DT1", Min = 0, Max = 19, Ocorrencias = 0)]
 		public DateTime TestDate { get; set; }
 
-		[DFeElement(TipoCampo.De2, "DC1", "decimal1", 0, 9, 0)]
+		[DFeElement(TipoCampo.De2, "decimal1", Id = "DC1", Min = 0, Max = 9, Ocorrencias = 0)]
 		public decimal TestDecimal { get; set; }
+
+		[DFeElement(TipoCampo.De2, "testString1", Id = "ST1", Min = 0, Max = 255, Ocorrencias = 1)]
+		public string TestString { get; set; }
 
 		[DFeItem(typeof(TesteXml2), "Interface1")]
 		[DFeItem(typeof(TesteXml3), "Interface2")]
