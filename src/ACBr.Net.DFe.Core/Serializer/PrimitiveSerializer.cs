@@ -29,7 +29,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			{
 				var value = prop.GetValue(item, null);
 				var estaVazio = value == null;
-				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Max, prop, item);
+				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Min, prop, item);
 
 				string alerta;
 				if (tag.Ocorrencias == 1 && estaVazio && tag.Min > 0)
@@ -67,7 +67,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			}
 		}
 
-		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, int max, PropertyInfo prop, object item)
+		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, int min, PropertyInfo prop, object item)
 		{
 			var conteudoProcessado = string.Empty;
 			// ReSharper disable once SwitchStatementMissingSomeCases
@@ -165,13 +165,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				case TipoCampo.Int:
-					if (!estaVazio)
-						conteudoProcessado = valor.ToString().OnlyNumbers();
-					break;
-
 				case TipoCampo.StrNumberFill:
 					if (!estaVazio)
-						conteudoProcessado = valor.ToString().ZeroFill(max);
+						conteudoProcessado = valor.ToString().ZeroFill(min);
 					break;
 
 				case TipoCampo.StrNumber:
