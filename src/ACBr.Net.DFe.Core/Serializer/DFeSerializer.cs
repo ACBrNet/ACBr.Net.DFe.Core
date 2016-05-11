@@ -107,7 +107,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
-			if(Options.IdentarXml)
+			if(Options.FormatarXml)
 				xmldoc.Save(path);
 			else
 				xmldoc.Save(path, SaveOptions.DisableFormatting);
@@ -133,7 +133,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
-			if (Options.IdentarXml)
+			if (Options.FormatarXml)
 				xmldoc.Save(stream);
 			else
 				xmldoc.Save(stream, SaveOptions.DisableFormatting);

@@ -56,7 +56,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				if (estaVazio)
 					return xmlTag;
 
-				var retValue = options.RetirarAcentos ? conteudoProcessado.RemoveCe() : conteudoProcessado;
+				var retValue = options.RemoverAcentos ? conteudoProcessado.RemoveCe() : conteudoProcessado;
 				xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name, retValue) : new XAttribute(tag.Name, retValue);
 				return xmlTag;
 			}

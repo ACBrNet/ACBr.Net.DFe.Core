@@ -83,8 +83,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 		{
 			ErrosAlertas = new BindingList<string>();
 			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
-			RetirarAcentos = false;
-			IdentarXml = true;
+			RemoverAcentos = false;
+			FormatarXml = true;
 		}
 
 		#endregion Constructors
@@ -95,13 +95,13 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// Gets or sets a value indicating whether [retirar acentos].
 		/// </summary>
 		/// <value><c>true</c> if [retirar acentos]; otherwise, <c>false</c>.</value>
-		public bool RetirarAcentos { get; set; }
+		public bool RemoverAcentos { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="SerializerOptions"/> is identar.
 		/// </summary>
 		/// <value><c>true</c> if identar; otherwise, <c>false</c>.</value>
-		public bool IdentarXml { get; set; }
+		public bool FormatarXml { get; set; }
 
 		/// <summary>
 		/// Gets the lista de alertas.
