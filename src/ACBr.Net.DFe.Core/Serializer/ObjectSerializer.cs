@@ -203,13 +203,13 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 				if (objectType == ObjectType.List)
 				{
-					var listElement = parentElement.Elements(tag.Name);
+					var listElement = parentElement.ElementsAnyNs(tag.Name);
 					return ListSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, options);
 				}
 
 				if (objectType == ObjectType.DFeList)
 				{
-					var listElement = parentElement.Elements(tag.Name);
+					var listElement = parentElement.ElementsAnyNs(tag.Name);
 					return DFeListSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, options);
 				}
 
@@ -218,7 +218,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 					var tags = prop.GetAttributes<DFeItemAttribute>();
 					foreach (var att in tags)
 					{
-						var node = parentElement.Elements(att.Name).FirstOrDefault();
+						var node = parentElement.ElementsAnyNs(att.Name).FirstOrDefault();
 						if (node == null)
 							continue;
 
@@ -229,17 +229,17 @@ namespace ACBr.Net.DFe.Core.Serializer
 				if (objectType == ObjectType.RootObject)
 				{
 					var rootTag = prop.PropertyType.GetAttribute<DFeRootAttribute>();
-					var xElement = parentElement.Elements(rootTag.Name).FirstOrDefault();
+					var xElement = parentElement.ElementsAnyNs(rootTag.Name).FirstOrDefault();
 					return Deserialize(prop.PropertyType, xElement, options);
 				}
 
 				if (objectType == ObjectType.ClassObject)
 				{
-					var xElement = parentElement.Elements(tag.Name).FirstOrDefault();
+					var xElement = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
 					return Deserialize(prop.PropertyType, xElement, options);
 				}
 
-				var element = parentElement.Elements(tag.Name).FirstOrDefault() ??
+				var element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault() ??
 				              (XObject)parentElement.Attributes(tag.Name).FirstOrDefault();
 
 				return PrimitiveSerializer.Deserialize(tag, element, item, prop);

@@ -49,7 +49,7 @@ namespace ACBr.Net.DFe.Core.Document
 		/// </summary>
 		/// <value>The transforms.</value>
 		[DFeElement("Transforms", Id = "XS10")]
-		[DFeItem("Transform")]
+		[DFeItem(typeof(Transform), "Transform")]
         public List<Transform> Transforms { get; set; }
 
 		/// <summary>

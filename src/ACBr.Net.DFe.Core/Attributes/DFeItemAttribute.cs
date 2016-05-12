@@ -26,15 +26,6 @@ namespace ACBr.Net.DFe.Core.Attributes
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		public DFeItemAttribute(string name)
-		{
-			Name = name;
-		}
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="DFeItemAttribute" /> class.
 		/// </summary>
 		/// <param name="tipo">The tipo.</param>

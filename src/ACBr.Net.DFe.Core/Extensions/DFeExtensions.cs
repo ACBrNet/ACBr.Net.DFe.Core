@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Interfaces;
 using ExtraConstraints;
@@ -64,6 +66,11 @@ namespace ACBr.Net.DFe.Core.Extensions
 		{
 			var method = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 			return method.ToDelegate<Func<string, object>>(item);
+		}
+
+		public static IEnumerable<XElement> ElementsAnyNs(this XElement source, string localName)
+		{
+			return source.Elements().Where(e => e.Name.LocalName == localName);
 		}
 	}
 }
