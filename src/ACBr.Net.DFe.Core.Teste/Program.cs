@@ -12,7 +12,8 @@ namespace ACBr.Net.DFe.Core.Teste
 				Id = 1,
 				TestDate = DateTime.Now,
 				TestDecimal = 100000M,
-				TesteEnum = TesteEnum.Value3
+				TesteEnum = TesteEnum.Value3,
+				TestNullInt = 999
 			};
 
 			for (var i = 0; i < 3; i++)

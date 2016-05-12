@@ -37,8 +37,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				else
 					alerta = string.Empty;
 
-				if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) &&
-					(conteudoProcessado.Length < tag.Min && string.IsNullOrEmpty(alerta) && conteudoProcessado.Length > 1))
+				if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() && conteudoProcessado.Length > 1)
 					alerta = SerializerOptions.ErrMsgMenor;
 
 				if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) && conteudoProcessado.Length > tag.Max)
@@ -167,7 +166,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 				case TipoCampo.Int:
 				case TipoCampo.StrNumberFill:
 					if (!estaVazio)
-						conteudoProcessado = valor.ToString().ZeroFill(min);
+					{
+						conteudoProcessado = valor.ToString();
+						if (conteudoProcessado.Length < min)
+							conteudoProcessado = conteudoProcessado.ZeroFill(min);
+					}
 					break;
 
 				case TipoCampo.StrNumber:

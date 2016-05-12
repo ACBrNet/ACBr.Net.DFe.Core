@@ -157,14 +157,17 @@ namespace ACBr.Net.DFe.Core.Serializer
 			try
 			{
 				var ret = Activator.CreateInstance(type);
-				var properties = ret.GetType().GetProperties();
+				if (element == null)
+					return ret;
+
+				var properties = type.GetProperties();
 				foreach (var prop in properties)
 				{
-					if (Utilities.ShouldIgnoreProperty(prop) || 
-					    !Utilities.ShouldSerializeProperty(prop, ret))
+					if (Utilities.ShouldIgnoreProperty(prop))
 						continue;
 
-					prop.SetValue(ret, Deserialize(prop, element, ret, options), null);
+					var value = Deserialize(prop, element, ret, options);
+					prop.SetValue(ret, value, null);
 				}
 
 				return ret;
@@ -190,10 +193,6 @@ namespace ACBr.Net.DFe.Core.Serializer
         {
 			try
 			{
-				var value = parentElement?.Value;
-				if (value == null)
-					return null;
-			
 				var tag = prop.HasAttribute<DFeElementAttribute>()
 					? (IDFeElement)prop.GetAttribute<DFeElementAttribute>()
 					: prop.GetAttribute<DFeAttributeAttribute>();

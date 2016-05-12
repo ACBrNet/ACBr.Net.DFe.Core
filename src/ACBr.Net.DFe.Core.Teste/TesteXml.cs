@@ -26,8 +26,11 @@ namespace ACBr.Net.DFe.Core.Teste
 		[DFeElement(TipoCampo.HorCFe, "dateTime1", Id = "DT1", Min = 0, Max = 19, Ocorrencias = 0)]
 		public DateTime TestDate { get; set; }
 
-		[DFeElement(TipoCampo.De2, "decimal1", Id = "DC1", Min = 0, Max = 9, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.De2, "decimal1", Id = "DC1", Min = 1, Max = 9, Ocorrencias = 0)]
 		public decimal TestDecimal { get; set; }
+
+		[DFeElement(TipoCampo.Int, "nullInt", Id = "NI1", Min = 3, Max = 9, Ocorrencias = 1)]
+		public int? TestNullInt { get; set; }
 
 		[DFeElement(TipoCampo.De2, "testString1", Id = "ST1", Min = 0, Max = 255, Ocorrencias = 1)]
 		public string TestString { get; set; }
@@ -89,13 +92,13 @@ namespace ACBr.Net.DFe.Core.Teste
 
 	public class TesteXml2 : IXmlItem
 	{
-		[DFeAttribute(TipoCampo.Int, "AT2", "id", 2, 2, 0)]
+		[DFeAttribute(TipoCampo.Int, "id", Id = "AT2", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "ST1", "custom1", 0, 19, 0)]
+		[DFeElement(TipoCampo.Custom, "custom1", Id = "ST1", Min = 0, Max = 19, Ocorrencias = 0)]
 		public string TestString { get; set; }
 
-		[DFeElement(TipoCampo.De3, "DC2", "decimal2", 0, 9, 0)]
+		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC2", Min = 0, Max = 9, Ocorrencias = 0)]
 		public decimal TestDecimal { get; set; }
 
 		private string SerializeTestString()
@@ -140,13 +143,13 @@ namespace ACBr.Net.DFe.Core.Teste
 
 	public class TesteXml3 : IXmlItem
 	{
-		[DFeAttribute(TipoCampo.Int, "AT2", "id", 2, 2, 0)]
+		[DFeAttribute(TipoCampo.Int, "id", Id = "AT3", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "ST1", "custom1", 0, 19, 0)]
+		[DFeElement(TipoCampo.Custom, "custom2", Id = "ST2", Min = 0, Max = 19, Ocorrencias = 0)]
 		public string TestString { get; set; }
 
-		[DFeElement(TipoCampo.De3, "DC2", "decimal2", 0, 9, 0)]
+		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC3", Min = 0, Max = 9, Ocorrencias = 0)]
 		public decimal TestDecimal { get; set; }
 
 		private string SerializeTestString()
@@ -191,13 +194,13 @@ namespace ACBr.Net.DFe.Core.Teste
 
 	public class TesteXml4
 	{
-		[DFeAttribute(TipoCampo.Int, "AT2", "id", 2, 2, 0)]
+		[DFeAttribute(TipoCampo.Int, "id", Id = "AT4", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "ST1", "custom1", 0, 19, 0)]
+		[DFeElement(TipoCampo.Custom, "custom3", Id = "ST3", Min = 0, Max = 19, Ocorrencias = 0)]
 		public string TestString { get; set; }
 
-		[DFeElement(TipoCampo.De3, "DC2", "decimal2", 0, 9, 0)]
+		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC4", Min = 0, Max = 9, Ocorrencias = 0)]
 		public decimal TestDecimal { get; set; }
 
 		private string SerializeTestString()

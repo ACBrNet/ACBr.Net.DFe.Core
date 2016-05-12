@@ -17,10 +17,13 @@
       <string>f:\programacao\acbr\acbr.net\acbr.net.dfe.core\src\acbr.net.dfe.core\serializer\objectserializer.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>F:\Programacao\ACBr\ACBr.Net\ACBr.Net.DFe.Core\src\ACBr.Net.DFe.Core\Serializer\PrimitiveSerializer.cs</string>
+      <string>f:\programacao\acbr\acbr.net\acbr.net.dfe.core\src\acbr.net.dfe.core\serializer\primitiveserializer.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>F:\Programacao\ACBr\ACBr.Net\ACBr.Net.DFe.Core\src\ACBr.Net.DFe.Core\Serializer\SerializerOptions.cs</string>
+      <string>f:\programacao\acbr\acbr.net\acbr.net.dfe.core\src\acbr.net.dfe.core\serializer\listserializer.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>f:\programacao\acbr\acbr.net\acbr.net.dfe.core\src\acbr.net.dfe.core\serializer\dfelistserializer.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

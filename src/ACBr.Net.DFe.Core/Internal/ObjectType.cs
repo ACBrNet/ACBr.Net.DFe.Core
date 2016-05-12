@@ -83,8 +83,22 @@ namespace ACBr.Net.DFe.Core.Internal
 		                                              || type == typeof(float)
 		                                              || type == typeof(decimal)
 		                                              || type == typeof(bool)
-		                                              || type.IsEnum
-		                                              || type == typeof(DateTime);
+		                                              || type == typeof(DateTime)
+													  || type == typeof(char?)
+													  || type == typeof(sbyte?)
+													  || type == typeof(short?)
+													  || type == typeof(int?)
+													  || type == typeof(long?)
+													  || type == typeof(byte?)
+													  || type == typeof(ushort?)
+													  || type == typeof(uint?)
+													  || type == typeof(ulong?)
+													  || type == typeof(double?)
+													  || type == typeof(float?)
+													  || type == typeof(decimal?)
+													  || type == typeof(bool?)
+													  || type == typeof(DateTime?)
+													  || type.IsEnum;
 
 
 		/// <summary>
