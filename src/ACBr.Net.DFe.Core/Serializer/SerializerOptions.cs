@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System.ComponentModel;
+using System.Text;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
@@ -102,6 +103,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
 			RemoverAcentos = false;
 			FormatarXml = true;
+			Encoder = Encoding.UTF8;
 		}
 
 		#endregion Constructors
@@ -119,6 +121,12 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		/// <value><c>true</c> if identar; otherwise, <c>false</c>.</value>
 		public bool FormatarXml { get; set; }
+
+		/// <summary>
+		/// Gets or sets the encoder.
+		/// </summary>
+		/// <value>The encoder.</value>
+		public Encoding Encoder { get; set; }
 
 		/// <summary>
 		/// Gets the lista de alertas.

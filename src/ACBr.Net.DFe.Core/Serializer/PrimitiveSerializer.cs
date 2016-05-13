@@ -32,12 +32,12 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using ACBr.Net.DFe.Core.Interfaces;
-using ACBr.Net.DFe.Core.Internal;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
@@ -243,20 +243,22 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <param name="parentElement">The parent XElement used to deserialize the fundamental primitive.</param>
 		/// <param name="item">The item.</param>
 		/// <param name="prop">The property.</param>
+		/// <param name="options">The options.</param>
 		/// <returns>The deserialized fundamental primitive from the XElement.</returns>
-		public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop)
+		public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options)
 		{
 			if (parentElement == null)
 				return null;
 
 			var element = parentElement as XElement;
 			var value = element?.Value ?? ((XAttribute)parentElement).Value;
+			value = options.Encoder.GetString(Encoding.Default.GetBytes(value));
 			return GetValue(tag.Tipo, value, item, prop);
 		}
 
 		private static object GetValue(TipoCampo tipo, string valor, object item, PropertyInfo prop)
 		{
-			if (valor.IsNull())
+			if (valor.IsEmpty())
 				return null;
 
 			object ret;
