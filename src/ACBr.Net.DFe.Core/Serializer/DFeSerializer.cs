@@ -10,38 +10,36 @@
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
-//	 Permission is hereby granted, free of charge, to any person obtaining 
-// a copy of this software and associated documentation files (the "Software"), 
-// to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-// and/or sell copies of the Software, and to permit persons to whom the 
+//	 Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following conditions:
-//	 The above copyright notice and this permission notice shall be 
+//	 The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
-using ACBr.Net.DFe.Core.Internal;
+using System;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-
 	/// <summary>
 	/// Class DFeSerializer.
 	/// </summary>
@@ -97,7 +95,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns>DFeSerializer.</returns>
-		public static DFeSerializer<T> CreateSerializer<T>() where T : class 
+		public static DFeSerializer<T> CreateSerializer<T>() where T : class
 		{
 			return new DFeSerializer<T>();
 		}
@@ -124,7 +122,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
-			if(Options.FormatarXml)
+			if (Options.FormatarXml)
 				xmldoc.Save(path);
 			else
 				xmldoc.Save(path, SaveOptions.DisableFormatting);
@@ -175,7 +173,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			xmldoc.RemoveEmptyNamespace();
 			return xmldoc;
 		}
-		
+
 		#endregion Serialize
 
 		#region Deserialize
@@ -187,7 +185,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <returns>System.Object.</returns>
 		public object Deserialize(string path)
 		{
-			var xmlDoc = XDocument.Load(path);
+			var content = File.ReadAllText(path, Options.Encoder);
+			var xmlDoc = XDocument.Parse(content);
 			return Deserialize(xmlDoc);
 		}
 
@@ -198,7 +197,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <returns>System.Object.</returns>
 		public object Deserialize(Stream stream)
 		{
-			var xmlDoc = XDocument.Load(stream);
+			var reader = new StreamReader(stream, Options.Encoder);
+			var xmlDoc = XDocument.Parse(reader.ReadToEnd());
 			return Deserialize(xmlDoc);
 		}
 
@@ -208,12 +208,12 @@ namespace ACBr.Net.DFe.Core.Serializer
 			var rootName = rooTag != null && !rooTag.Name.IsEmpty()
 				? rooTag.Name : tipoDFe.Name;
 
-			return rootName != xmlDoc.Root?.Name ? null : 
+			return rootName != xmlDoc.Root?.Name ? null :
 				   ObjectSerializer.Deserialize(tipoDFe, xmlDoc.Root, Options);
 		}
 
 		#endregion Deserialize
-		
+
 		#endregion Methods
 	}
 
