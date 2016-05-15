@@ -87,22 +87,22 @@
             Calculoes the padrao.
             </summary>
         </member>
-        <member name="T:ACBr.Net.Core.Enum.CalcDigFormula">
+        <member name="T:ACBr.Net.Core.CalcDigFormula">
             <summary>
             Enum CalcDigFormula
             </summary>
         </member>
-        <member name="F:ACBr.Net.Core.Enum.CalcDigFormula.Modulo11">
+        <member name="F:ACBr.Net.Core.CalcDigFormula.Modulo11">
             <summary>
             The modulo11
             </summary>
         </member>
-        <member name="F:ACBr.Net.Core.Enum.CalcDigFormula.Modulo10PIS">
+        <member name="F:ACBr.Net.Core.CalcDigFormula.Modulo10PIS">
             <summary>
             The modulo10 pis
             </summary>
         </member>
-        <member name="F:ACBr.Net.Core.Enum.CalcDigFormula.Modulo10">
+        <member name="F:ACBr.Net.Core.CalcDigFormula.Modulo10">
             <summary>
             The modulo10
             </summary>
@@ -737,7 +737,7 @@
             Encrypts the specified data.
             </summary>
             <param name="data">The data.</param>
-            <param name="key">The key.</param>
+            <param name="password">The password.</param>
             <returns>System.String.</returns>
             <exception cref="T:System.Exception">Erro ao criptografar a string</exception>
             <exception cref="T:System.Exception">Erro ao criptografar a string</exception>
@@ -747,10 +747,34 @@
             Decrypts the specified data.
             </summary>
             <param name="data">The data.</param>
-            <param name="key">The key.</param>
+            <param name="password">The password.</param>
             <returns>System.String.</returns>
             <exception cref="T:System.Exception">Erro ao descriptografar string</exception>
             <exception cref="T:System.Exception">Erro ao descriptografar string</exception>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.Encrypt``1(System.String,System.String,System.String,System.String)">
+            <summary>
+            Encrypts the specified password.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value.</param>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="vector">The vector.</param>
+            <returns>System.String.</returns>
+            <exception cref="T:ACBr.Net.Core.ACBrException">Erro ao criptografar a string</exception>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.Decrypt``1(System.String,System.String,System.String,System.String)">
+            <summary>
+            Decrypts the specified password.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value.</param>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="vector">The vector.</param>
+            <returns>System.String.</returns>
+            <exception cref="T:ACBr.Net.Core.ACBrException">Erro ao descriptografar string</exception>
         </member>
         <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToMd5Hash(System.String)">
             <summary>
@@ -796,6 +820,23 @@
             <param name="dados">The dados.</param>
             <param name="def">The definition.</param>
             <returns>System.Double.</returns>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToDouble(System.String,System.IFormatProvider)">
+            <summary>
+            To the double.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="format">The format.</param>
+            <returns>System.Double.</returns>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToDouble(System.String,System.Double,System.IFormatProvider)">
+            <summary>
+            To the double.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="def">The definition.</param>
+            <param name="format">The format.</param>
+            <returns>System.Double.</returns>
             <exception cref="T:System.Exception">Erro ao converter string</exception>
             <exception cref="T:System.Exception">Erro ao converter string</exception>
         </member>
@@ -809,6 +850,24 @@
             <exception cref="T:System.Exception">Erro ao converter string</exception>
             <exception cref="T:System.Exception">Erro ao converter string</exception>
         </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToDecimal(System.String,System.IFormatProvider)">
+            <summary>
+            To the decimal.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="format">The format.</param>
+            <returns>System.Decimal.</returns>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToDecimal(System.String,System.Decimal,System.IFormatProvider)">
+            <summary>
+            To the decimal.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="def">The definition.</param>
+            <param name="format">The format.</param>
+            <returns>System.Decimal.</returns>
+            <exception cref="T:System.Exception">Erro ao converter string</exception>
+        </member>
         <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToInt32(System.String,System.Int32)">
             <summary>
             To the int32.
@@ -819,12 +878,47 @@
             <exception cref="T:System.Exception">Erro ao converter string</exception>
             <exception cref="T:System.Exception">Erro ao converter string</exception>
         </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToInt32(System.String,System.IFormatProvider)">
+            <summary>
+            To the int32.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="format">The format.</param>
+            <returns>System.Int32.</returns>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToInt32(System.String,System.Int32,System.IFormatProvider)">
+            <summary>
+            To the int32.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="def">The definition.</param>
+            <param name="format">The format.</param>
+            <returns>System.Int32.</returns>
+            <exception cref="T:System.Exception">Erro ao converter string</exception>
+        </member>
         <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToInt64(System.String,System.Int64)">
             <summary>
             To the int64.
             </summary>
             <param name="dados">The dados.</param>
             <param name="def">The definition.</param>
+            <returns>System.Int64.</returns>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToInt64(System.String,System.IFormatProvider)">
+            <summary>
+            To the int64.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="format">The format.</param>
+            <returns>System.Int64.</returns>
+        </member>
+        <member name="M:ACBr.Net.Core.Extensions.StringExtensions.ToInt64(System.String,System.Int64,System.IFormatProvider)">
+            <summary>
+            To the int64.
+            </summary>
+            <param name="dados">The dados.</param>
+            <param name="def">The definition.</param>
+            <param name="format">The format.</param>
             <returns>Int64.</returns>
             <exception cref="T:System.Exception">Erro ao converter string</exception>
             <exception cref="T:System.Exception">Erro ao converter string</exception>
@@ -1803,12 +1897,12 @@
             The logger conf key
             </summary>
         </member>
-        <member name="F:ACBr.Net.Core.Logging.LoggerProvider.LoggerFactory">
+        <member name="F:ACBr.Net.Core.Logging.LoggerProvider.loggerFactory">
             <summary>
             The logger factory
             </summary>
         </member>
-        <member name="F:ACBr.Net.Core.Logging.LoggerProvider._instance">
+        <member name="F:ACBr.Net.Core.Logging.LoggerProvider.instance">
             <summary>
             The _instance
             </summary>

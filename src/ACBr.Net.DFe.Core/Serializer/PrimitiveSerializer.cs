@@ -218,7 +218,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				case TipoCampo.Custom:
-					var serialize = item.GetSerializer(prop);
+					var serialize = prop.GetSerializer(item);
 					conteudoProcessado = serialize();
 					break;
 
@@ -309,7 +309,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				case TipoCampo.Custom:
-					var deserialize = item.GetDeserializer(prop);
+					var deserialize = prop.GetDeserializer(item);
 					ret = deserialize(valor);
 					break;
 

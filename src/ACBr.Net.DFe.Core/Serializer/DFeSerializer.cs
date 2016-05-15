@@ -36,6 +36,7 @@ using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
@@ -185,7 +186,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <returns>System.Object.</returns>
 		public object Deserialize(string path)
 		{
-			var content = File.ReadAllText(path, Options.Encoder);
+			var content = File.Exists(path) ? File.ReadAllText(path, Options.Encoder) :
+				                              path;
 			var xmlDoc = XDocument.Parse(content);
 			return Deserialize(xmlDoc);
 		}

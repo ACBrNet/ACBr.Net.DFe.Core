@@ -92,10 +92,20 @@ namespace ACBr.Net.DFe.Core.Teste
 
 	public class TesteXml2 : IXmlItem
 	{
+		internal TesteXml2()
+		{
+			
+		}
+
+		internal static TesteXml2 Create()
+		{
+			return new TesteXml2();
+		}
+		
 		[DFeAttribute(TipoCampo.Int, "id", Id = "AT2", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "custom1", Id = "ST1", Min = 0, Max = 19, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.Custom, "custom1", Id = "ST2", Min = 0, Max = 19, Ocorrencias = 0)]
 		public string TestString { get; set; }
 
 		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC2", Min = 0, Max = 9, Ocorrencias = 0)]
@@ -146,7 +156,7 @@ namespace ACBr.Net.DFe.Core.Teste
 		[DFeAttribute(TipoCampo.Int, "id", Id = "AT3", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "custom2", Id = "ST2", Min = 0, Max = 19, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.Custom, "custom2", Id = "ST3", Min = 0, Max = 19, Ocorrencias = 0)]
 		public string TestString { get; set; }
 
 		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC3", Min = 0, Max = 9, Ocorrencias = 0)]
@@ -197,7 +207,7 @@ namespace ACBr.Net.DFe.Core.Teste
 		[DFeAttribute(TipoCampo.Int, "id", Id = "AT4", Min = 2, Max = 2, Ocorrencias = 0)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "custom3", Id = "ST3", Min = 0, Max = 19, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.Custom, "custom3", Id = "ST4", Min = 0, Max = 19, Ocorrencias = 0)]
 		public string TestString { get; set; }
 
 		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC4", Min = 0, Max = 9, Ocorrencias = 0)]

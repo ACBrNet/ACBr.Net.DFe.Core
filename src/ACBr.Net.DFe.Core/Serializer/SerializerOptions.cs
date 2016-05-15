@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace ACBr.Net.DFe.Core.Serializer
@@ -103,6 +104,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
 			RemoverAcentos = false;
 			FormatarXml = true;
+			AssinarXML = false;
 			Encoder = Encoding.UTF8;
 		}
 
@@ -111,7 +113,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		#region Propriedades
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [retirar acentos].
+		/// Indica se é para retirar acentos do XML ou não.
 		/// </summary>
 		/// <value><c>true</c> if [retirar acentos]; otherwise, <c>false</c>.</value>
 		public bool RemoverAcentos { get; set; }
@@ -121,6 +123,12 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		/// <value><c>true</c> if identar; otherwise, <c>false</c>.</value>
 		public bool FormatarXml { get; set; }
+
+		public bool AssinarXML { get; set; }
+
+		public string SignUri { get; set; }
+
+		public X509Certificate Certificado { get; set; }
 
 		/// <summary>
 		/// Gets or sets the encoder.

@@ -186,7 +186,9 @@ namespace ACBr.Net.DFe.Core.Serializer
         {
 			try
 			{
-				var ret = Activator.CreateInstance(type);
+				var ret = type.HasCreate() ? type.GetCreate().Invoke() : 
+											 Activator.CreateInstance(type);
+
 				if (element == null)
 					return ret;
 

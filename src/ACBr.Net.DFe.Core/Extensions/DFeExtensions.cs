@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using ACBr.Net.Core.Exceptions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Interfaces;
 using ExtraConstraints;
@@ -81,26 +82,45 @@ namespace ACBr.Net.DFe.Core.Extensions
 					: prop.GetAttribute<DFeAttributeAttribute>();
 		}
 
-	    internal static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
+		internal static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method) where TDelegate : class
+		{
+			return Delegate.CreateDelegate(typeof(TDelegate), method) as TDelegate;
+		}
+
+		internal static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
 	    {
 			return Delegate.CreateDelegate(typeof(TDelegate), item, method) as TDelegate;
 		}
 
-		internal static Func<string> GetSerializer<T>(this T item, PropertyInfo prop) where T : class
+		internal static Func<string> GetSerializer(this PropertyInfo prop, object item)
 		{
+			Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");
 			var method = item.GetType().GetMethod($"Serialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 			return method.ToDelegate<Func<string>>(item);
 		}
 
-		internal static Func<string, object> GetDeserializer<T>(this T item, PropertyInfo prop) where T : class
+		internal static Func<string, object> GetDeserializer(this PropertyInfo prop, object item)
 		{
+			Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");
 			var method = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 			return method.ToDelegate<Func<string, object>>(item);
 		}
 
-		public static IEnumerable<XElement> ElementsAnyNs(this XElement source, string localName)
+	    internal static Func<object> GetCreate(this Type tipo)
+	    {
+			var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+			return method.ToDelegate<Func<object>>();
+		}
+
+		internal static bool HasCreate(this Type tipo)
 		{
-			return source.Elements().Where(e => e.Name.LocalName == localName);
+			var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+			return method != null;
+		}
+
+		public static IEnumerable<XElement> ElementsAnyNs(this XElement source, string name)
+		{
+			return source.Elements().Where(e => e.Name.LocalName == name);
 		}
 	}
 }
