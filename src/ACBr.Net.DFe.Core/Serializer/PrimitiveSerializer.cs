@@ -161,7 +161,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 					{
 						var numberFormat = CultureInfo.InvariantCulture.NumberFormat;
 						decimal vDecimal;
-						if (decimal.TryParse(valor.ToString(), NumberStyles.Any, CultureInfo.CurrentCulture, out vDecimal))
+						if (decimal.TryParse(valor.ToString(), out vDecimal))
 						{
 							// ReSharper disable once SwitchStatementMissingSomeCases
 							switch (tipo)
