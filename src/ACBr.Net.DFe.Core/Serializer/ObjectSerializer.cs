@@ -49,7 +49,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <summary>
 		/// The logger
 		/// </summary>
-		internal static IInternalLogger Logger = LoggerProvider.LoggerFor(typeof(DFeSerializer));
+		internal static IACBrLogger Logger = LoggerProvider.LoggerFor<DFeSerializer>();
 
 		#endregion Fields
 

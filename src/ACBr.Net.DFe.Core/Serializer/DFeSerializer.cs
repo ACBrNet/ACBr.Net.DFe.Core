@@ -36,7 +36,6 @@ using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.Xml;
 using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
