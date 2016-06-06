@@ -41,8 +41,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACBr.Net.Core">
-      <HintPath>..\..\libs\Net40\ACBr.Net.Core.dll</HintPath>
+    <Reference Include="ACBr.Net.Core, Version=0.9.3.0, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
+      <HintPath>..\packages\ACBr.Net.Core.0.9.3.0-rc1\lib\net40\ACBr.Net.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,6 +63,9 @@
       <Project>{d5613362-449b-4c9d-ac82-7e234cfe545a}</Project>
       <Name>ACBr.Net.DFe.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

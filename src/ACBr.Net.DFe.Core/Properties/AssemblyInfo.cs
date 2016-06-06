@@ -16,8 +16,8 @@ using System.Runtime.InteropServices;
 #endif
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ACBr.Net")]
-[assembly: AssemblyCopyright("Copyright © ACBr.Net 2014 - 2016")]
-[assembly: AssemblyTrademark("Projeto ACBr.Net https://github.com/ACBrNet")]
+[assembly: AssemblyCopyright("Copyright © Grupo ACBr.Net 2014 - 2016")]
+[assembly: AssemblyTrademark("Grupo ACBr.Net https://acbrnet.github.io")]
 [assembly: AssemblyKeyFile(@"../../../acbr.net.snk")]
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
