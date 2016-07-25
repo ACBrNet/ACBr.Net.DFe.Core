@@ -186,7 +186,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		public object Deserialize(string path)
 		{
 			var content = File.Exists(path) ? File.ReadAllText(path, Options.Encoder) :
-				                              path;
+											  path;
 			var xmlDoc = XDocument.Parse(content);
 			return Deserialize(xmlDoc);
 		}
@@ -205,12 +205,23 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		private object Deserialize(XDocument xmlDoc)
 		{
-			var rooTag = tipoDFe.GetAttribute<DFeRootAttribute>();
-			var rootName = rooTag != null && !rooTag.Name.IsEmpty()
-				? rooTag.Name : tipoDFe.Name;
+			var rootTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+			var rootName = rootTag != null && !rootTag.Name.IsEmpty()
+								? rootTag.Name : tipoDFe.Name;
+
+			var xmlNode = xmlDoc.Root;
+
+			if (xmlDoc.Root?.Name != rootName)
+			{
+				xmlNode = (from d in xmlDoc.Descendants()
+						   where d.Name.LocalName == rootName
+						   select d).FirstOrDefault();
+			}
+
+			Guard.Against<ACBrDFeException>(xmlNode == null, $"Nenhum objeto {rootName} encontrado !");
 
 			return rootName != xmlDoc.Root?.Name ? null :
-				   ObjectSerializer.Deserialize(tipoDFe, xmlDoc.Root, Options);
+				   ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
 		}
 
 		#endregion Deserialize
