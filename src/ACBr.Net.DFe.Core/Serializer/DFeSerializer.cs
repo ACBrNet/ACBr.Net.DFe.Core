@@ -108,7 +108,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// Serializes the specified item.
 		/// </summary>
 		/// <param name="item">The item.</param>
-		/// <param name="path">The path.</param>
+		/// <param name="path">The xml.</param>
 		public bool Serialize(object item, string path)
 		{
 			Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
@@ -179,14 +179,14 @@ namespace ACBr.Net.DFe.Core.Serializer
 		#region Deserialize
 
 		/// <summary>
-		/// Deserializes the specified path.
+		/// Deserializes the specified xml.
 		/// </summary>
-		/// <param name="path">The path.</param>
+		/// <param name="xml">The xml.</param>
 		/// <returns>System.Object.</returns>
-		public object Deserialize(string path)
+		public object Deserialize(string xml)
 		{
-			var content = File.Exists(path) ? File.ReadAllText(path, Options.Encoder) :
-											  path;
+			var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) :
+											  xml;
 			var xmlDoc = XDocument.Parse(content);
 			return Deserialize(xmlDoc);
 		}
@@ -213,15 +213,14 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			if (xmlDoc.Root?.Name != rootName)
 			{
-				xmlNode = (from d in xmlDoc.Descendants()
-						   where d.Name.LocalName == rootName
-						   select d).FirstOrDefault();
+				xmlNode = (from node in xmlDoc.Descendants()
+						   where node.Name.LocalName == rootName
+						   select node).FirstOrDefault();
 			}
 
 			Guard.Against<ACBrDFeException>(xmlNode == null, $"Nenhum objeto {rootName} encontrado !");
 
-			return rootName != xmlDoc.Root?.Name ? null :
-				   ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
+			return ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
 		}
 
 		#endregion Deserialize
@@ -255,7 +254,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// Serializes the specified item.
 		/// </summary>
 		/// <param name="item">The item.</param>
-		/// <param name="path">The path.</param>
+		/// <param name="path">The xml.</param>
 		public bool Serialize(T item, string path)
 		{
 			return base.Serialize(item, path);
@@ -273,9 +272,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 		}
 
 		/// <summary>
-		/// Deserializes the specified path.
+		/// Deserializes the specified xml.
 		/// </summary>
-		/// <param name="path">The path.</param>
+		/// <param name="path">The xml.</param>
 		/// <returns>T.</returns>
 		public new T Deserialize(string path)
 		{
@@ -283,9 +282,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 		}
 
 		/// <summary>
-		/// Deserializes the specified path.
+		/// Deserializes the specified xml.
 		/// </summary>
-		/// <param name="stream">The path.</param>
+		/// <param name="stream">The xml.</param>
 		/// <returns>T.</returns>
 		public new T Deserialize(Stream stream)
 		{

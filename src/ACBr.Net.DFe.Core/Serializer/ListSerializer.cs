@@ -10,33 +10,32 @@
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
-//	 Permission is hereby granted, free of charge, to any person obtaining 
-// a copy of this software and associated documentation files (the "Software"), 
-// to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-// and/or sell copies of the Software, and to permit persons to whom the 
+//	 Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following conditions:
-//	 The above copyright notice and this permission notice shall be 
+//	 The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Extensions;
-using ACBr.Net.DFe.Core.Internal;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
@@ -54,14 +53,13 @@ namespace ACBr.Net.DFe.Core.Serializer
 		public static XObject[] Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
 		{
 			var tag = prop.GetAttribute<DFeElementAttribute>();
-			var values = ((IEnumerable<object>) prop.GetValue(parentObject, null) ?? new object[0]).ToArray();
+			var values = ((IEnumerable<object>)prop.GetValue(parentObject, null) ?? new object[0]).ToArray();
 			if (values.Length == 0 && tag.Min == 0 && tag.Ocorrencias == 0)
 				return null;
 
 			if (values.Length < tag.Min || values.Length > tag.Max)
 				options.WAlerta(tag.Id, tag.Name, tag.Descricao,
 					values.Length > tag.Max ? SerializerOptions.ErrMsgMaiorMaximo : SerializerOptions.ErrMsgMenorMinimo);
-
 
 			if (!prop.HasAttribute<DFeItemAttribute>())
 				return values.Select(value => ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
@@ -72,10 +70,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 				var itemTags = prop.GetAttributes<DFeItemAttribute>();
 				var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType()) ?? itemTags[0];
 				var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, options);
-				Utilities.AddChild(childElement, arrayElement);
+				arrayElement.AddChild(childElement);
 			}
 
-			return new XObject[] {arrayElement};
+			return new XObject[] { arrayElement };
 		}
 
 		#endregion Serialize

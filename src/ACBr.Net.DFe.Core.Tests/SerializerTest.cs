@@ -1,11 +1,13 @@
-﻿using System;
-using ACBr.Net.DFe.Core.Serializer;
+﻿using ACBr.Net.DFe.Core.Serializer;
+using System;
+using System.IO;
+using Xunit;
 
-namespace ACBr.Net.DFe.Core.Teste
+namespace ACBr.Net.DFe.Core.Tests
 {
-	class Program
+	public class SerializerTest
 	{
-		static void Main(string[] args)
+		public static TesteXml GenerateXml()
 		{
 			var xml = new TesteXml
 			{
@@ -20,7 +22,7 @@ namespace ACBr.Net.DFe.Core.Teste
 			{
 				var item = new TesteXml2
 				{
-					Id = i+1,
+					Id = i + 1,
 					TestDecimal = xml.TestDecimal + i + 1,
 					TestString = $"XmlItem2 {i + 1}"
 				};
@@ -48,14 +50,18 @@ namespace ACBr.Net.DFe.Core.Teste
 
 			xml.TestInterface1 = xml.XmlItems[0];
 
-			var serializer = DFeSerializer.CreateSerializer<TesteXml>();
-			serializer.Serialize(xml, "testexml.xml");
+			return xml;
+		}
 
-			Console.WriteLine("XML Gerado com sucesso !");
-			Console.ReadKey();
-			var xmltest = serializer.Deserialize("testexml.xml");
-			Console.WriteLine(xmltest.ToString());
-			Console.ReadKey();
+		[Fact]
+		public void TestSerializer()
+		{
+			var xml = GenerateXml();
+
+			var serializer = DFeSerializer.CreateSerializer<TesteXml>();
+			serializer.Serialize(xml, "teste.xml");
+
+			Assert.True(File.Exists("teste.xml"), "Erro ao serializar a classe");
 		}
 	}
 }

@@ -10,40 +10,39 @@
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
-//	 Permission is hereby granted, free of charge, to any person obtaining 
-// a copy of this software and associated documentation files (the "Software"), 
-// to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-// and/or sell copies of the Software, and to permit persons to whom the 
+//	 Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following conditions:
-//	 The above copyright notice and this permission notice shall be 
+//	 The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Xml.Linq;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.Core.Logging;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using ACBr.Net.DFe.Core.Interfaces;
-using ACBr.Net.DFe.Core.Internal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-    internal class ObjectSerializer
-    {
+	internal class ObjectSerializer
+	{
 		#region Fields
 
 		/// <summary>
@@ -86,21 +85,21 @@ namespace ACBr.Net.DFe.Core.Serializer
 				var properties = tipo.GetProperties();
 				foreach (var prop in properties)
 				{
-					if (Utilities.ShouldIgnoreProperty(prop) ||
-					    !Utilities.ShouldSerializeProperty(prop, value))
+					if (prop.ShouldIgnoreProperty() ||
+						!prop.ShouldSerializeProperty(value))
 						continue;
 
 					var elements = Serialize(prop, value, options);
-					if(elements == null)
+					if (elements == null)
 						continue;
 
 					foreach (var element in elements)
 					{
 						var child = element as XElement;
 						if (child != null)
-							Utilities.AddChild(child, objectElement);
+							objectElement.AddChild(child);
 						else
-							Utilities.AddAttribute((XAttribute)element, objectElement);
+							objectElement.AddAttribute((XAttribute)element);
 					}
 				}
 
@@ -112,57 +111,57 @@ namespace ACBr.Net.DFe.Core.Serializer
 				Logger.Error(msg, e);
 				throw new ACBrDFeException(msg, e);
 			}
-        }
+		}
 
-        /// <summary>
-        /// Serializes the specified property into a XElement using options.
-        /// </summary>
-        /// <param name="prop">The property to serialize.</param>
-        /// <param name="parentObject">The object that owns the property.</param>
-        /// <param name="options">Indicates how the output is formatted or serialized.</param>
-        /// <returns>The XElement representation of the property. May be null if it has no value, cannot be read or written or should be ignored.</returns>
-        private static IEnumerable<XObject> Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
-        {
-	        try
-	        {
-		        var value = prop.GetValue(parentObject, null);
-		        var objectType = ObjectType.From(prop.PropertyType);
+		/// <summary>
+		/// Serializes the specified property into a XElement using options.
+		/// </summary>
+		/// <param name="prop">The property to serialize.</param>
+		/// <param name="parentObject">The object that owns the property.</param>
+		/// <param name="options">Indicates how the output is formatted or serialized.</param>
+		/// <returns>The XElement representation of the property. May be null if it has no value, cannot be read or written or should be ignored.</returns>
+		private static IEnumerable<XObject> Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
+		{
+			try
+			{
+				var value = prop.GetValue(parentObject, null);
+				var objectType = ObjectType.From(prop.PropertyType);
 
-		        if (objectType == ObjectType.Dictionary)
-			        throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
+				if (objectType == ObjectType.Dictionary)
+					throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
 
-		        if (objectType == ObjectType.List)
-			        return ListSerializer.Serialize(prop, parentObject, options);
+				if (objectType == ObjectType.List)
+					return ListSerializer.Serialize(prop, parentObject, options);
 
-		        if (objectType == ObjectType.DFeList)
-			        return DFeListSerializer.Serialize(prop, parentObject, options);
+				if (objectType == ObjectType.DFeList)
+					return DFeListSerializer.Serialize(prop, parentObject, options);
 
-		        if (objectType == ObjectType.InterfaceObject)
-		        {
-			        if (value == null)
-				        return null;
+				if (objectType == ObjectType.InterfaceObject)
+				{
+					if (value == null)
+						return null;
 
-			        var attributes = prop.GetAttributes<DFeItemAttribute>();
-			        var attribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType()) ?? attributes[0];
-			        return new XObject[] { Serialize(value, value.GetType(), attribute.Name, options) };
-		        }
+					var attributes = prop.GetAttributes<DFeItemAttribute>();
+					var attribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType()) ?? attributes[0];
+					return new XObject[] { Serialize(value, value.GetType(), attribute.Name, options) };
+				}
 
-		        if (objectType == ObjectType.ClassObject)
-		        {
-			        var attribute = prop.GetAttribute<DFeElementAttribute>();
-			        return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
-		        }
+				if (objectType == ObjectType.ClassObject)
+				{
+					var attribute = prop.GetAttribute<DFeElementAttribute>();
+					return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
+				}
 
-		        if (objectType == ObjectType.RootObject)
-		        {
+				if (objectType == ObjectType.RootObject)
+				{
 					var attribute = prop.PropertyType.GetAttribute<DFeRootAttribute>();
-			        var rootElement = Serialize(value, prop.PropertyType, attribute.Name, options);
-			        return new XObject[] { rootElement };
-		        }
+					var rootElement = Serialize(value, prop.PropertyType, attribute.Name, options);
+					return new XObject[] { rootElement };
+				}
 
-		        var tag = prop.GetTag();
-		        return new[] { PrimitiveSerializer.Serialize(tag, parentObject, prop, options) };
-	        }
+				var tag = prop.GetTag();
+				return new[] { PrimitiveSerializer.Serialize(tag, parentObject, prop, options) };
+			}
 			catch (Exception e)
 			{
 				var msg = $"Erro ao serializar a propriedade:{Environment.NewLine}{prop.DeclaringType?.Name ?? prop.PropertyType.Name} - {prop.Name}";
@@ -183,10 +182,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <param name="options">Indicates how the output is deserialized.</param>
 		/// <returns>The deserialized object from the XElement.</returns>
 		public static object Deserialize(Type type, XElement element, SerializerOptions options)
-        {
+		{
 			try
 			{
-				var ret = type.HasCreate() ? type.GetCreate().Invoke() : 
+				var ret = type.HasCreate() ? type.GetCreate().Invoke() :
 											 Activator.CreateInstance(type);
 
 				if (element == null)
@@ -195,7 +194,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				var properties = type.GetProperties();
 				foreach (var prop in properties)
 				{
-					if (Utilities.ShouldIgnoreProperty(prop))
+					if (prop.ShouldIgnoreProperty())
 						continue;
 
 					var value = Deserialize(prop, element, ret, options);
@@ -222,7 +221,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <returns>The deserialized object from the XElement.</returns>
 		/// <exception cref="System.NotSupportedException">Tipo Dictionary não suportado ainda !</exception>
 		public static object Deserialize(PropertyInfo prop, XElement parentElement, object item, SerializerOptions options)
-        {
+		{
 			try
 			{
 				var tag = prop.HasAttribute<DFeElementAttribute>()
@@ -272,7 +271,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				}
 
 				var element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault() ??
-				              (XObject)parentElement.Attributes(tag.Name).FirstOrDefault();
+							  (XObject)parentElement.Attributes(tag.Name).FirstOrDefault();
 
 				return PrimitiveSerializer.Deserialize(tag, element, item, prop, options);
 			}
@@ -282,7 +281,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				Logger.Error(msg, e);
 				throw new ACBrDFeException(msg, e);
 			}
-        }
+		}
 
 		#endregion Deserialize
 	}
