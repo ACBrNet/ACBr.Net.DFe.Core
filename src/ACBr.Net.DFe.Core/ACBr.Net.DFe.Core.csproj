@@ -61,6 +61,18 @@
     <Compile Include="ACBrDFeException.cs" />
     <Compile Include="Attributes\DFeEnumAttribute.cs" />
     <Compile Include="Attributes\DFeIgnoreAttribute.cs" />
+    <Compile Include="Interfaces\IDFeWebServices.cs" />
+    <Compile Include="Interfaces\IDFeGeral.cs" />
+    <Compile Include="Interfaces\IDFeArquivos.cs" />
+    <Compile Include="Common\DFeCertificadosBase.cs" />
+    <Compile Include="Common\DFeGeral.cs" />
+    <Compile Include="Common\DFeWebServices.cs" />
+    <Compile Include="Common\CodUF.cs" />
+    <Compile Include="Interfaces\IDFeCertificados.cs" />
+    <Compile Include="Interfaces\IDFeConfig.cs" />
+    <Compile Include="Common\TipoAmbiente.cs" />
+    <Compile Include="Common\TipoCertificado.cs" />
+    <Compile Include="Common\TipoImpressao.cs" />
     <Compile Include="Extensions\DocumentExtensions.cs" />
     <Compile Include="Interfaces\IDFeElement.cs" />
     <Compile Include="CertificadoDigital.cs" />
@@ -70,6 +82,7 @@
     <Compile Include="Attributes\DFeItemAttribute.cs" />
     <Compile Include="Attributes\DFeRootAttribute.cs" />
     <Compile Include="Serializer\DFeListSerializer.cs" />
+    <Compile Include="Serializer\DictionarySerializer.cs" />
     <Compile Include="Serializer\ListSerializer.cs" />
     <Compile Include="Serializer\PrimitiveSerializer.cs" />
     <Compile Include="Serializer\SerializerOptions.cs" />
@@ -88,9 +101,6 @@
     <Compile Include="Document\SignedInfo.cs" />
     <Compile Include="Document\Transform.cs" />
     <Compile Include="Document\X509Data.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
