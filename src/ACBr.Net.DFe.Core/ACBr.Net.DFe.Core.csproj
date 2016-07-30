@@ -82,7 +82,6 @@
     <Compile Include="Attributes\DFeItemAttribute.cs" />
     <Compile Include="Attributes\DFeRootAttribute.cs" />
     <Compile Include="Serializer\DFeListSerializer.cs" />
-    <Compile Include="Serializer\DictionarySerializer.cs" />
     <Compile Include="Serializer\ListSerializer.cs" />
     <Compile Include="Serializer\PrimitiveSerializer.cs" />
     <Compile Include="Serializer\SerializerOptions.cs" />
