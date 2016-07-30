@@ -28,6 +28,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using System;

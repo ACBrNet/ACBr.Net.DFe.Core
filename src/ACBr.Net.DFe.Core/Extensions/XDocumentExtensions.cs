@@ -30,66 +30,30 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
-	internal static class DocumentExtensions
+	internal static class XDocumentExtensions
 	{
-		internal static void RemoveEmptyNamespace(this XDocument doc)
-		{
-			if (doc.Root == null)
-				return;
-
-			foreach (var node in doc.Root.Descendants())
-			{
-				if (node.Name.NamespaceName != "")
-					continue;
-
-				node.Attributes("xmlns").Remove();
-				if (node.Parent != null)
-					node.Name = node.Parent.Name.Namespace + node.Name.LocalName;
-			}
-		}
-
 		internal static Type GetElementType(this XElement element, Type parentType, int genericArgumentIndex)
 		{
 			Type type = null;
 			var typeELement = element.Attribute("Type");
 			if (typeELement != null)
+			{
 				type = Type.GetType(typeELement.Value);
+			}
 
-			if (type != null)
-				return type;
+			if (type != null) return type;
 
 			var arguments = parentType.GetGenericArguments();
 			if (arguments.Length > genericArgumentIndex)
+			{
 				type = arguments[genericArgumentIndex];
+			}
 
 			return type;
-		}
-
-		internal static void AddChild(this XElement parent, XElement child)
-		{
-			if (child == null || parent == null)
-				return;
-
-			parent.Add(child);
-		}
-
-		internal static void AddAttribute(this XElement parent, XAttribute child)
-		{
-			if (child == null || parent == null)
-				return;
-
-			parent.Add(child);
-		}
-
-		internal static IEnumerable<XElement> ElementsAnyNs(this XElement source, string name)
-		{
-			return source.Elements().Where(e => e.Name.LocalName == name);
 		}
 	}
 }

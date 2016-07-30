@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>ACBr.Net.DFe.Core</id>
-        <version>1.0.0.1</version>
+        <version>1.0.1.0</version>
         <title>ACBr.Net.DFe.Core</title>
         <authors>Grupo ACBr.Net</authors>
         <owners>Grupo ACBr.Net</owners>
@@ -14,7 +14,7 @@
         <language>pt-BR</language>
         <tags>ACBr ACBr.Net Automação Comercial</tags>
         <dependencies>
-            <dependency id="ACBr.Net.Core" version="1.0.0.0" />
+            <dependency id="ACBr.Net.Core" version="1.0.1.1" />
         </dependencies>
     </metadata>
     <files>

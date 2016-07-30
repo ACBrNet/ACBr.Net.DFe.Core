@@ -45,7 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACBr.Net.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.0.0\lib\net40\ACBr.Net.Core.dll</HintPath>
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.1\lib\net40\ACBr.Net.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -73,7 +73,7 @@
     <Compile Include="Common\TipoAmbiente.cs" />
     <Compile Include="Common\TipoCertificado.cs" />
     <Compile Include="Common\TipoImpressao.cs" />
-    <Compile Include="Extensions\DocumentExtensions.cs" />
+    <Compile Include="Extensions\XDocumentExtensions.cs" />
     <Compile Include="Interfaces\IDFeElement.cs" />
     <Compile Include="CertificadoDigital.cs" />
     <Compile Include="Collection\DFeCollection.cs" />
@@ -104,7 +104,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
