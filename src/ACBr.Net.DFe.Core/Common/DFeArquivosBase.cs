@@ -41,8 +41,6 @@ namespace ACBr.Net.DFe.Core.Common
 
 		public bool PastaMensal { get; set; }
 
-		protected DFeConfigBase Parent { get; }
-
 		#endregion Properties
 	}
 }

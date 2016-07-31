@@ -66,7 +66,6 @@
     <Compile Include="Common\DFeGeralBase.cs" />
     <Compile Include="Common\DFeWebServicesBase.cs" />
     <Compile Include="Common\CodUF.cs" />
-    <Compile Include="Common\DFeConfigBase.cs" />
     <Compile Include="Common\TipoAmbiente.cs" />
     <Compile Include="Common\TipoCertificado.cs" />
     <Compile Include="Common\TipoImpressao.cs" />
