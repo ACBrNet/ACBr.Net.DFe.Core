@@ -1,12 +1,12 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 07-30-2016
+// Created          : 01-31-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 07-30-2016
+// Last Modified On : 06-07-2016
 // ***********************************************************************
-// <copyright file="IDFeGeral.cs" company="ACBr.Net">
+// <copyright file="DFeArquivosBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,20 +29,20 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace ACBr.Net.DFe.Core.Interfaces
+namespace ACBr.Net.DFe.Core.Common
 {
-	public interface IDFeGeral
+	public abstract class DFeArquivosBase
 	{
-		bool ExibirErroSchema { get; set; }
+		#region Properties
 
-		string FormatoAlerta { get; set; }
+		public bool AdicionarLiteral { get; set; }
 
-		string PathSalvar { get; set; }
+		public bool Salvar { get; set; }
 
-		string PathSchemas { get; set; }
+		public bool PastaMensal { get; set; }
 
-		bool RetirarAcentos { get; set; }
+		protected DFeConfigBase Parent { get; }
 
-		bool Salvar { get; set; }
+		#endregion Properties
 	}
 }

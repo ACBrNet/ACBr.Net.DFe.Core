@@ -30,7 +30,6 @@
 // ***********************************************************************
 
 using ACBr.Net.Core.Extensions;
-using ACBr.Net.DFe.Core.Interfaces;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace ACBr.Net.DFe.Core.Common
 	/// <summary>
 	/// Class NFECFGCertificados. This class cannot be inherited.
 	/// </summary>
-	public abstract class DFeCertificadosBase : IDFeCertificados
+	public abstract class DFeCertificadosBase
 	{
 		#region Fields
 

@@ -1,12 +1,12 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 07-30-2016
+// Created          : 01-31-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 07-30-2016
+// Last Modified On : 06-07-2016
 // ***********************************************************************
-// <copyright file="IDFeCertificados.cs" company="ACBr.Net">
+// <copyright file="IDFeConfig.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,36 +29,20 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.DFe.Core.Common;
-using System;
-using System.Security.Cryptography.X509Certificates;
-
-namespace ACBr.Net.DFe.Core.Interfaces
+namespace ACBr.Net.DFe.Core.Common
 {
-	public interface IDFeCertificados
+	public abstract class DFeConfigBase
 	{
-		#region Propriedades
+		#region Properties
 
-		string Certificado { get; set; }
+		public DFeGeralBase Geral { get; }
 
-		string CNPJ { get; }
+		public DFeArquivosBase Arquivos { get; }
 
-		DateTime DataVenc { get; }
+		public DFeCertificadosBase CertificadosBase { get; }
 
-		string Senha { get; set; }
+		public DFeWebServicesBase WebServices { get; }
 
-		string SubjectName { get; }
-
-		TipoCertificado Tipo { get; set; }
-
-		#endregion Propriedades
-
-		#region Methods
-
-		string SelecionarCertificado();
-
-		X509Certificate2 ObterCertificado();
-
-		#endregion Methods
+		#endregion Properties
 	}
 }

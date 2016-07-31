@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 06-07-2016
 // ***********************************************************************
-// <copyright file="DFeGeral.cs" company="ACBr.Net">
+// <copyright file="DFeGeralBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.DFe.Core.Interfaces;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -37,16 +36,16 @@ using System.Reflection;
 namespace ACBr.Net.DFe.Core.Common
 {
 	/// <summary>
-	/// Class DFeGeral. This class cannot be inherited.
+	/// Class DFeGeralBase. This class cannot be inherited.
 	/// </summary>
-	public abstract class DFeGeral : IDFeGeral
+	public abstract class DFeGeralBase
 	{
 		#region Constructor
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeGeral"/> class.
+		/// Initializes a new instance of the <see cref="DFeGeralBase"/> class.
 		/// </summary>
-		protected DFeGeral()
+		protected DFeGeralBase()
 		{
 			Salvar = false;
 			PathSchemas = Path.Combine(Assembly.GetExecutingAssembly().CodeBase, "Schemas");
@@ -61,7 +60,7 @@ namespace ACBr.Net.DFe.Core.Common
 		#region Properties
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="DFeGeral"/> is salvar.
+		/// Gets or sets a value indicating whether this <see cref="DFeGeralBase"/> is salvar.
 		/// </summary>
 		/// <value><c>true</c> if salvar; otherwise, <c>false</c>.</value>
 		[Browsable(true)]

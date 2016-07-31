@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 06-07-2016
 // ***********************************************************************
-// <copyright file="DFeWebServices.cs" company="ACBr.Net">
+// <copyright file="DFeWebServicesBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -36,14 +36,14 @@ namespace ACBr.Net.DFe.Core.Common
 	/// <summary>
 	/// Classe de configuração dos webservices
 	/// </summary>
-	public abstract class DFeWebServices : IDFeWebServices
+	public abstract class DFeWebServicesBase
 	{
 		#region Constructor
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeWebServices"/> class.
+		/// Initializes a new instance of the <see cref="DFeWebServicesBase"/> class.
 		/// </summary>
-		protected DFeWebServices()
+		protected DFeWebServicesBase()
 		{
 			Ambiente = TipoAmbiente.Homologacao;
 			Visualizar = false;
@@ -61,7 +61,7 @@ namespace ACBr.Net.DFe.Core.Common
 		#region Properties
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="DFeWebServices"/> is visualizar.
+		/// Gets or sets a value indicating whether this <see cref="DFeWebServicesBase"/> is visualizar.
 		/// </summary>
 		/// <value><c>true</c> if visualizar; otherwise, <c>false</c>.</value>
 		[Browsable(true)]
