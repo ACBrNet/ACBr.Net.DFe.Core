@@ -29,6 +29,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using ACBr.Net.Core.Extensions;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -48,8 +49,14 @@ namespace ACBr.Net.DFe.Core.Common
 		protected DFeGeralBase()
 		{
 			Salvar = false;
-			PathSchemas = Path.Combine(Assembly.GetExecutingAssembly().CodeBase, "Schemas");
-			PathSalvar = Path.Combine(Assembly.GetExecutingAssembly().CodeBase, "Xml");
+
+			var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase);
+			if (!path.IsEmpty())
+			{
+				PathSchemas = Path.Combine(path, "Schemas");
+				PathSalvar = Path.Combine(path, "Xml");
+			}
+
 			ExibirErroSchema = false;
 			RetirarAcentos = false;
 			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
