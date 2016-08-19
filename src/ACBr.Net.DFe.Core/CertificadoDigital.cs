@@ -108,7 +108,7 @@ namespace ACBr.Net.DFe.Core
 
 		/// <summary>
 		/// Busca certificados instalado se informado uma serie
-		/// se não abre caixa de dialogos de certificados.
+		/// senão abre caixa de dialogos de certificados.
 		/// </summary>
 		/// <param name="cerSerie">Serie do certificado.</param>
 		/// <returns>X509Certificate2.</returns>
@@ -118,47 +118,58 @@ namespace ACBr.Net.DFe.Core
 		/// Certificado digital não encontrado
 		/// or
 		/// </exception>
-		public static X509Certificate2 SelecionarCertificado(string cerSerie)
+		public static X509Certificate2 SelecionarCertificado(string cerSerie = "")
 		{
-			var certificate = new X509Certificate2();
+			var store = new X509Store("MY", StoreLocation.CurrentUser);
+			store.Open(OpenFlags.MaxAllowed);
+
 			try
 			{
-				var store = new X509Store("MY", StoreLocation.CurrentUser);
-				store.Open(OpenFlags.OpenExistingOnly);
 				var certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now, true)
 					.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
 
-				X509Certificate2Collection certificatesSel;
+				X509Certificate2Collection certificadosSelecionados;
+
+				X509Certificate2 certificado;
 				if (cerSerie.IsEmpty())
 				{
-					certificatesSel = X509Certificate2UI.SelectFromCollection(certificates, "Certificados Digitais", "Selecione o Certificado Digital para uso no aplicativo", X509SelectionFlag.SingleSelection);
-					if (certificatesSel.Count == 0)
-					{
-						certificate.Reset();
-						throw new ACBrDFeException("Nenhum certificado digital foi selecionado ou o certificado selecionado está com problemas.");
-					}
+					certificadosSelecionados = X509Certificate2UI.SelectFromCollection(certificates, "Certificados Digitais",
+						"Selecione o Certificado Digital para uso no aplicativo", X509SelectionFlag.SingleSelection);
+					Guard.Against<ACBrDFeException>(certificadosSelecionados.Count == 0,
+						"Nenhum certificado digital foi selecionado ou o certificado selecionado está com problemas.");
 
-					certificate = certificatesSel[0];
+					certificado = certificadosSelecionados[0];
 				}
 				else
 				{
-					certificatesSel = certificates.Find(X509FindType.FindBySerialNumber, cerSerie, true);
-					if (certificatesSel.Count == 0)
-					{
-						certificate.Reset();
-						throw new ACBrDFeException("Certificado digital não encontrado");
-					}
+					certificadosSelecionados = certificates.Find(X509FindType.FindBySerialNumber, cerSerie, true);
+					Guard.Against<ACBrDFeException>(certificadosSelecionados.Count == 0, "Certificado digital não encontrado");
 
-					certificate = certificatesSel[0];
+					certificado = certificadosSelecionados[0];
 				}
 
 				store.Close();
-				return certificate;
+				return certificado;
 			}
 			catch (Exception ex)
 			{
 				throw new ACBrDFeException("Erro ao selecionar o certificado", ex);
 			}
+			finally
+			{
+				store.Close();
+			}
+		}
+
+		/// <summary>
+		/// Exibi o certificado usando a ui nativa do windows.
+		/// </summary>
+		/// <param name="certificado"></param>
+		public static void ExbirCertificado(X509Certificate2 certificado)
+		{
+			Guard.Against<ArgumentNullException>(certificado == null, nameof(certificado));
+
+			X509Certificate2UI.DisplayCertificate(certificado);
 		}
 
 		/// <summary>

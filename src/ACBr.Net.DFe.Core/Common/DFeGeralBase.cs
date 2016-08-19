@@ -50,7 +50,7 @@ namespace ACBr.Net.DFe.Core.Common
 		{
 			Salvar = false;
 
-			var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase);
+			var path = Path.GetDirectoryName(Assembly.GetCallingAssembly().CodeBase);
 			if (!path.IsEmpty())
 			{
 				PathSchemas = Path.Combine(path, "Schemas");

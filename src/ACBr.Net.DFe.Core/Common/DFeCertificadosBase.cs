@@ -32,9 +32,8 @@
 using ACBr.Net.Core.Extensions;
 using System;
 using System.ComponentModel;
-using System.Linq;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace ACBr.Net.DFe.Core.Common
 {
@@ -81,13 +80,6 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <value>A senha.</value>
 		[Browsable(true)]
 		public string Senha { get; set; }
-
-		/// <summary>
-		/// Retorna ou estabelece o tipo de certificado a utilizar.
-		/// </summary>
-		/// <value>Tipo de Certificado.</value>
-		[Browsable(true)]
-		public TipoCertificado Tipo { get; set; }
 
 		/// <summary>
 		/// Retorna a data de vencimento do certificado.
@@ -154,8 +146,18 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <returns>X509Certificate2.</returns>
 		public X509Certificate2 ObterCertificado()
 		{
-			return Tipo == TipoCertificado.A1 ? CertificadoDigital.SelecionarCertificado(Certificado, Senha) :
-												CertificadoDigital.SelecionarCertificado(Certificado);
+			if (File.Exists(Certificado))
+			{
+				return CertificadoDigital.SelecionarCertificado(Certificado, Senha);
+			}
+
+			var ret = CertificadoDigital.SelecionarCertificado(Certificado);
+			if (!Senha.IsEmpty())
+			{
+				ret.SetPin(Senha);
+			}
+
+			return ret;
 		}
 
 		/// <summary>
@@ -166,29 +168,7 @@ namespace ACBr.Net.DFe.Core.Common
 			var cert = ObterCertificado();
 			dataVenc = cert.GetExpirationDateString().ToData();
 			subjectName = cert.SubjectName.Name;
-
-			foreach (var lines in from X509Extension extension in
-									  cert.Extensions
-								  select extension.Format(true) into s1
-								  select s1.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-			{
-				foreach (var t in lines)
-				{
-					if (!t.Trim().StartsWith("2.16.76.1.3.3"))
-						continue;
-
-					var value = t.Substring(t.IndexOf('=') + 1);
-					var elements = value.Split(' ');
-					var cnpjBytes = new byte[14];
-					for (var j = 0; j < cnpjBytes.Length; j++)
-						cnpjBytes[j] = Convert.ToByte(elements[j + 2], 16);
-					cnpj = Encoding.UTF8.GetString(cnpjBytes);
-					break;
-				}
-
-				if (!string.IsNullOrEmpty(cnpj))
-					break;
-			}
+			cnpj = cert.GetCNPJ();
 		}
 
 		#endregion Methods
