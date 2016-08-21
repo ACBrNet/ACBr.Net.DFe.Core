@@ -36,8 +36,18 @@ using System.ServiceModel;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-	internal abstract class DFeWebserviceBase<T> : ClientBase<T>, IACBrLog where T : class
+	/// <summary>
+	/// Classe base para comunição com websrvices.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public abstract class DFeWebserviceBase<T> : ClientBase<T>, IACBrLog where T : class
 	{
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="url"></param>
+		/// <param name="timeOut"></param>
+		/// <param name="certificado"></param>
 		protected DFeWebserviceBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(new BasicHttpBinding(), new EndpointAddress(url))
 		{
 			((BasicHttpBinding)Endpoint.Binding).UseDefaultWebProxy = true;
