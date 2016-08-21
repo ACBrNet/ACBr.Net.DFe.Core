@@ -40,7 +40,7 @@ namespace ACBr.Net.DFe.Core.Common
 	/// <summary>
 	/// Class NFECFGCertificados. This class cannot be inherited.
 	/// </summary>
-	public abstract class DFeCertificadosBase
+	public abstract class DFeCertificadosConfigBase
 	{
 		#region Fields
 
@@ -53,9 +53,9 @@ namespace ACBr.Net.DFe.Core.Common
 		#region Constructor
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeCertificadosBase"/> class.
+		/// Initializes a new instance of the <see cref="DFeCertificadosConfigBase"/> class.
 		/// </summary>
-		protected DFeCertificadosBase()
+		protected DFeCertificadosConfigBase()
 		{
 			dataVenc = DateTime.MinValue;
 			Certificado = string.Empty;

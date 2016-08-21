@@ -34,6 +34,7 @@ using ACBr.Net.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
@@ -51,15 +52,15 @@ namespace ACBr.Net.DFe.Core
 		/// <summary>
 		/// Assina a XML usando o certificado informado.
 		/// </summary>
-		/// <param name="xml">A XML.</param>
-		/// <param name="pUri">A Url.</param>
-		/// <param name="pNode">The p node.</param>
+		/// <param name="xml">O Xml.</param>
+		/// <param name="pUri">A Uri da referencia.</param>
+		/// <param name="pNode">O node onde sera feito o append da assinatura.</param>
 		/// <param name="pCertificado">O certificado.</param>
-		/// <param name="comments">if set to <c>true</c> [comments].</param>
+		/// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
 		/// <returns>System.String.</returns>
-		/// <exception cref="Exception">Erro ao efetuar assinatura digital, detalhes:  + ex.Message</exception>
-		/// <exception cref="System.Exception">Erro ao efetuar assinatura digital, detalhes:  + ex.Message</exception>
-		public static string Assinar(string xml, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
+		/// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+		/// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+		public static string AssinarXml(string xml, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
 		{
 			try
 			{
@@ -94,16 +95,95 @@ namespace ACBr.Net.DFe.Core
 				var xmlDigitalSignature = signedDocument.GetXml();
 
 				// Adiciona ao doc XML
-				var xmlElement = doc.GetElementsByTagName(pNode)[0] as XmlElement;
-				Guard.Against<ArgumentException>(xmlElement == null, "Nome do elemento de assinatura incorreto");
-				xmlElement.ParentNode.AppendChild(doc.ImportNode(xmlDigitalSignature, true));
+				var xmlElement = doc.GetElementsByTagName(pNode).Cast<XmlElement>().FirstOrDefault();
+				Guard.Against<ACBrDFeException>(xmlElement == null, "Nome do elemento de assinatura incorreto");
+
+				var element = doc.ImportNode(xmlDigitalSignature, true);
+				xmlElement.AppendChild(element);
 
 				return doc.AsString();
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Erro ao efetuar assinatura digital, detalhes: " + ex.Message);
+				throw new ACBrDFeException("Erro ao efetuar assinatura digital.", ex);
 			}
+		}
+
+		/// <summary>
+		/// Assina Multiplos elementos dentro da Xml.
+		/// </summary>
+		/// <param name="xml">O Xml.</param>
+		/// <param name="pUri">A Uri da referencia.</param>
+		/// <param name="pNode">O node onde sera feito o append da assinatura.</param>
+		/// <param name="pCertificado">O certificado.</param>
+		/// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
+		/// <returns>System.String.</returns>
+		/// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+		/// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+		public static string AssinarXmlTodos(string xml, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
+		{
+			try
+			{
+				var doc = new XmlDocument();
+				doc.LoadXml(xml);
+
+				var xmlElements = doc.GetElementsByTagName(pNode).Cast<XmlElement>().ToArray();
+				Guard.Against<ACBrDFeException>(!xmlElements.Any(), "Nome do elemento de assinatura incorreto");
+
+				foreach (var element in xmlElements)
+				{
+					var signed = AssinarElemento(element.OuterXml, pUri, pNode, pCertificado, comments);
+					doc.ReplaceChild(signed, element);
+				}
+
+				return doc.AsString();
+			}
+			catch (Exception ex)
+			{
+				throw new ACBrDFeException("Erro ao efetuar assinatura digital.", ex);
+			}
+		}
+
+		private static XmlElement AssinarElemento(string elemento, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
+		{
+			var doc = new XmlDocument();
+			doc.LoadXml(elemento);
+
+			//Adiciona Certificado ao Key Info
+			var keyInfo = new KeyInfo();
+			keyInfo.AddClause(new KeyInfoX509Data(pCertificado));
+
+			//Seta chaves
+			var signedDocument = new SignedXml(doc)
+			{
+				SigningKey = pCertificado.PrivateKey,
+				KeyInfo = keyInfo
+			};
+
+			// Cria referencia
+			var reference = new Reference { Uri = pUri };
+
+			// Adiciona transformação a referencia
+			reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
+			reference.AddTransform(new XmlDsigC14NTransform(comments));
+
+			// Adiciona referencia ao xml
+			signedDocument.AddReference(reference);
+
+			// Calcula Assinatura
+			signedDocument.ComputeSignature();
+
+			// Pega representação da assinatura
+			var xmlDigitalSignature = signedDocument.GetXml();
+
+			// Adiciona ao doc XML
+			var xmlElement = doc.GetElementsByTagName(pNode).Cast<XmlElement>().FirstOrDefault();
+			Guard.Against<ACBrDFeException>(xmlElement == null, "Nome do elemento de assinatura incorreto");
+
+			var element = doc.ImportNode(xmlDigitalSignature, true);
+			xmlElement.AppendChild(element);
+
+			return doc.DocumentElement;
 		}
 
 		/// <summary>
@@ -130,24 +210,18 @@ namespace ACBr.Net.DFe.Core
 
 				X509Certificate2Collection certificadosSelecionados;
 
-				X509Certificate2 certificado;
 				if (cerSerie.IsEmpty())
 				{
 					certificadosSelecionados = X509Certificate2UI.SelectFromCollection(certificates, "Certificados Digitais",
 						"Selecione o Certificado Digital para uso no aplicativo", X509SelectionFlag.SingleSelection);
-					Guard.Against<ACBrDFeException>(certificadosSelecionados.Count == 0,
-						"Nenhum certificado digital foi selecionado ou o certificado selecionado está com problemas.");
-
-					certificado = certificadosSelecionados[0];
 				}
 				else
 				{
 					certificadosSelecionados = certificates.Find(X509FindType.FindBySerialNumber, cerSerie, true);
 					Guard.Against<ACBrDFeException>(certificadosSelecionados.Count == 0, "Certificado digital não encontrado");
-
-					certificado = certificadosSelecionados[0];
 				}
 
+				var certificado = certificadosSelecionados.Count < 1 ? null : certificadosSelecionados[0];
 				store.Close();
 				return certificado;
 			}
@@ -165,7 +239,7 @@ namespace ACBr.Net.DFe.Core
 		/// Exibi o certificado usando a ui nativa do windows.
 		/// </summary>
 		/// <param name="certificado"></param>
-		public static void ExbirCertificado(X509Certificate2 certificado)
+		public static void ExibirCertificado(this X509Certificate2 certificado)
 		{
 			Guard.Against<ArgumentNullException>(certificado == null, nameof(certificado));
 

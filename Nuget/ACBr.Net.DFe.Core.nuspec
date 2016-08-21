@@ -2,19 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>ACBr.Net.DFe.Core</id>
-        <version>1.0.1.2</version>
+        <version>1.0.1.3</version>
         <title>ACBr.Net.DFe.Core</title>
         <authors>Grupo ACBr.Net</authors>
         <owners>Grupo ACBr.Net</owners>
         <projectUrl>https://acbrnet.github.io</projectUrl>
         <iconUrl>https://avatars2.githubusercontent.com/u/7342977?v=3&amp;s=200</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Biblioteca para serialização e deserialização de xml usada pelos componentes ACBr.Net</description>
+        <description>Biblioteca para serialização e deserialização de xml e comunicação com os webservices</description>
         <copyright>Copyright © Grupo ACBr.Net 2014 - 2016</copyright>
         <language>pt-BR</language>
         <tags>ACBr ACBr.Net Automação Comercial</tags>
         <dependencies>
-            <dependency id="ACBr.Net.Core" version="1.0.1.1" />
+            <dependency id="ACBr.Net.Core" version="1.0.1.2" />
         </dependencies>
     </metadata>
     <files>

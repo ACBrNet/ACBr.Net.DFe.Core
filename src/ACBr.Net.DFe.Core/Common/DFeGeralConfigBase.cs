@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 06-07-2016
 // ***********************************************************************
-// <copyright file="DFeWebServicesBase.cs" company="ACBr.Net">
+// <copyright file="DFeGeralConfigBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,31 +29,37 @@
 // <summary></summary>
 // ***********************************************************************
 
+using ACBr.Net.Core.Extensions;
 using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 
 namespace ACBr.Net.DFe.Core.Common
 {
 	/// <summary>
-	/// Classe de configuração dos webservices
+	/// Class DFeGeralConfigBase. This class cannot be inherited.
 	/// </summary>
-	public abstract class DFeWebServicesBase
+	public abstract class DFeGeralConfigBase
 	{
 		#region Constructor
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeWebServicesBase"/> class.
+		/// Initializes a new instance of the <see cref="DFeGeralConfigBase"/> class.
 		/// </summary>
-		protected DFeWebServicesBase()
+		protected DFeGeralConfigBase()
 		{
-			Ambiente = TipoAmbiente.Homologacao;
-			Visualizar = false;
-			AjustaAguardaConsultaRet = false;
-			AguardarConsultaRet = 1;
-			Tentativas = 3;
-			ProxyHost = string.Empty;
-			ProxyPass = string.Empty;
-			ProxyPort = string.Empty;
-			ProxyUser = string.Empty;
+			Salvar = false;
+
+			var path = Path.GetDirectoryName(Assembly.GetCallingAssembly().CodeBase);
+			if (!path.IsEmpty())
+			{
+				PathSchemas = Path.Combine(path, "Schemas");
+				PathSalvar = Path.Combine(path, "Xml");
+			}
+
+			ExibirErroSchema = false;
+			RetirarAcentos = false;
+			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
 		}
 
 		#endregion Constructor
@@ -61,78 +67,48 @@ namespace ACBr.Net.DFe.Core.Common
 		#region Properties
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="DFeWebServicesBase"/> is visualizar.
+		/// Gets or sets a value indicating whether this <see cref="DFeGeralConfigBase"/> is salvar.
 		/// </summary>
-		/// <value><c>true</c> if visualizar; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if salvar; otherwise, <c>false</c>.</value>
 		[Browsable(true)]
 		[DefaultValue(false)]
-		public bool Visualizar { get; set; }
+		public bool Salvar { get; set; }
 
 		/// <summary>
-		/// Gets or sets the ambiente.
+		/// Gets or sets the path salvar.
 		/// </summary>
-		/// <value>The ambiente.</value>
+		/// <value>The path salvar.</value>
 		[Browsable(true)]
-		[DefaultValue(TipoAmbiente.Homologacao)]
-		public TipoAmbiente Ambiente { get; set; }
+		public string PathSalvar { get; set; }
 
 		/// <summary>
-		/// Gets the ambiente codigo.
+		/// Gets or sets the path schemas.
 		/// </summary>
-		/// <value>The ambiente codigo.</value>
+		/// <value>The path schemas.</value>
 		[Browsable(true)]
-		public int AmbienteCodigo => (int)Ambiente;
+		public string PathSchemas { get; set; }
 
 		/// <summary>
-		/// Gets or sets the proxy host.
+		/// Exibir Erros de validação do Schema
 		/// </summary>
-		/// <value>The proxy host.</value>
-		[Browsable(true)]
-		public string ProxyHost { get; set; }
-
-		/// <summary>
-		/// Gets or sets the proxy port.
-		/// </summary>
-		/// <value>The proxy port.</value>
-		[Browsable(true)]
-		public string ProxyPort { get; set; }
-
-		/// <summary>
-		/// Gets or sets the proxy user.
-		/// </summary>
-		/// <value>The proxy user.</value>
-		[Browsable(true)]
-		public string ProxyUser { get; set; }
-
-		/// <summary>
-		/// Gets or sets the proxy pass.
-		/// </summary>
-		/// <value>The proxy pass.</value>
-		[Browsable(true)]
-		public string ProxyPass { get; set; }
-
-		/// <summary>
-		/// Gets or sets the aguardar consulta ret.
-		/// </summary>
-		/// <value>The aguardar consulta ret.</value>
-		[Browsable(true)]
-		public uint AguardarConsultaRet { get; set; }
-
-		/// <summary>
-		/// Gets or sets the tentativas.
-		/// </summary>
-		/// <value>The tentativas.</value>
-		[Browsable(true)]
-		[DefaultValue(3)]
-		public int Tentativas { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether [ajusta aguarda consulta ret].
-		/// </summary>
-		/// <value><c>true</c> if [ajusta aguarda consulta ret]; otherwise, <c>false</c>.</value>
 		[Browsable(true)]
 		[DefaultValue(false)]
-		public bool AjustaAguardaConsultaRet { get; set; }
+		public bool ExibirErroSchema { get; set; }
+
+		/// <summary>
+		/// Formato do Alerta
+		/// Valor Padrão = TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.
+		/// </summary>
+		[Browsable(true)]
+		[DefaultValue("TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.")]
+		public string FormatoAlerta { get; set; }
+
+		/// <summary>
+		/// Retirar acentos do XML
+		/// </summary>
+		[Browsable(true)]
+		[DefaultValue(false)]
+		public bool RetirarAcentos { get; set; }
 
 		#endregion Properties
 	}
