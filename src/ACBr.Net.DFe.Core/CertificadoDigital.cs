@@ -133,7 +133,8 @@ namespace ACBr.Net.DFe.Core
 				foreach (var element in xmlElements)
 				{
 					var signed = AssinarElemento(element.OuterXml, pUri, pNode, pCertificado, comments);
-					doc.ReplaceChild(signed, element);
+					var signedElement = doc.ImportNode(signed, true);
+					element.ParentNode?.ReplaceChild(signedElement, element);
 				}
 
 				return doc.AsString();
@@ -183,7 +184,7 @@ namespace ACBr.Net.DFe.Core
 			var element = doc.ImportNode(xmlDigitalSignature, true);
 			xmlElement.AppendChild(element);
 
-			return doc.DocumentElement;
+			return xmlElement;
 		}
 
 		/// <summary>

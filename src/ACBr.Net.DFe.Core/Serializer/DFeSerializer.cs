@@ -159,10 +159,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		private XDocument Serialize(object item)
 		{
-			var xmldoc = new XDocument
-			{
-				Declaration = new XDeclaration("1.0", "UTF-8", null)
-			};
+			var xmldoc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
 			var rooTag = item.GetType().GetAttribute<DFeRootAttribute>();
 			var rootName = rooTag != null && !rooTag.Name.IsEmpty()
@@ -170,7 +167,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, Options);
 			xmldoc.Add(rootElement);
-			xmldoc.RemoveEmptyNamespace();
+			xmldoc.RemoveEmptyNs();
 			return xmldoc;
 		}
 
