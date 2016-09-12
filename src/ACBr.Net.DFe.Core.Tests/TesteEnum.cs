@@ -7,10 +7,10 @@ namespace ACBr.Net.DFe.Core.Tests
 		[DFeEnum("1")]
 		Value1,
 
-		[DFeEnum("1")]
+		[DFeEnum("2")]
 		Value2,
 
-		[DFeEnum("1")]
+		[DFeEnum("3")]
 		Value3
 	}
 }

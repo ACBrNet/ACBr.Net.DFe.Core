@@ -17,6 +17,8 @@ namespace ACBr.Net.DFe.Core.Tests
 				TestDate = DateTime.Now,
 				TestDecimal = 100000M,
 				TesteEnum = TesteEnum.Value3,
+				TesteEnum1 = TesteEnum.Value1,
+				TesteEnum2 = null,
 				TestNullInt = 999
 			};
 
@@ -78,7 +80,7 @@ namespace ACBr.Net.DFe.Core.Tests
 			Assert.True(xmlDocument.Root.FirstAttribute.Value == "01", "Erro ao serializar atributo id do root.");
 
 			var nodes = xmlDocument.Root.Nodes();
-			Assert.True(nodes.Count() == 12, "Erro ao serializar dados do xml.");
+			Assert.True(nodes.Count() == 14, "Erro ao serializar dados do xml.");
 		}
 	}
 }

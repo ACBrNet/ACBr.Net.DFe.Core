@@ -274,14 +274,12 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 				case TipoCampo.Dat:
 				case TipoCampo.DatCFe:
-					ret = DateTime.ParseExact(valor, tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd",
-						CultureInfo.InvariantCulture);
+					ret = DateTime.ParseExact(valor, tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd", CultureInfo.InvariantCulture);
 					break;
 
 				case TipoCampo.Hor:
 				case TipoCampo.HorCFe:
-					ret = DateTime.ParseExact(valor, tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss",
-						CultureInfo.InvariantCulture);
+					ret = DateTime.ParseExact(valor, tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss", CultureInfo.InvariantCulture);
 					break;
 
 				case TipoCampo.De2:
@@ -305,7 +303,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 						break;
 					}
 
-					ret = Enum.Parse(prop.PropertyType, value1.ToString());
+					var type = prop.PropertyType.IsGenericType ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+					ret = Enum.Parse(type, value1.ToString());
 					break;
 
 				case TipoCampo.Custom:

@@ -54,6 +54,12 @@ namespace ACBr.Net.DFe.Core.Tests
 		[DFeElement(TipoCampo.Enum, "TesteEnum", Min = 1, Max = 1, Ocorrencias = 1)]
 		public TesteEnum TesteEnum { get; set; }
 
+		[DFeElement(TipoCampo.Enum, "TesteEnum1", Min = 1, Max = 1, Ocorrencias = 1)]
+		public TesteEnum? TesteEnum1 { get; set; }
+
+		[DFeElement(TipoCampo.Enum, "TesteEnum2", Min = 1, Max = 1, Ocorrencias = 1)]
+		public TesteEnum? TesteEnum2 { get; set; }
+
 		public Signature Signature { get; set; }
 
 		private bool ShouldSerializeId()
