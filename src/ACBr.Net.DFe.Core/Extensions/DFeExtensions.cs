@@ -32,6 +32,7 @@
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Interfaces;
+using ExtraConstraints;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -80,12 +81,12 @@ namespace ACBr.Net.DFe.Core.Extensions
 					: prop.GetAttribute<DFeAttributeAttribute>();
 		}
 
-		internal static TDelegate ToDelegate<TDelegate>(this MethodInfo method) where TDelegate : class
+		internal static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method) where TDelegate : class
 		{
 			return Delegate.CreateDelegate(typeof(TDelegate), method) as TDelegate;
 		}
 
-		internal static TDelegate ToDelegate<TDelegate>(this MethodInfo method, object item) where TDelegate : class
+		internal static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
 		{
 			return Delegate.CreateDelegate(typeof(TDelegate), item, method) as TDelegate;
 		}

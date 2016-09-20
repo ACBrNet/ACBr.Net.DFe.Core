@@ -31,10 +31,27 @@
 
 using ACBr.Net.DFe.Core.Attributes;
 
-#pragma warning disable
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
 
 namespace ACBr.Net.DFe.Core.Common
 {
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(true)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	public enum TipoImpressao
 	{
 		[DFeEnum("0")]

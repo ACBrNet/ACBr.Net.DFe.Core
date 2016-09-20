@@ -29,12 +29,10 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Extensions;
 using ACBr.Net.Core.Generics;
 using ACBr.Net.DFe.Core.Serializer;
 using System.IO;
 using System.Text;
-using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Common
 {
@@ -71,31 +69,34 @@ namespace ACBr.Net.DFe.Core.Common
 		/// </summary>
 		/// <param name="options">The options.</param>
 		/// <returns>System.String.</returns>
-		public string GetXml(DFeOptions options = DFeOptions.None)
+		public string GetXml(DFeSaveOptions options = DFeSaveOptions.None)
 		{
 			using (var stream = new MemoryStream())
 			{
 				Save(stream, options);
-
-				var xml = XDocument.Load(stream);
-
-				return xml.AsString(!options.HasFlag(DFeOptions.DisableFormatting));
+				stream.Position = 0;
+				using (var streamReader = new StreamReader(stream))
+				{
+					return streamReader.ReadToEnd();
+				}
 			}
 		}
 
 		/// <summary>
 		/// Salva o documento.
 		/// </summary>
-		/// <param name="document">The document.</param>
+		/// <param name="path">The path.</param>
+		/// <param name="options">The options.</param>
 		/// <returns>TDocument.</returns>
-		public void Save(string path, DFeOptions options = DFeOptions.None)
+		public void Save(string path, DFeSaveOptions options = DFeSaveOptions.None)
 		{
 			var serializer = new DFeSerializer(typeof(TDocument));
 
-			if (!options.HasFlag(DFeOptions.None))
+			if (!options.HasFlag(DFeSaveOptions.None))
 			{
-				serializer.Options.RemoverAcentos = options.HasFlag(DFeOptions.RemoveAccents);
-				serializer.Options.FormatarXml = !options.HasFlag(DFeOptions.DisableFormatting);
+				serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
+				serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
+				serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
 			}
 
 			serializer.Serialize(this, path);
@@ -104,16 +105,18 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <summary>
 		/// Salva o documento.
 		/// </summary>
-		/// <param name="document">The document.</param>
+		/// <param name="stream">The stream.</param>
+		/// <param name="options">The options.</param>
 		/// <returns>TDocument.</returns>
-		public void Save(Stream stream, DFeOptions options = DFeOptions.None)
+		public void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None)
 		{
 			var serializer = new DFeSerializer(typeof(TDocument));
 
-			if (!options.HasFlag(DFeOptions.None))
+			if (!options.HasFlag(DFeSaveOptions.None))
 			{
-				serializer.Options.RemoverAcentos = options.HasFlag(DFeOptions.RemoveAccents);
-				serializer.Options.FormatarXml = !options.HasFlag(DFeOptions.DisableFormatting);
+				serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
+				serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
+				serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
 			}
 
 			serializer.Serialize(this, stream);

@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 09-11-2016
 // ***********************************************************************
-// <copyright file="DFeOptions.cs" company="ACBr.Net">
+// <copyright file="DFeSaveOptions.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -31,13 +31,33 @@
 
 using System;
 
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
+
 namespace ACBr.Net.DFe.Core.Common
 {
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(true)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	[Flags]
-	public enum DFeOptions
+	public enum DFeSaveOptions
 	{
 		None,
 		RemoveAccents,
-		DisableFormatting
+		DisableFormatting,
+		OmitDeclaration
 	}
 }

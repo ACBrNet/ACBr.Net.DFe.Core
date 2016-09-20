@@ -159,7 +159,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		private XDocument Serialize(object item)
 		{
-			var xmldoc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
+			var xmldoc = Options.OmitirDeclaracao ? new XDocument() : new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
 			var rooTag = item.GetType().GetAttribute<DFeRootAttribute>();
 			var rootName = rooTag != null && !rooTag.Name.IsEmpty()
@@ -182,8 +182,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <returns>System.Object.</returns>
 		public object Deserialize(string xml)
 		{
-			var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) :
-											  xml;
+			var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) : xml;
 			var xmlDoc = XDocument.Parse(content);
 			return Deserialize(xmlDoc);
 		}
@@ -195,9 +194,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <returns>System.Object.</returns>
 		public object Deserialize(Stream stream)
 		{
-			var reader = new StreamReader(stream, Options.Encoder);
-			var xmlDoc = XDocument.Parse(reader.ReadToEnd());
-			return Deserialize(xmlDoc);
+			using (var reader = new StreamReader(stream, Options.Encoder))
+			{
+				var xmlDoc = XDocument.Parse(reader.ReadToEnd());
+				return Deserialize(xmlDoc);
+			}
 		}
 
 		private object Deserialize(XDocument xmlDoc)
@@ -221,72 +222,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 		}
 
 		#endregion Deserialize
-
-		#endregion Methods
-	}
-
-	/// <summary>
-	/// Class DFeSerializer. This class cannot be inherited.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <seealso>
-	///     <cref>ACBr.Net.DFe.Core.Serializer.DFeSerializerBase</cref>
-	/// </seealso>
-	public sealed class DFeSerializer<T> : DFeSerializer where T : class
-	{
-		#region Constructors
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeSerializer{T}"/> class.
-		/// </summary>
-		internal DFeSerializer() : base(typeof(T))
-		{
-		}
-
-		#endregion Constructors
-
-		#region Methods
-
-		/// <summary>
-		/// Serializes the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="path">The xml.</param>
-		public bool Serialize(T item, string path)
-		{
-			return base.Serialize(item, path);
-		}
-
-		/// <summary>
-		/// Serializes the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="stream">The stream.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		public bool Serialize(T item, Stream stream)
-		{
-			return base.Serialize(item, stream);
-		}
-
-		/// <summary>
-		/// Deserializes the specified xml.
-		/// </summary>
-		/// <param name="path">The xml.</param>
-		/// <returns>T.</returns>
-		public new T Deserialize(string path)
-		{
-			return (T)base.Deserialize(path);
-		}
-
-		/// <summary>
-		/// Deserializes the specified xml.
-		/// </summary>
-		/// <param name="stream">The xml.</param>
-		/// <returns>T.</returns>
-		public new T Deserialize(Stream stream)
-		{
-			return (T)base.Deserialize(stream);
-		}
 
 		#endregion Methods
 	}

@@ -32,6 +32,16 @@
 using ACBr.Net.DFe.Core.Attributes;
 using System.ComponentModel;
 
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
+
 namespace ACBr.Net.DFe.Core.Common
 {
 	/// <summary>
@@ -39,6 +49,16 @@ namespace ACBr.Net.DFe.Core.Common
 	///     <para>1 - Produção</para>
 	///     <para>2 - Homologação</para>
 	/// </summary>
+
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(true)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	public enum TipoAmbiente
 	{
 		[DFeEnum("1")]

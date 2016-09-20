@@ -68,7 +68,7 @@ namespace ACBr.Net.DFe.Core.Tests
 
 			Assert.True(File.Exists("teste.xml"), "Erro ao serializar a classe");
 
-			var xmlDocument = XDocument.Load(File.Open("teste.xml", FileMode.Open));
+			var xmlDocument = XDocument.Load("teste.xml");
 			Assert.NotNull(xmlDocument);
 
 			Assert.NotNull(xmlDocument.Root);
