@@ -38,11 +38,27 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
+
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	/// <summary>
-	/// Class DFeSerializer.
-	/// </summary>
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(false)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	public class DFeSerializer
 	{
 		#region Fields

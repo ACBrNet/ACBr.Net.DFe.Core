@@ -34,11 +34,29 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
+
 namespace ACBr.Net.DFe.Core.Common
 {
-	/// <summary>
-	/// Class DFeGeralConfigBase. This class cannot be inherited.
-	/// </summary>
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(true)]
+	[Guid("622F92B9-DC70-4064-BD89-92380A8A8E27")]
+	[ClassInterface(ClassInterfaceType.AutoDual)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	public abstract class DFeGeralConfigBase
 	{
 		#region Constructor

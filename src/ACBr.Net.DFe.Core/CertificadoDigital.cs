@@ -40,11 +40,27 @@ using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Xml.Schema;
 
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
+
 namespace ACBr.Net.DFe.Core
 {
-	/// <summary>
-	/// Classe CertificadoDigital.
-	/// </summary>
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(false)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	public static class CertificadoDigital
 	{
 		#region Methods
@@ -311,7 +327,7 @@ namespace ACBr.Net.DFe.Core
 					}
 
 					// Erro na validação do schema XSD
-					if ((args.Exception != null))
+					if (args.Exception != null)
 					{
 						// ReSharper disable once AccessToModifiedClosure
 						errorList.Add("\nErro: " + args.Exception.Message + "\nLinha " + args.Exception.LinePosition + " - Coluna "

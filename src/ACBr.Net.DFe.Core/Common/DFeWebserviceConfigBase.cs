@@ -31,11 +31,29 @@
 
 using System.ComponentModel;
 
+#region COM Interop Attributes
+
+#if COM_INTEROP
+
+using System.Runtime.InteropServices;
+
+#endif
+
+#endregion COM Interop Attributes
+
 namespace ACBr.Net.DFe.Core.Common
 {
-	/// <summary>
-	/// Classe de configuração dos webservices
-	/// </summary>
+	#region COM Interop Attributes
+
+#if COM_INTEROP
+
+	[ComVisible(true)]
+	[Guid("360300AF-DB44-4150-8BED-A7CE4F997DFA")]
+	[ClassInterface(ClassInterfaceType.AutoDual)]
+#endif
+
+	#endregion COM Interop Attributes
+
 	public abstract class DFeWebserviceConfigBase
 	{
 		#region Constructor
