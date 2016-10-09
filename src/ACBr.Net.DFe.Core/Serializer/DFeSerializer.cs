@@ -183,7 +183,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, Options);
 			xmldoc.Add(rootElement);
-			xmldoc.RemoveEmptyNs();
+			xmldoc.Root.RemoveEmptyNs();
 			return xmldoc;
 		}
 
