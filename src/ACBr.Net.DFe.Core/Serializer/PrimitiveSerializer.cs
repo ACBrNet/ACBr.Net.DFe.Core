@@ -256,8 +256,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		private static object GetValue(TipoCampo tipo, string valor, object item, PropertyInfo prop)
 		{
-			if (valor.IsEmpty())
-				return null;
+			if (valor.IsEmpty()) return null;
 
 			object ret;
 			// ReSharper disable once SwitchStatementMissingSomeCases

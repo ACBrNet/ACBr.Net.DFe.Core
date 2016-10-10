@@ -10,20 +10,20 @@
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
-//	 Permission is hereby granted, free of charge, to any person obtaining 
-// a copy of this software and associated documentation files (the "Software"), 
-// to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-// and/or sell copies of the Software, and to permit persons to whom the 
+//	 Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following conditions:
-//	 The above copyright notice and this permission notice shall be 
+//	 The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+//	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // </copyright>
 // <summary></summary>
@@ -31,17 +31,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using ACBr.Net.Core.Generics;
 
 namespace ACBr.Net.DFe.Core.Collection
 {
-    /// <summary>
-    /// Classe GenericNFeCollection.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class DFeCollection<T> : GenericCollection<T> where T : class
-    {
+	/// <summary>
+	/// Classe GenericNFeCollection.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public class DFeCollection<T> : List<T> where T : class
+	{
 		#region Constructors
 
 		/// <summary>
@@ -56,9 +54,9 @@ namespace ACBr.Net.DFe.Core.Collection
 		/// </summary>
 		/// <param name="source">The source.</param>
 		public DFeCollection(IEnumerable<T> source)
-	    {
-		    List = source.ToList();
-	    }
+		{
+			AddRange(source);
+		}
 
 		#endregion Constructors
 
@@ -69,52 +67,42 @@ namespace ACBr.Net.DFe.Core.Collection
 		/// </summary>
 		/// <returns>T.</returns>
 		public virtual T AddNew()
-        {
-            var item = (T)Activator.CreateInstance(typeof (T), true);
-            List.Add(item);
-            return item;
-        }
+		{
+			var item = (T)Activator.CreateInstance(typeof(T), true);
+			base.Add(item);
+			return item;
+		}
 
 		/// <summary>
 		/// Adds the range.
 		/// </summary>
 		/// <param name="item">The item.</param>
-		public virtual void Add(T item)
+		public new virtual void Add(T item)
 		{
-			List.Add(item);
+			base.Add(item);
 		}
 
 		/// <summary>
 		/// Adds the range.
 		/// </summary>
 		/// <param name="itens">The itens.</param>
-		public virtual void AddRange(IEnumerable<T> itens)
-	    {
-		    List.AddRange(itens);
-	    }
+		public new virtual void AddRange(IEnumerable<T> itens)
+		{
+			base.AddRange(itens);
+		}
 
 		#endregion Methods
 
 		#region Operators
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="List{T}"/> to <see cref="DFeCollection{T}"/>.
-		/// </summary>
-		/// <param name="source">The source.</param>
-		/// <returns>The result of the conversion.</returns>
-		public static implicit operator DFeCollection<T>(List<T> source)
-	    {
-		    return new DFeCollection<T>(source);
-	    }
-
-		/// <summary>
 		/// Performs an implicit conversion from <see cref="DFeCollection{T}"/> to <see cref="List{T}"/>.
 		/// </summary>
 		/// <param name="source">The source.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static implicit operator List<T>(DFeCollection<T> source)
+		public static implicit operator DFeCollection<T>(T[] source)
 		{
-			return source.List;
+			return new DFeCollection<T>(source);
 		}
 
 		#endregion Operators

@@ -76,11 +76,26 @@ namespace ACBr.Net.DFe.Core.Tests
 
 			Assert.True(xmlDocument.Root.HasAttributes, "Erro ao serializar atributos do root.");
 			Assert.True(xmlDocument.Root.Attributes().Count() == 1, "Erro ao serializar atributos do root.");
-			Assert.True(xmlDocument.Root.FirstAttribute.Name == "id", "Erro ao serializar atributo id do root.");
-			Assert.True(xmlDocument.Root.FirstAttribute.Value == "01", "Erro ao serializar atributo id do root.");
+			Assert.True(xmlDocument.Root.FirstAttribute.Name == "id", "Erro ao serializar atributo id do root. Atributo com nome errado!");
+			Assert.True(xmlDocument.Root.FirstAttribute.Value == "01", "Erro ao serializar atributo id do root. Valor incorreto!");
 
 			var nodes = xmlDocument.Root.Nodes();
 			Assert.True(nodes.Count() == 14, "Erro ao serializar dados do xml.");
+
+			File.Delete("teste.xml");
+		}
+
+		[Fact]
+		public void TestDeserializer()
+		{
+			var xml = GenerateXml();
+
+			var serializer = DFeSerializer.CreateSerializer<TesteXml>();
+			serializer.Serialize(xml, "teste.xml");
+
+			var item = serializer.Deserialize("teste.xml");
+
+			File.Delete("teste.xml");
 		}
 	}
 }

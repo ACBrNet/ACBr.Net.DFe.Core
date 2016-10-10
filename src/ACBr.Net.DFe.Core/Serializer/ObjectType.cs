@@ -59,18 +59,13 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		public static ObjectType From(Type type)
 		{
-			if (IsPrimitive(type))
-				return Primitive;
-			if (IsDictionary(type))
-				return Dictionary;
-			if (IsList(type))
-				return List;
-			if (IsInterfaceObject(type))
-				return InterfaceObject;
-			if (IsRootObject(type))
-				return RootObject;
+			if (IsPrimitive(type)) return Primitive;
+			if (IsInterfaceObject(type)) return InterfaceObject;
+			if (IsRootObject(type)) return RootObject;
+			if (IsDFeList(type)) return DFeList;
+			if (IsDictionary(type)) return Dictionary;
 
-			return IsDFeList(type) ? DFeList : ClassObject;
+			return IsList(type) ? List : ClassObject;
 		}
 
 		private int Id { get; }
@@ -95,11 +90,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 			return Id.GetHashCode();
 		}
 
-		/// <summary>
-		/// Checks if the type is a fundamental primitive object (e.g string, int etc.).
-		/// </summary>
-		/// <param name="type">The type to check.</param>
-		/// <returns>The boolean value indicating whether the type is a fundamental primitive.</returns>
 		private static bool IsPrimitive(Type type)
 		{
 			return type == typeof(string)
@@ -135,26 +125,17 @@ namespace ACBr.Net.DFe.Core.Serializer
 				   || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && type.GetGenericArguments()[0].IsEnum);
 		}
 
-		/// <summary>
-		/// Determines whether the specified type is list.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns><c>true</c> if the specified type is list; otherwise, <c>false</c>.</returns>
 		private static bool IsList(Type type)
 		{
-			return typeof(ICollection).IsAssignableFrom(type) ||
-				(type.BaseType != null && typeof(ICollection).IsAssignableFrom(type.BaseType));
+			return (typeof(ICollection).IsAssignableFrom(type) ||
+				(type.BaseType != null && typeof(ICollection).IsAssignableFrom(type.BaseType))) &&
+				!IsDFeList(type);
 		}
 
-		/// <summary>
-		/// Determines whether [is d fe list] [the specified type].
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns><c>true</c> if [is d fe list] [the specified type]; otherwise, <c>false</c>.</returns>
 		private static bool IsDFeList(Type type)
 		{
 			return (type.IsGenericType && typeof(DFeCollection<>).IsAssignableFrom(type.GetGenericTypeDefinition())) ||
-					(type.BaseType != null && type.BaseType.IsGenericType && typeof(DFeCollection<>).IsAssignableFrom(type.BaseType.GetGenericTypeDefinition()));
+				   (type.BaseType != null && type.BaseType.IsGenericType && typeof(DFeCollection<>).IsAssignableFrom(type.BaseType.GetGenericTypeDefinition()));
 		}
 
 		private static bool IsInterfaceObject(Type type)
@@ -167,11 +148,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 			return type.HasAttribute<DFeRootAttribute>();
 		}
 
-		/// <summary>
-		/// Determines whether the specified type is dictionary.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns><c>true</c> if the specified type is dictionary; otherwise, <c>false</c>.</returns>
 		public static bool IsDictionary(Type type)
 		{
 			return typeof(IDictionary).IsAssignableFrom(type);
