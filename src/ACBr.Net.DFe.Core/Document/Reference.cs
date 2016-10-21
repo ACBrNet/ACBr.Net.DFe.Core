@@ -32,28 +32,8 @@ using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Collection;
 using ACBr.Net.DFe.Core.Serializer;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("E40A69B2-C407-410B-ABEE-0B421F3B601A")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public class Reference
 	{
 		#region Constructors
@@ -75,7 +55,7 @@ namespace ACBr.Net.DFe.Core.Document
 		/// XS08 - Atributo URI da tag Reference
 		/// </summary>
 		/// <value>The URI.</value>
-		[DFeAttribute(TipoCampo.Str, "URI", Id = "XS08", Min = 0, Max = 999, Ocorrencias = 1)]
+		[DFeAttribute(TipoCampo.Str, "URI", Id = "XS08", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string URI { get; set; }
 
 		/// <summary>
@@ -97,7 +77,7 @@ namespace ACBr.Net.DFe.Core.Document
 		/// XS17 - Digest Value (Hash SHA-1 – Base64)
 		/// </summary>
 		/// <value>The digest value.</value>
-		[DFeElement(TipoCampo.Str, "DigestValue", Id = "XS17", Min = 0, Max = 999, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.Str, "DigestValue", Id = "XS17", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string DigestValue { get; set; }
 
 		#endregion Propriedades

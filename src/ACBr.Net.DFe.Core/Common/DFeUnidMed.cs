@@ -1,12 +1,12 @@
-ï»¿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 05-07-2016
+// Created          : 10-16-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 05-07-2016
+// Last Modified On : 10-16-2016
 // ***********************************************************************
-// <copyright file="SignatureMethod.cs" company="ACBr.Net">
+// <copyright file="DFeUnidMed.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -25,23 +25,39 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
-// DEALINGS IN THE SOFTWARE.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
 
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Serializer;
+using System.ComponentModel;
 
-namespace ACBr.Net.DFe.Core.Document
+namespace ACBr.Net.DFe.Core.Common
 {
-	public class SignatureMethod
+	public enum DFeUnidMed
 	{
-		/// <summary>
-		/// XS06 - Atributo Algorithm de SignatureMethod: http://www.w3.org/2000/09/xmldsig#rsa-sha1
-		/// </summary>
-		/// <value>The algorithm.</value>
-		[DFeAttribute(TipoCampo.Str, "Algorithm", Id = "XS06", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
-		public string Algorithm { get; set; }
+		[DFeEnum("00")]
+		[Description("Metro cúbico")]
+		M3,
+
+		[DFeEnum("01")]
+		[Description("Kilograma")]
+		Kg,
+
+		[DFeEnum("02")]
+		[Description("Tonelada")]
+		Ton,
+
+		[DFeEnum("03")]
+		[Description("Unidade")]
+		Unidade,
+
+		[DFeEnum("04")]
+		[Description("Litro")]
+		Litros,
+
+		[DFeEnum("05")]
+		[Description("Unidade Térmicas Britânica")]
+		Mmbtu
 	}
 }

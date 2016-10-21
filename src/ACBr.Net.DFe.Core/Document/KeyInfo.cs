@@ -31,28 +31,8 @@
 
 using ACBr.Net.DFe.Core.Attributes;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("4271E67A-D59F-4720-95C5-0802F22D3699")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public class KeyInfo
 	{
 		#region Constructors

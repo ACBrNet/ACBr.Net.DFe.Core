@@ -28,6 +28,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
@@ -54,21 +55,48 @@ namespace ACBr.Net.DFe.Core.Serializer
 		public static XObject[] Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
 		{
 			var tag = prop.GetAttribute<DFeElementAttribute>();
-			var values = ((IEnumerable<object>)prop.GetValue(parentObject, null) ?? new object[0]).ToArray();
-			if (values.Length == 0 && tag.Min == 0 && tag.Ocorrencias == 0)
-				return null;
+			var list = (IList)prop.GetValue(parentObject, null);
+			var values = new ArrayList();
+			if (list != null)
+			{
+				values.AddRange(list);
+			}
 
-			if (values.Length < tag.Min || values.Length > tag.Max)
-				options.WAlerta(tag.Id, tag.Name, tag.Descricao,
-					values.Length > tag.Max ? SerializerOptions.ErrMsgMaiorMaximo : SerializerOptions.ErrMsgMenorMinimo);
+			if (values.Count == 0 && tag.Min == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
+
+			if (values.Count < tag.Min || values.Count > tag.Max)
+			{
+				var msg = values.Count > tag.Max ? SerializerOptions.ErrMsgMaiorMaximo : SerializerOptions.ErrMsgMenorMinimo;
+				options.WAlerta(tag.Id, tag.Name, tag.Descricao, msg);
+			}
 
 			if (!prop.HasAttribute<DFeItemAttribute>())
-				return values.Select(value => ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
+			{
+				var elements = new List<XObject>();
+				foreach (var value in values)
+				{
+					var element = ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options);
+					elements.Add(element);
+				}
+				return elements.ToArray();
+			}
+
+			var itemTags = prop.GetAttributes<DFeItemAttribute>();
+
+			if (itemTags.Length == 1 && itemTags[0].Single)
+			{
+				var retElements = new List<XObject>();
+				for (var i = 0; i < values.Count; i++)
+				{
+					var ret = PrimitiveSerializer.Serialize(tag, parentObject, prop, options, i);
+					retElements.Add(ret);
+				}
+				return retElements.ToArray();
+			}
 
 			var arrayElement = new XElement(tag.Name);
 			foreach (var value in values)
 			{
-				var itemTags = prop.GetAttributes<DFeItemAttribute>();
 				var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType()) ?? itemTags[0];
 				var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, options);
 				arrayElement.AddChild(childElement);
@@ -87,27 +115,39 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <param name="type">The type of the list to deserialize.</param>
 		/// <param name="parent">The parent.</param>
 		/// <param name="prop">The property.</param>
+		/// <param name="parentItem"></param>
 		/// <param name="options">Indicates how the output is deserialized.</param>
 		/// <returns>The deserialized list from the XElement.</returns>
 		/// <exception cref="System.InvalidOperationException">Could not deserialize this non generic dictionary without more type information.</exception>
 		/// Deserializes the XElement to the list (e.g. List<T />, Array of a specified type using options.
-		public static object Deserialize(Type type, XElement[] parent, PropertyInfo prop, SerializerOptions options)
+		public static object Deserialize(Type type, XElement[] parent, PropertyInfo prop, object parentItem, SerializerOptions options)
 		{
-			var listItemType = type.IsArray ? type.GetElementType() :
-				type.GetGenericArguments().Any() ? type.GetGenericArguments()[0] : type.BaseType?.GetGenericArguments()[0];
+			var listItemType = GetListType(type);
 
-			var listType = typeof(List<>).MakeGenericType(listItemType);
-			var list = (IList)Activator.CreateInstance(listType);
+			var list = (IList)Activator.CreateInstance(type);
 
 			var elements = parent.Length > 1 ? parent : parent.Elements();
 			if (prop.HasAttribute<DFeItemAttribute>())
 			{
 				var itemTags = prop.GetAttributes<DFeItemAttribute>();
-				foreach (var element in elements)
+
+				if (itemTags.Length == 1 && itemTags[0].Single)
 				{
-					var itemTag = itemTags.SingleOrDefault(x => x.Name == element.Name) ?? itemTags[0];
-					var obj = ObjectSerializer.Deserialize(itemTag.Tipo, element, options);
-					list.Add(obj);
+					foreach (var element in elements)
+					{
+						var elementAtt = prop.GetAttribute<DFeElementAttribute>();
+						var obj = PrimitiveSerializer.Deserialize(elementAtt, element, parentItem, prop, options);
+						list.Add(obj);
+					}
+				}
+				else
+				{
+					foreach (var element in elements)
+					{
+						var itemTag = itemTags.SingleOrDefault(x => x.Name == element.Name) ?? itemTags[0];
+						var obj = ObjectSerializer.Deserialize(itemTag.Tipo, element, options);
+						list.Add(obj);
+					}
 				}
 			}
 			else
@@ -120,6 +160,14 @@ namespace ACBr.Net.DFe.Core.Serializer
 			}
 
 			return list;
+		}
+
+		private static Type GetListType(Type type)
+		{
+			var listItemType = typeof(ArrayList).IsAssignableFrom(type) || type.IsArray ? typeof(ArrayList) :
+							   type.GetGenericArguments().Any() ? type.GetGenericArguments()[0] : type.BaseType?.GetGenericArguments()[0];
+
+			return listItemType;
 		}
 
 		#endregion Deserialize

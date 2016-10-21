@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 05-07-2016
 // ***********************************************************************
-// <copyright file="Signature.cs" company="ACBr.Net">
+// <copyright file="DFeSignature.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -32,37 +32,17 @@
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("6E9D1AFD-67D5-4BD5-B026-AE752A127CD7")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	[DFeRoot("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
-	public class Signature
+	public class DFeSignature
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Signature"/> class.
+		/// Initializes a new instance of the <see cref="DFeSignature"/> class.
 		/// </summary>
-		public Signature()
+		public DFeSignature()
 		{
 			SignedInfo = new SignedInfo();
 			KeyInfo = new KeyInfo();
@@ -83,7 +63,7 @@ namespace ACBr.Net.DFe.Core.Document
 		/// XS18 - Grupo do Signature Value
 		/// </summary>
 		/// <value>The signature value.</value>
-		[DFeElement(TipoCampo.Str, "SignatureValue", Id = "XS18", Min = 0, Max = 999, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.Str, "SignatureValue", Id = "XS18", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string SignatureValue { get; set; }
 
 		/// <summary>

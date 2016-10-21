@@ -40,27 +40,8 @@ using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Xml.Schema;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(false)]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public static class CertificadoDigital
 	{
 		#region Methods

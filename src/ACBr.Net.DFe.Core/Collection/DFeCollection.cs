@@ -4,7 +4,7 @@
 // Created          : 07-26-2014
 //
 // Last Modified By : RFTD
-// Last Modified On : 10-08-2014
+// Last Modified On : 10-21-2016
 // ***********************************************************************
 // <copyright file="GenericNFeCollection.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -37,8 +37,9 @@ namespace ACBr.Net.DFe.Core.Collection
 	/// <summary>
 	/// Classe GenericNFeCollection.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public class DFeCollection<T> : List<T> where T : class
+	/// <typeparam name="TTipo"></typeparam>
+	[Serializable]
+	public class DFeCollection<TTipo> : List<TTipo>
 	{
 		#region Constructors
 
@@ -53,7 +54,7 @@ namespace ACBr.Net.DFe.Core.Collection
 		/// Initializes a new instance of the <see cref="DFeCollection{T}"/> class.
 		/// </summary>
 		/// <param name="source">The source.</param>
-		public DFeCollection(IEnumerable<T> source)
+		public DFeCollection(IEnumerable<TTipo> source)
 		{
 			AddRange(source);
 		}
@@ -66,9 +67,9 @@ namespace ACBr.Net.DFe.Core.Collection
 		/// Adiciona novo item na coleção e retorna  item criado
 		/// </summary>
 		/// <returns>T.</returns>
-		public virtual T AddNew()
+		public virtual TTipo AddNew()
 		{
-			var item = (T)Activator.CreateInstance(typeof(T), true);
+			var item = (TTipo)Activator.CreateInstance(typeof(TTipo), true);
 			base.Add(item);
 			return item;
 		}
@@ -77,7 +78,7 @@ namespace ACBr.Net.DFe.Core.Collection
 		/// Adds the range.
 		/// </summary>
 		/// <param name="item">The item.</param>
-		public new virtual void Add(T item)
+		public new virtual void Add(TTipo item)
 		{
 			base.Add(item);
 		}
@@ -86,7 +87,7 @@ namespace ACBr.Net.DFe.Core.Collection
 		/// Adds the range.
 		/// </summary>
 		/// <param name="itens">The itens.</param>
-		public new virtual void AddRange(IEnumerable<T> itens)
+		public new virtual void AddRange(IEnumerable<TTipo> itens)
 		{
 			base.AddRange(itens);
 		}
@@ -96,13 +97,13 @@ namespace ACBr.Net.DFe.Core.Collection
 		#region Operators
 
 		/// <summary>
-		/// Performs an implicit conversion from <see cref="DFeCollection{T}"/> to <see cref="List{T}"/>.
+		/// Performs an implicit conversion from <see cref="TTipo[]"/> to <see cref="DFeCollection{TTipo}"/>.
 		/// </summary>
 		/// <param name="source">The source.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static implicit operator DFeCollection<T>(T[] source)
+		public static implicit operator DFeCollection<TTipo>(TTipo[] source)
 		{
-			return new DFeCollection<T>(source);
+			return new DFeCollection<TTipo>(source);
 		}
 
 		#endregion Operators

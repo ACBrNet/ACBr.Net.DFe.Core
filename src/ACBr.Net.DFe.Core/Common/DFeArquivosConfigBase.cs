@@ -29,29 +29,8 @@
 // <summary></summary>
 // ***********************************************************************
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Common
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("86CAA3FF-19F2-401E-9028-EB3749C5AB5E")]
-	[ClassInterface(ClassInterfaceType.AutoDual)]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public abstract class DFeArquivosConfigBase
 	{
 		#region Properties

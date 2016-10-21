@@ -34,6 +34,7 @@ using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using ACBr.Net.DFe.Core.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -85,13 +86,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 				var properties = tipo.GetProperties();
 				foreach (var prop in properties)
 				{
-					if (prop.ShouldIgnoreProperty() ||
-						!prop.ShouldSerializeProperty(value))
-						continue;
+					if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
 
 					var elements = Serialize(prop, value, options);
-					if (elements == null)
-						continue;
+					if (elements == null) continue;
 
 					foreach (var element in elements)
 					{
@@ -124,35 +122,33 @@ namespace ACBr.Net.DFe.Core.Serializer
 		{
 			try
 			{
-				var value = prop.GetValue(parentObject, null);
 				var objectType = ObjectType.From(prop.PropertyType);
 
-				if (objectType == ObjectType.Dictionary)
-					throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
+				if (objectType == ObjectType.DictionaryType) throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
 
-				if (objectType == ObjectType.List)
-					return ListSerializer.Serialize(prop, parentObject, options);
-
-				if (objectType == ObjectType.DFeList)
-					return DFeListSerializer.Serialize(prop, parentObject, options);
-
-				if (objectType == ObjectType.InterfaceObject)
+				if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
 				{
-					if (value == null)
-						return null;
+					return ListSerializer.Serialize(prop, parentObject, options);
+				}
+
+				var value = prop.GetValue(parentObject, null);
+
+				if (objectType == ObjectType.InterfaceType)
+				{
+					if (value == null) return null;
 
 					var attributes = prop.GetAttributes<DFeItemAttribute>();
 					var attribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType()) ?? attributes[0];
 					return new XObject[] { Serialize(value, value.GetType(), attribute.Name, options) };
 				}
 
-				if (objectType == ObjectType.ClassObject)
+				if (objectType == ObjectType.ClassType)
 				{
 					var attribute = prop.GetAttribute<DFeElementAttribute>();
 					return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
 				}
 
-				if (objectType == ObjectType.RootObject)
+				if (objectType == ObjectType.RootType)
 				{
 					var attribute = prop.PropertyType.GetAttribute<DFeRootAttribute>();
 					var rootElement = Serialize(value, prop.PropertyType, attribute.Name, options);
@@ -229,22 +225,23 @@ namespace ACBr.Net.DFe.Core.Serializer
 					: prop.GetAttribute<DFeAttributeAttribute>();
 
 				var objectType = ObjectType.From(prop.PropertyType);
-				if (objectType == ObjectType.Dictionary)
-					throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
+				if (objectType == ObjectType.DictionaryType) throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
 
-				if (objectType == ObjectType.List)
+				if (objectType.IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
 				{
 					var listElement = parentElement.ElementsAnyNs(tag.Name);
-					return ListSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, options);
+					var list = (ArrayList)ListSerializer.Deserialize(typeof(ArrayList), listElement.ToArray(), prop, item, options);
+					var type = prop.PropertyType.IsArray ? prop.PropertyType.GetElementType() : prop.PropertyType.GetGenericArguments()[0];
+					return objectType == ObjectType.ArrayType ? list.ToArray(type) : list.Cast(type);
 				}
 
-				if (objectType == ObjectType.DFeList)
+				if (objectType == ObjectType.ListType)
 				{
 					var listElement = parentElement.ElementsAnyNs(tag.Name);
-					return DFeListSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, options);
+					return ListSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, item, options);
 				}
 
-				if (objectType == ObjectType.InterfaceObject)
+				if (objectType == ObjectType.InterfaceType)
 				{
 					var tags = prop.GetAttributes<DFeItemAttribute>();
 					foreach (var att in tags)
@@ -257,14 +254,14 @@ namespace ACBr.Net.DFe.Core.Serializer
 					}
 				}
 
-				if (objectType == ObjectType.RootObject)
+				if (objectType == ObjectType.RootType)
 				{
 					var rootTag = prop.PropertyType.GetAttribute<DFeRootAttribute>();
 					var xElement = parentElement.ElementsAnyNs(rootTag.Name).FirstOrDefault();
 					return Deserialize(prop.PropertyType, xElement, options);
 				}
 
-				if (objectType == ObjectType.ClassObject)
+				if (objectType == ObjectType.ClassType)
 				{
 					var xElement = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
 					return Deserialize(prop.PropertyType, xElement, options);

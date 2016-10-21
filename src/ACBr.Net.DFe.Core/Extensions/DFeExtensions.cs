@@ -34,6 +34,7 @@ using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Interfaces;
 using ExtraConstraints;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -106,6 +107,17 @@ namespace ACBr.Net.DFe.Core.Extensions
 			return method.ToDelegate<Func<string, object>>(item);
 		}
 
+		internal static object GetValueOrIndex(this PropertyInfo prop, object parent, int index)
+		{
+			var value = prop.GetValue(parent, null);
+			if (index > -1)
+			{
+				value = ((IList)value)[index];
+			}
+
+			return value;
+		}
+
 		internal static Func<object> GetCreate(this Type tipo)
 		{
 			var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
@@ -141,6 +153,18 @@ namespace ACBr.Net.DFe.Core.Extensions
 				return (bool)shouldSerialize.Invoke(item, null);
 
 			return true;
+		}
+
+		internal static IEnumerable Cast(this IEnumerable lista, Type tipo)
+		{
+			var method = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(tipo);
+			return (IEnumerable)method.Invoke(null, new object[] { lista });
+		}
+
+		internal static object[] ToArray(this IEnumerable lista, Type tipo)
+		{
+			var method = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(tipo);
+			return (object[])method.Invoke(null, new object[] { lista });
 		}
 	}
 }

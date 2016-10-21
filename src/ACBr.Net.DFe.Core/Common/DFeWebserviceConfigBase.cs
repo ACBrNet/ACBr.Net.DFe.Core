@@ -31,29 +31,8 @@
 
 using System.ComponentModel;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Common
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("360300AF-DB44-4150-8BED-A7CE4F997DFA")]
-	[ClassInterface(ClassInterfaceType.AutoDual)]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public abstract class DFeWebserviceConfigBase
 	{
 		#region Constructor
@@ -63,7 +42,7 @@ namespace ACBr.Net.DFe.Core.Common
 		/// </summary>
 		protected DFeWebserviceConfigBase()
 		{
-			Ambiente = TipoAmbiente.Homologacao;
+			Ambiente = DFeTipoAmbiente.Homologacao;
 			Visualizar = false;
 			AjustaAguardaConsultaRet = false;
 			AguardarConsultaRet = 1;
@@ -91,8 +70,8 @@ namespace ACBr.Net.DFe.Core.Common
 		/// </summary>
 		/// <value>The ambiente.</value>
 		[Browsable(true)]
-		[DefaultValue(TipoAmbiente.Homologacao)]
-		public TipoAmbiente Ambiente { get; set; }
+		[DefaultValue(DFeTipoAmbiente.Homologacao)]
+		public DFeTipoAmbiente Ambiente { get; set; }
 
 		/// <summary>
 		/// Gets the ambiente codigo.

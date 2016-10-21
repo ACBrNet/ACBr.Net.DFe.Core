@@ -31,27 +31,8 @@
 
 using System;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Common
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-#endif
-
-	#endregion COM Interop Attributes
-
 	[Flags]
 	public enum DFeSaveOptions
 	{

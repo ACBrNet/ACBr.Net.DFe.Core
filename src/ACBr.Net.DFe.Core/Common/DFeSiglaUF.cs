@@ -1,12 +1,12 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 05-07-2016
+// Created          : 01-31-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 05-07-2016
+// Last Modified On : 06-07-2016
 // ***********************************************************************
-// <copyright file="SignatureMethod.cs" company="ACBr.Net">
+// <copyright file="DFeSiglaUF.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -25,23 +25,98 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
-// DEALINGS IN THE SOFTWARE.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
 
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Serializer;
 
-namespace ACBr.Net.DFe.Core.Document
+namespace ACBr.Net.DFe.Core.Common
 {
-	public class SignatureMethod
+	public enum DFeSiglaUF
 	{
-		/// <summary>
-		/// XS06 - Atributo Algorithm de SignatureMethod: http://www.w3.org/2000/09/xmldsig#rsa-sha1
-		/// </summary>
-		/// <value>The algorithm.</value>
-		[DFeAttribute(TipoCampo.Str, "Algorithm", Id = "XS06", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
-		public string Algorithm { get; set; }
+		[DFeEnum("AC")]
+		AC,
+
+		[DFeEnum("AL")]
+		AL,
+
+		[DFeEnum("AM")]
+		AM,
+
+		[DFeEnum("AP")]
+		AP,
+
+		[DFeEnum("BA")]
+		BA,
+
+		[DFeEnum("CE")]
+		CE,
+
+		[DFeEnum("DF")]
+		DF,
+
+		[DFeEnum("ES")]
+		ES,
+
+		[DFeEnum("GO")]
+		GO,
+
+		[DFeEnum("MA")]
+		MA,
+
+		[DFeEnum("MG")]
+		MG,
+
+		[DFeEnum("MS")]
+		MS,
+
+		[DFeEnum("MT")]
+		MT,
+
+		[DFeEnum("PA")]
+		PA,
+
+		[DFeEnum("PB")]
+		PB,
+
+		[DFeEnum("PE")]
+		PE,
+
+		[DFeEnum("PI")]
+		PI,
+
+		[DFeEnum("PR")]
+		PR,
+
+		[DFeEnum("RJ")]
+		RJ,
+
+		[DFeEnum("RN")]
+		RN,
+
+		[DFeEnum("RO")]
+		RO,
+
+		[DFeEnum("RR")]
+		RR,
+
+		[DFeEnum("RS")]
+		RS,
+
+		[DFeEnum("SC")]
+		SC,
+
+		[DFeEnum("SE")]
+		SE,
+
+		[DFeEnum("SP")]
+		SP,
+
+		[DFeEnum("TO")]
+		TO,
+
+		[DFeEnum("EX")]
+		EX
 	}
 }

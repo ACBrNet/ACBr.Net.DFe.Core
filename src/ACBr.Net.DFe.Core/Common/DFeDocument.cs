@@ -34,27 +34,8 @@ using ACBr.Net.DFe.Core.Serializer;
 using System.IO;
 using System.Text;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Common
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(false)]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public abstract class DFeDocument<TDocument> : GenericClone<TDocument> where TDocument : class
 	{
 		/// <summary>

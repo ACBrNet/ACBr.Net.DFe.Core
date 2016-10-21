@@ -28,6 +28,8 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
 namespace ACBr.Net.DFe.Core.Interfaces
@@ -71,7 +73,7 @@ namespace ACBr.Net.DFe.Core.Interfaces
 		/// Gets or sets the ocorrencias.
 		/// </summary>
 		/// <value>The ocorrencias.</value>
-		int Ocorrencias { get; set; }
+		Ocorrencia Ocorrencia { get; set; }
 
 		/// <summary>
 		/// Gets or sets the tipo.

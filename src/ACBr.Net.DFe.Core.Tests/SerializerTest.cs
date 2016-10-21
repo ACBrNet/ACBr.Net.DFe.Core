@@ -33,6 +33,14 @@ namespace ACBr.Net.DFe.Core.Tests
 				xml.XmlItems.Add(item);
 			}
 
+			xml.XmlItems2 = xml.XmlItems.AsEnumerable();
+			xml.XmlItems3 = xml.XmlItems.ToArray();
+
+			for (var i = 0; i < 3; i++)
+			{
+				xml.TesteListEnum.Add((TesteEnum)i);
+			}
+
 			for (var i = 0; i < 3; i++)
 			{
 				var item = new TesteXml3
@@ -80,7 +88,7 @@ namespace ACBr.Net.DFe.Core.Tests
 			Assert.True(xmlDocument.Root.FirstAttribute.Value == "01", "Erro ao serializar atributo id do root. Valor incorreto!");
 
 			var nodes = xmlDocument.Root.Nodes();
-			Assert.True(nodes.Count() == 14, "Erro ao serializar dados do xml.");
+			Assert.True(nodes.Count() == 19, "Erro ao serializar dados do xml.");
 
 			File.Delete("teste.xml");
 		}

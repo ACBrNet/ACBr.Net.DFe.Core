@@ -31,34 +31,14 @@
 
 using ACBr.Net.DFe.Core.Attributes;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("D8205E93-281F-4EC8-8100-4B087A32B792")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public class SignedInfo
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Signature" /> class.
+		/// Initializes a new instance of the <see cref="DFeSignature" /> class.
 		/// </summary>
 		public SignedInfo()
 		{

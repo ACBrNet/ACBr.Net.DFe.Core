@@ -5,7 +5,6 @@ using ACBr.Net.DFe.Core.Serializer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ACBr.Net.DFe.Core.Tests
@@ -17,22 +16,23 @@ namespace ACBr.Net.DFe.Core.Tests
 		{
 			XmlItems = new List<IXmlItem>();
 			XmlProd = new DFeCollection<TesteXml4>();
-			Signature = new Signature();
+			TesteListEnum = new DFeCollection<TesteEnum>();
+			Signature = new DFeSignature();
 		}
 
-		[DFeAttribute(TipoCampo.Int, "id", Id = "AT1", Min = 2, Max = 2, Ocorrencias = 0)]
+		[DFeAttribute(TipoCampo.Int, "id", Id = "AT1", Min = 2, Max = 2, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.HorCFe, "dateTime1", Id = "DT1", Min = 0, Max = 19, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.HorCFe, "dateTime1", Id = "DT1", Min = 0, Max = 19, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public DateTime TestDate { get; set; }
 
-		[DFeElement(TipoCampo.De2, "decimal1", Id = "DC1", Min = 1, Max = 9, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.De2, "decimal1", Id = "DC1", Min = 1, Max = 9, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public decimal TestDecimal { get; set; }
 
-		[DFeElement(TipoCampo.Int, "nullInt", Id = "NI1", Min = 3, Max = 9, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.Int, "nullInt", Id = "NI1", Min = 3, Max = 9, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public int? TestNullInt { get; set; }
 
-		[DFeElement(TipoCampo.De2, "testString1", Id = "ST1", Min = 0, Max = 255, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.De2, "testString1", Id = "ST1", Min = 0, Max = 255, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string TestString { get; set; }
 
 		[DFeItem(typeof(TesteXml2), "Interface1")]
@@ -48,19 +48,36 @@ namespace ACBr.Net.DFe.Core.Tests
 		[DFeItem(typeof(TesteXml3), "Item3")]
 		public List<IXmlItem> XmlItems { get; set; }
 
+		[DFeElement("Itens2")]
+		[DFeItem(typeof(TesteXml2), "Item2")]
+		[DFeItem(typeof(TesteXml3), "Item3")]
+		public IEnumerable<IXmlItem> XmlItems2 { get; set; }
+
+		[DFeElement("Itens3")]
+		[DFeItem(typeof(TesteXml2), "Item2")]
+		[DFeItem(typeof(TesteXml3), "Item3")]
+		public IXmlItem[] XmlItems3 { get; set; }
+
 		[DFeElement("prod")]
 		public DFeCollection<TesteXml4> XmlProd { get; set; }
 
-		[DFeElement(TipoCampo.Enum, "TesteEnum", Min = 1, Max = 1, Ocorrencias = 1)]
+		[DFeElement("prod2")]
+		public DFeCollection<TesteXml4> XmlProd2 { get; set; }
+
+		[DFeItem(true)]
+		[DFeElement(TipoCampo.Enum, "TesteListEnum", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
+		public DFeCollection<TesteEnum> TesteListEnum { get; set; }
+
+		[DFeElement(TipoCampo.Enum, "TesteEnum", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public TesteEnum TesteEnum { get; set; }
 
-		[DFeElement(TipoCampo.Enum, "TesteEnum1", Min = 1, Max = 1, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.Enum, "TesteEnum1", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public TesteEnum? TesteEnum1 { get; set; }
 
-		[DFeElement(TipoCampo.Enum, "TesteEnum2", Min = 1, Max = 1, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.Enum, "TesteEnum2", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public TesteEnum? TesteEnum2 { get; set; }
 
-		public Signature Signature { get; set; }
+		public DFeSignature Signature { get; set; }
 
 		private bool ShouldSerializeId()
 		{
@@ -79,7 +96,13 @@ namespace ACBr.Net.DFe.Core.Tests
 					(prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) ||
 					(prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(DFeCollection<>)))
 				{
-					var values = ((IEnumerable<object>)prop.GetValue(this, null) ?? new object[0]).ToArray();
+					var list = (IList)prop.GetValue(this, null);
+					var values = new ArrayList();
+					if (list != null)
+					{
+						values.AddRange(list);
+					}
+
 					foreach (var value in values)
 						builder.AppendLine($"{prop.Name}: {value.GetType()}{Environment.NewLine}{value}");
 				}

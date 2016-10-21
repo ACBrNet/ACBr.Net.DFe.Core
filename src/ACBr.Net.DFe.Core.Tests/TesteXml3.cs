@@ -11,13 +11,13 @@ namespace ACBr.Net.DFe.Core.Tests
 {
 	public class TesteXml3 : IXmlItem
 	{
-		[DFeAttribute(TipoCampo.Int, "id", Id = "AT3", Min = 2, Max = 2, Ocorrencias = 0)]
+		[DFeAttribute(TipoCampo.Int, "id", Id = "AT3", Min = 2, Max = 2, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "custom2", Id = "ST3", Min = 0, Max = 19, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.Custom, "custom2", Id = "ST3", Min = 0, Max = 19, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public string TestString { get; set; }
 
-		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC3", Min = 0, Max = 9, Ocorrencias = 0)]
+		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC3", Min = 0, Max = 9, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public decimal TestDecimal { get; set; }
 
 		private string SerializeTestString()

@@ -52,41 +52,53 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <param name="prop">The property.</param>
 		/// <param name="options">Indicates how the output is formatted or serialized.</param>
 		/// <returns>The XElement representation of the primitive.</returns>
-		public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options)
+		public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
 		{
 			try
 			{
-				var value = prop.GetValue(item, null);
-				var estaVazio = value == null;
-				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Min, prop, item);
+				var value = prop.GetValueOrIndex(item, idx);
+				var estaVazio = value == null || value.ToString().IsEmpty();
+				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Ocorrencia, tag.Min, prop, item);
 
 				string alerta;
-				if (tag.Ocorrencias == 1 && estaVazio && tag.Min > 0)
+				if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio && tag.Min > 0)
+				{
 					alerta = SerializerOptions.ErrMsgVazio;
+				}
 				else
+				{
 					alerta = string.Empty;
+				}
 
-				if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() && conteudoProcessado.Length > 1)
+				if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() &&
+					conteudoProcessado.Length > 1)
+				{
 					alerta = SerializerOptions.ErrMsgMenor;
+				}
 
 				if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) && conteudoProcessado.Length > tag.Max)
+				{
 					alerta = SerializerOptions.ErrMsgMaior;
+				}
 
 				if (!string.IsNullOrEmpty(alerta.Trim()) && SerializerOptions.ErrMsgVazio.Equals(alerta) && !estaVazio)
+				{
 					alerta += $" [{value}]";
+				}
 
 				options.WAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
 
 				XObject xmlTag = null;
-				if (tag.Ocorrencias == 1 && estaVazio)
+				if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
+				{
 					xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name) : new XAttribute(tag.Name, "");
+				}
 
-				if (estaVazio)
-					return xmlTag;
+				if (estaVazio) return xmlTag;
 
 				var retValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
-				xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name, retValue) : new XAttribute(tag.Name, retValue);
-				return xmlTag;
+				var ret = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name, retValue) : new XAttribute(tag.Name, retValue);
+				return ret;
 			}
 			catch (Exception ex)
 			{
@@ -95,60 +107,66 @@ namespace ACBr.Net.DFe.Core.Serializer
 			}
 		}
 
-		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, int min, PropertyInfo prop, object item)
+		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, Ocorrencia ocorrencia, int min, PropertyInfo prop, object item)
 		{
 			var conteudoProcessado = string.Empty;
+
+			if (estaVazio) return conteudoProcessado;
+
 			// ReSharper disable once SwitchStatementMissingSomeCases
 			switch (tipo)
 			{
 				case TipoCampo.Str:
-					if (!estaVazio)
-						conteudoProcessado = valor.ToString().Trim();
+					conteudoProcessado = valor.ToString().Trim();
 					break;
 
 				case TipoCampo.Dat:
 				case TipoCampo.DatCFe:
-					if (!estaVazio)
+					DateTime data;
+					if (DateTime.TryParse(valor.ToString(), out data))
 					{
-						DateTime data;
-						if (DateTime.TryParse(valor.ToString(), out data))
-							conteudoProcessado = data.ToString(tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd");
-						else
-							estaVazio = true;
+						conteudoProcessado = data.ToString(tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd");
+					}
+					else
+					{
+						estaVazio = true;
 					}
 					break;
 
 				case TipoCampo.Hor:
 				case TipoCampo.HorCFe:
-					if (!estaVazio)
+					DateTime hora;
+					if (DateTime.TryParse(valor.ToString(), out hora))
 					{
-						DateTime hora;
-						if (DateTime.TryParse(valor.ToString(), out hora))
-							conteudoProcessado = hora.ToString(tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss");
-						else
-							estaVazio = true;
+						conteudoProcessado = hora.ToString(tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss");
+					}
+					else
+					{
+						estaVazio = true;
 					}
 					break;
 
 				case TipoCampo.DatHor:
-					if (!estaVazio)
+					DateTime dthora;
+					if (DateTime.TryParse(valor.ToString(), out dthora))
 					{
-						DateTime dthora;
-						if (DateTime.TryParse(valor.ToString(), out dthora))
-							conteudoProcessado = dthora.ToString("s");
-						else
-							estaVazio = true;
+						conteudoProcessado = dthora.ToString("s");
+					}
+					else
+					{
+						estaVazio = true;
 					}
 					break;
 
 				case TipoCampo.DatHorTz:
-					if (!estaVazio)
+					DateTime dthoratz;
+					if (DateTime.TryParse(valor.ToString(), out dthoratz))
 					{
-						DateTime dthoratz;
-						if (DateTime.TryParse(valor.ToString(), out dthoratz))
-							conteudoProcessado = dthoratz.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
-						else
-							estaVazio = true;
+						conteudoProcessado = dthoratz.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+					}
+					else
+					{
+						estaVazio = true;
 					}
 					break;
 
@@ -157,64 +175,64 @@ namespace ACBr.Net.DFe.Core.Serializer
 				case TipoCampo.De4:
 				case TipoCampo.De6:
 				case TipoCampo.De10:
-					if (!estaVazio)
+					decimal vDecimal;
+					if (decimal.TryParse(valor.ToString(), out vDecimal))
 					{
-						var numberFormat = CultureInfo.InvariantCulture.NumberFormat;
-						decimal vDecimal;
-						if (decimal.TryParse(valor.ToString(), out vDecimal))
+						if (ocorrencia == Ocorrencia.SeDiferenteDeZero && vDecimal == 0)
+						{
+							estaVazio = true;
+						}
+						else
 						{
 							// ReSharper disable once SwitchStatementMissingSomeCases
 							switch (tipo)
 							{
 								case TipoCampo.De2:
-									conteudoProcessado = string.Format(numberFormat, "{0:0.00}", vDecimal);
+									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", vDecimal);
 									break;
 
 								case TipoCampo.De3:
-									conteudoProcessado = string.Format(numberFormat, "{0:0.000}", vDecimal);
+									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.000}", vDecimal);
 									break;
 
 								case TipoCampo.De4:
-									conteudoProcessado = string.Format(numberFormat, "{0:0.0000}", vDecimal);
+									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.0000}", vDecimal);
 									break;
 
 								case TipoCampo.De6:
-									conteudoProcessado = string.Format(numberFormat, "{0:0.000000}", vDecimal);
+									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.000000}", vDecimal);
 									break;
 
 								default:
-									conteudoProcessado = string.Format(numberFormat, "{0:0.0000000000}", vDecimal);
+									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.0000000000}", vDecimal);
 									break;
 							}
 						}
-						else
-							estaVazio = true;
+					}
+					else
+					{
+						estaVazio = true;
 					}
 					break;
 
 				case TipoCampo.Int:
 				case TipoCampo.StrNumberFill:
-					if (!estaVazio)
+					conteudoProcessado = valor.ToString();
+					if (conteudoProcessado.Length < min)
 					{
-						conteudoProcessado = valor.ToString();
-						if (conteudoProcessado.Length < min)
-							conteudoProcessado = conteudoProcessado.ZeroFill(min);
+						conteudoProcessado = conteudoProcessado.ZeroFill(min);
 					}
 					break;
 
 				case TipoCampo.StrNumber:
-					if (!estaVazio)
-						conteudoProcessado = valor.ToString().OnlyNumbers();
+					conteudoProcessado = valor.ToString().OnlyNumbers();
 					break;
 
 				case TipoCampo.Enum:
-					if (!estaVazio)
-					{
-						var member = valor.GetType().GetMember(valor.ToString()).FirstOrDefault();
-						var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-						var enumValue = enumAttribute?.Value;
-						conteudoProcessado = enumValue ?? valor.ToString();
-					}
+					var member = valor.GetType().GetMember(valor.ToString()).FirstOrDefault();
+					var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
+					var enumValue = enumAttribute?.Value;
+					conteudoProcessado = enumValue ?? valor.ToString();
 					break;
 
 				case TipoCampo.Custom:
@@ -223,8 +241,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				default:
-					if (!estaVazio)
-						conteudoProcessado = valor.ToString();
+					conteudoProcessado = valor.ToString();
 					break;
 			}
 
@@ -244,10 +261,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <param name="prop">The property.</param>
 		/// <param name="options">The options.</param>
 		/// <returns>The deserialized fundamental primitive from the XElement.</returns>
-		public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options)
+		public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
 		{
-			if (parentElement == null)
-				return null;
+			if (parentElement == null) return null;
 
 			var element = parentElement as XElement;
 			var value = element?.Value ?? ((XAttribute)parentElement).Value;
@@ -291,18 +307,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 					break;
 
 				case TipoCampo.Enum:
-					object value1 = valor;
-					foreach (var member in prop.PropertyType.GetMembers().Where(x => x.HasAttribute<DFeEnumAttribute>()))
-					{
-						var att = member.GetAttribute<DFeEnumAttribute>();
-						if (att.Value != valor)
-							continue;
-
-						value1 = member.Name;
-						break;
-					}
-
 					var type = prop.PropertyType.IsGenericType ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+					object value1 = type.GetMembers().Where(x => x.HasAttribute<DFeEnumAttribute>())
+								 .SingleOrDefault(x => x.GetAttribute<DFeEnumAttribute>().Value == valor)?.Name ?? valor;
+
 					ret = Enum.Parse(type, value1.ToString());
 					break;
 

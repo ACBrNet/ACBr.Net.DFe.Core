@@ -34,27 +34,8 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Service
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(false)]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public abstract class DFeWebserviceBase<T> : ClientBase<T>, IACBrLog where T : class
 	{
 		/// <summary>

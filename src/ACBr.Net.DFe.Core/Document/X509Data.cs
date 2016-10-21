@@ -32,35 +32,15 @@
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("E137BF14-CB86-4130-8385-F0DBA6CB3D79")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public class X509Data
 	{
 		/// <summary>
 		/// XS21 - Certificado Digital X509 em Base64
 		/// </summary>
 		/// <value>The X509 certificate.</value>
-		[DFeElement(TipoCampo.Str, "X509Certificate", Id = "XS21", Min = 0, Max = 999, Ocorrencias = 1)]
+		[DFeElement(TipoCampo.Str, "X509Certificate", Id = "XS21", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string X509Certificate { get; set; }
 	}
 }

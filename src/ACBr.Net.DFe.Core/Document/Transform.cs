@@ -32,28 +32,8 @@
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("CBE1EE28-AC1B-4286-A825-7EC329A623F1")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public class Transform
 	{
 		/// <summary>
@@ -61,7 +41,7 @@ namespace ACBr.Net.DFe.Core.Document
 		/// <para>http://www.w3.org/TR/2001/REC-xml-c14n-20010315</para><para>http://www.w3.org/2000/09/xmldsig#enveloped-signature</para>
 		/// </summary>
 		/// <value>The algorithm.</value>
-		[DFeAttribute(TipoCampo.Str, "Algorithm", Id = "XS12", Min = 0, Max = 999, Ocorrencias = 1)]
+		[DFeAttribute(TipoCampo.Str, "Algorithm", Id = "XS12", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string Algorithm { get; set; }
 	}
 }

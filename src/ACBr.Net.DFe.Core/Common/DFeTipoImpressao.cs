@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 07-24-2016
 // ***********************************************************************
-// <copyright file="TCTeInfCteIdeTpImp.cs" company="ACBr.Net">
+// <copyright file="DFeTipoImpressao.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -31,28 +31,9 @@
 
 using ACBr.Net.DFe.Core.Attributes;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Common
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-#endif
-
-	#endregion COM Interop Attributes
-
-	public enum TipoImpressao
+	public enum DFeTipoImpressao
 	{
 		[DFeEnum("0")]
 		SemGeracao,

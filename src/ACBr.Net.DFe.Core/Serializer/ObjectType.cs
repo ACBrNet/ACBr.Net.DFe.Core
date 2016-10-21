@@ -30,7 +30,6 @@
 // ***********************************************************************
 
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Collection;
 using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.Collections;
@@ -39,13 +38,20 @@ namespace ACBr.Net.DFe.Core.Serializer
 {
 	internal struct ObjectType
 	{
-		public static ObjectType Primitive => new ObjectType(1);
-		public static ObjectType List => new ObjectType(2);
-		public static ObjectType Dictionary => new ObjectType(3);
-		public static ObjectType DFeList => new ObjectType(4);
-		public static ObjectType InterfaceObject => new ObjectType(5);
-		public static ObjectType RootObject => new ObjectType(6);
-		public static ObjectType ClassObject => new ObjectType(10);
+		#region ObjectsTypes
+
+		public static ObjectType ClassType => new ObjectType(0);
+		public static ObjectType PrimitiveType => new ObjectType(1);
+		public static ObjectType ListType => new ObjectType(2);
+		public static ObjectType DictionaryType => new ObjectType(3);
+		public static ObjectType InterfaceType => new ObjectType(4);
+		public static ObjectType RootType => new ObjectType(5);
+		public static ObjectType ArrayType => new ObjectType(6);
+		public static ObjectType EnumerableType => new ObjectType(7);
+
+		#endregion ObjectsTypes
+
+		#region Constructors
 
 		private ObjectType(int id)
 		{
@@ -59,21 +65,25 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		public static ObjectType From(Type type)
 		{
-			if (IsPrimitive(type)) return Primitive;
-			if (IsInterfaceObject(type)) return InterfaceObject;
-			if (IsRootObject(type)) return RootObject;
-			if (IsDFeList(type)) return DFeList;
-			if (IsDictionary(type)) return Dictionary;
+			if (IsPrimitive(type)) return PrimitiveType;
+			if (IsInterface(type)) return InterfaceType;
+			if (IsList(type)) return ListType;
+			if (IsDictionary(type)) return DictionaryType;
+			if (IsArray(type)) return ArrayType;
+			if (IsEnumerable(type)) return EnumerableType;
 
-			return IsList(type) ? List : ClassObject;
+			return IsRoot(type) ? RootType : ClassType;
 		}
+
+		#endregion Constructors
+
+		#region Propriedades
 
 		private int Id { get; }
 
-		public override bool Equals(object obj)
-		{
-			return GetHashCode() == obj.GetHashCode();
-		}
+		#endregion Propriedades
+
+		#region Operators
 
 		public static bool operator ==(ObjectType a, ObjectType b)
 		{
@@ -83,6 +93,15 @@ namespace ACBr.Net.DFe.Core.Serializer
 		public static bool operator !=(ObjectType a, ObjectType b)
 		{
 			return !(a == b);
+		}
+
+		#endregion Operators
+
+		#region Methods
+
+		public override bool Equals(object obj)
+		{
+			return obj != null && GetHashCode() == obj.GetHashCode();
 		}
 
 		public override int GetHashCode()
@@ -127,23 +146,25 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		private static bool IsList(Type type)
 		{
-			return (typeof(ICollection).IsAssignableFrom(type) ||
-				(type.BaseType != null && typeof(ICollection).IsAssignableFrom(type.BaseType))) &&
-				!IsDFeList(type);
+			return typeof(IList).IsAssignableFrom(type) && !IsArray(type);
 		}
 
-		private static bool IsDFeList(Type type)
+		private static bool IsEnumerable(Type type)
 		{
-			return (type.IsGenericType && typeof(DFeCollection<>).IsAssignableFrom(type.GetGenericTypeDefinition())) ||
-				   (type.BaseType != null && type.BaseType.IsGenericType && typeof(DFeCollection<>).IsAssignableFrom(type.BaseType.GetGenericTypeDefinition()));
+			return typeof(IEnumerable).IsAssignableFrom(type) && !IsArray(type);
 		}
 
-		private static bool IsInterfaceObject(Type type)
+		private static bool IsInterface(Type type)
 		{
-			return type.IsInterface;
+			return type.IsInterface && !IsList(type) && !IsEnumerable(type) && !IsArray(type);
 		}
 
-		private static bool IsRootObject(Type type)
+		private static bool IsArray(Type type)
+		{
+			return type.IsArray;
+		}
+
+		private static bool IsRoot(Type type)
 		{
 			return type.HasAttribute<DFeRootAttribute>();
 		}
@@ -152,5 +173,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		{
 			return typeof(IDictionary).IsAssignableFrom(type);
 		}
+
+		#endregion Methods
 	}
 }

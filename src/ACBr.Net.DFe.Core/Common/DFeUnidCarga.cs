@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 07-24-2016
+// Created          : 10-16-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 07-24-2016
+// Last Modified On : 10-16-2016
 // ***********************************************************************
-// <copyright file="TipoAmbiente.cs" company="ACBr.Net">
+// <copyright file="DFeUnidCarga.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -30,43 +30,21 @@
 // ***********************************************************************
 
 using ACBr.Net.DFe.Core.Attributes;
-using System.ComponentModel;
-
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
 
 namespace ACBr.Net.DFe.Core.Common
 {
-	/// <summary>
-	///     Identificação do Ambiente
-	///     <para>1 - Produção</para>
-	///     <para>2 - Homologação</para>
-	/// </summary>
-
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-#endif
-
-	#endregion COM Interop Attributes
-
-	public enum TipoAmbiente
+	public enum DFeUnidCarga
 	{
 		[DFeEnum("1")]
-		[Description("Produção")]
-		Producao,
+		Container,
 
 		[DFeEnum("2")]
-		[Description("Homologação")]
-		Homologacao
+		ucULD,
+
+		[DFeEnum("3")]
+		ucPallet,
+
+		[DFeEnum("4")]
+		ucOutros
 	}
 }

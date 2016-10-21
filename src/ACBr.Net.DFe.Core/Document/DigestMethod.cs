@@ -31,35 +31,15 @@
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
-#region COM Interop Attributes
-
-#if COM_INTEROP
-
-using System.Runtime.InteropServices;
-
-#endif
-
-#endregion COM Interop Attributes
-
 namespace ACBr.Net.DFe.Core.Document
 {
-	#region COM Interop Attributes
-
-#if COM_INTEROP
-
-	[ComVisible(true)]
-	[Guid("5184AC1A-3D61-42BD-BD70-139B9F531B3B")]
-#endif
-
-	#endregion COM Interop Attributes
-
 	public class DigestMethod
 	{
 		/// <summary>
 		/// XS16 - Atributo Algorithm de DigestMethod: http://www.w3.org/2000/09/xmldsig#sha1
 		/// </summary>
 		/// <value>The algorithm.</value>
-		[DFeAttribute(TipoCampo.Str, "Algorithm", Id = "XS16", Min = 0, Max = 999, Ocorrencias = 1)]
+		[DFeAttribute(TipoCampo.Str, "Algorithm", Id = "XS16", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public string Algorithm { get; set; }
 	}
 }
