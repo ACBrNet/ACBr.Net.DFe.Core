@@ -62,7 +62,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 				values.AddRange(list);
 			}
 
-			if (values.Count == 0 && tag.Min == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
+			if (!prop.HasAttribute<DFeItemAttribute>())
+			{
+				return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
+			}
 
 			if (values.Count < tag.Min || values.Count > tag.Max)
 			{
@@ -70,16 +73,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				options.WAlerta(tag.Id, tag.Name, tag.Descricao, msg);
 			}
 
-			if (!prop.HasAttribute<DFeItemAttribute>())
-			{
-				var elements = new List<XObject>();
-				foreach (var value in values)
-				{
-					var element = ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options);
-					elements.Add(element);
-				}
-				return elements.ToArray();
-			}
+			if (values.Count == 0 && tag.Min == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
 
 			var itemTags = prop.GetAttributes<DFeItemAttribute>();
 

@@ -17,6 +17,7 @@ namespace ACBr.Net.DFe.Core.Tests
 			XmlItems = new List<IXmlItem>();
 			XmlProd = new DFeCollection<TesteXml4>();
 			TesteListEnum = new DFeCollection<TesteEnum>();
+			TesteDateTime = new DFeCollection<DateTime>();
 			Signature = new DFeSignature();
 		}
 
@@ -67,6 +68,10 @@ namespace ACBr.Net.DFe.Core.Tests
 		[DFeItem(true)]
 		[DFeElement(TipoCampo.Enum, "TesteListEnum", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public DFeCollection<TesteEnum> TesteListEnum { get; set; }
+
+		[DFeItem(true)]
+		[DFeElement(TipoCampo.DatHor, "TesteDateTime", Min = 19, Max = 19, Ocorrencia = Ocorrencia.Obrigatoria)]
+		public DFeCollection<DateTime> TesteDateTime { get; set; }
 
 		[DFeElement(TipoCampo.Enum, "TesteEnum", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public TesteEnum TesteEnum { get; set; }

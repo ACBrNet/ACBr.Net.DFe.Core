@@ -161,10 +161,10 @@ namespace ACBr.Net.DFe.Core.Extensions
 			return (IEnumerable)method.Invoke(null, new object[] { lista });
 		}
 
-		internal static object[] ToArray(this IEnumerable lista, Type tipo)
+		internal static Array ToArray(this IEnumerable lista, Type tipo)
 		{
 			var method = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(tipo);
-			return (object[])method.Invoke(null, new object[] { lista });
+			return (Array)method.Invoke(null, new object[] { lista });
 		}
 	}
 }

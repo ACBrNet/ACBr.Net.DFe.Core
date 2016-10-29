@@ -35,6 +35,6 @@ namespace ACBr.Net.DFe.Core.Attributes
 	{
 		NaoObrigatoria,
 		Obrigatoria,
-		SeDiferenteDeZero
+		MaiorQueZero
 	}
 }
