@@ -40,14 +40,20 @@ namespace ACBr.Net.DFe.Core.Common
 	///     <para>2 - Homologação</para>
 	/// </summary>
 
-	public enum DFeTipoAmbiente
+	public enum DFeTipoAmbiente : byte
 	{
+		/// <summary>
+		/// Produção
+		/// </summary>
 		[DFeEnum("1")]
 		[Description("Produção")]
-		Producao,
+		Producao = 1,
 
+		/// <summary>
+		/// Homologação
+		/// </summary>
 		[DFeEnum("2")]
 		[Description("Homologação")]
-		Homologacao
+		Homologacao = 2
 	}
 }

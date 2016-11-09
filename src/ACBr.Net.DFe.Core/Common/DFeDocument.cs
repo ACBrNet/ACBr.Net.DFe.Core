@@ -59,7 +59,9 @@ namespace ACBr.Net.DFe.Core.Common
 		{
 			var serializer = new DFeSerializer(typeof(TDocument));
 			if (encoding != null)
+			{
 				serializer.Options.Encoder = encoding;
+			}
 
 			return (TDocument)serializer.Deserialize(document);
 		}
