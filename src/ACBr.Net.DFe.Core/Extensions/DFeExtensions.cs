@@ -160,11 +160,5 @@ namespace ACBr.Net.DFe.Core.Extensions
 			var method = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(tipo);
 			return (IEnumerable)method.Invoke(null, new object[] { lista });
 		}
-
-		internal static Array ToArray(this IEnumerable lista, Type tipo)
-		{
-			var method = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(tipo);
-			return (Array)method.Invoke(null, new object[] { lista });
-		}
 	}
 }

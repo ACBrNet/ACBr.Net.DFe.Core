@@ -120,16 +120,19 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var list = (IList)Activator.CreateInstance(type);
 
-			var elements = parent.Length > 1 ? parent : parent.Elements();
+			IEnumerable<XElement> elements = parent;
+
 			if (prop.HasAttribute<DFeItemAttribute>())
 			{
 				var itemTags = prop.GetAttributes<DFeItemAttribute>();
+
+				var elementAtt = prop.GetAttribute<DFeElementAttribute>();
+				elements = parent.All(x => x.Name.LocalName == elementAtt.Name) && parent.Length > 1 ? parent : parent.Elements();
 
 				if (itemTags.Length == 1 && itemTags[0].Single)
 				{
 					foreach (var element in elements)
 					{
-						var elementAtt = prop.GetAttribute<DFeElementAttribute>();
 						var obj = PrimitiveSerializer.Deserialize(elementAtt, element, parentItem, prop, options);
 						list.Add(obj);
 					}
@@ -138,7 +141,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 				{
 					foreach (var element in elements)
 					{
-						var itemTag = itemTags.SingleOrDefault(x => x.Name == element.Name) ?? itemTags[0];
+						var itemTag = itemTags.SingleOrDefault(x => x.Name == element.Name.LocalName) ?? itemTags[0];
 						var obj = ObjectSerializer.Deserialize(itemTag.Tipo, element, options);
 						list.Add(obj);
 					}
