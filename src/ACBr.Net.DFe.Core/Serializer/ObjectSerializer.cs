@@ -151,8 +151,16 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 				if (objectType == ObjectType.RootType)
 				{
-					var attribute = prop.PropertyType.GetAttribute<DFeRootAttribute>();
-					var rootElement = Serialize(value, prop.PropertyType, attribute.Name, options);
+					var rooTag = prop.PropertyType.GetAttribute<DFeRootAttribute>();
+					var rootName = rooTag.Name;
+
+					if (rootName.IsEmpty())
+					{
+						var root = prop.PropertyType.GetRootName(value);
+						rootName = root.IsEmpty() ? prop.PropertyType.Name : root;
+					}
+
+					var rootElement = Serialize(value, prop.PropertyType, rootName, options);
 					return new XObject[] { rootElement };
 				}
 
@@ -258,8 +266,23 @@ namespace ACBr.Net.DFe.Core.Serializer
 				if (objectType == ObjectType.RootType)
 				{
 					var rootTag = prop.PropertyType.GetAttribute<DFeRootAttribute>();
-					var xElement = parentElement.ElementsAnyNs(rootTag.Name).FirstOrDefault();
-					return Deserialize(prop.PropertyType, xElement, options);
+					var rootNames = new List<string>();
+					if (!rootTag.Name.IsEmpty())
+					{
+						rootNames.Add(rootTag.Name);
+						rootNames.Add(prop.PropertyType.Name);
+					}
+					else
+					{
+						rootNames.AddRange(prop.PropertyType.GetRootNames());
+						rootNames.Add(prop.PropertyType.Name);
+					}
+
+					var xmlNode = (from node in parentElement.Elements()
+								   where node.Name.LocalName.IsIn(rootNames)
+								   select node).FirstOrDefault();
+
+					return Deserialize(prop.PropertyType, xmlNode, options);
 				}
 
 				if (objectType == ObjectType.ClassType)

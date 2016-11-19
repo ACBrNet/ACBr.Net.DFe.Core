@@ -91,7 +91,7 @@
     <Compile Include="Common\DFeGeralConfigBase.cs" />
     <Compile Include="Common\DFeWebserviceConfigBase.cs" />
     <Compile Include="Common\DFeCodUF.cs" />
-    <Compile Include="Service\DFeWebserviceBase.cs" />
+    <Compile Include="Service\DFeServiceClientBase.cs" />
     <Compile Include="Common\DFeTipoAmbiente.cs" />
     <Compile Include="Common\DFeTipoImpressao.cs" />
     <Compile Include="Extensions\XDocumentExtensions.cs" />
@@ -120,6 +120,7 @@
     <Compile Include="Document\SignedInfo.cs" />
     <Compile Include="Document\Transform.cs" />
     <Compile Include="Document\X509Data.cs" />
+    <Compile Include="Service\DFeSoap12ServiceClientBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="acbr.net.snk" />

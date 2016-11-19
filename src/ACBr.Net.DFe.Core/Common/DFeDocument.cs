@@ -36,16 +36,28 @@ using System.Text;
 
 namespace ACBr.Net.DFe.Core.Common
 {
+	/// <summary>
+	/// Class DFeDocument.
+	/// </summary>
+	/// <typeparam name="TDocument">The type of the t document.</typeparam>
+	/// <seealso cref="ACBr.Net.Core.Generics.GenericClone{TDocument}" />
 	public abstract class DFeDocument<TDocument> : GenericClone<TDocument> where TDocument : class
 	{
 		/// <summary>
 		/// Carrega o documento.
 		/// </summary>
 		/// <param name="document">The document.</param>
+		/// <param name="encoding">The encoding.</param>
 		/// <returns>TDocument.</returns>
-		public static TDocument Load(string document)
+		public static TDocument Load(string document, Encoding encoding = null)
 		{
 			var serializer = new DFeSerializer(typeof(TDocument));
+
+			if (encoding != null)
+			{
+				serializer.Options.Encoder = encoding;
+			}
+
 			return (TDocument)serializer.Deserialize(document);
 		}
 
@@ -70,12 +82,13 @@ namespace ACBr.Net.DFe.Core.Common
 		/// Retorna o Xml do documento.
 		/// </summary>
 		/// <param name="options">The options.</param>
+		/// <param name="encoding">The encoding.</param>
 		/// <returns>System.String.</returns>
-		public string GetXml(DFeSaveOptions options = DFeSaveOptions.None)
+		public string GetXml(DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
 		{
 			using (var stream = new MemoryStream())
 			{
-				Save(stream, options);
+				Save(stream, options, encoding);
 				stream.Position = 0;
 				using (var streamReader = new StreamReader(stream))
 				{
@@ -89,8 +102,9 @@ namespace ACBr.Net.DFe.Core.Common
 		/// </summary>
 		/// <param name="path">The path.</param>
 		/// <param name="options">The options.</param>
+		/// <param name="encoding">The encoding.</param>
 		/// <returns>TDocument.</returns>
-		public void Save(string path, DFeSaveOptions options = DFeSaveOptions.None)
+		public void Save(string path, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
 		{
 			var serializer = new DFeSerializer(typeof(TDocument));
 
@@ -101,6 +115,11 @@ namespace ACBr.Net.DFe.Core.Common
 				serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
 			}
 
+			if (encoding != null)
+			{
+				serializer.Options.Encoder = encoding;
+			}
+
 			serializer.Serialize(this, path);
 		}
 
@@ -109,8 +128,9 @@ namespace ACBr.Net.DFe.Core.Common
 		/// </summary>
 		/// <param name="stream">The stream.</param>
 		/// <param name="options">The options.</param>
+		/// <param name="encoding">The encoding.</param>
 		/// <returns>TDocument.</returns>
-		public void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None)
+		public void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
 		{
 			var serializer = new DFeSerializer(typeof(TDocument));
 
@@ -119,6 +139,11 @@ namespace ACBr.Net.DFe.Core.Common
 				serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
 				serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
 				serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
+			}
+
+			if (encoding != null)
+			{
+				serializer.Options.Encoder = encoding;
 			}
 
 			serializer.Serialize(this, stream);

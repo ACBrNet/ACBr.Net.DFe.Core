@@ -31,16 +31,18 @@
 
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
+using ACBr.Net.Core.Logging;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	public class DFeSerializer
+	public class DFeSerializer : IACBrLog
 	{
 		#region Fields
 
@@ -90,11 +92,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <summary>
 		/// Creates the serializer.
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TCreate"></typeparam>
 		/// <returns>DFeSerializer.</returns>
-		public static DFeSerializer<T> CreateSerializer<T>() where T : class
+		public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
 		{
-			return new DFeSerializer<T>();
+			return new DFeSerializer<TCreate>();
 		}
 
 		#endregion Create
@@ -119,10 +121,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
-			if (Options.FormatarXml)
-				xmldoc.Save(path);
-			else
-				xmldoc.Save(path, SaveOptions.DisableFormatting);
+			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
+			File.WriteAllText(path, xml);
+
 			return ret;
 		}
 
@@ -145,10 +146,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
-			if (Options.FormatarXml)
-				xmldoc.Save(stream);
-			else
-				xmldoc.Save(stream, SaveOptions.DisableFormatting);
+			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
+			var sw = new StreamWriter(stream, Options.Encoder);
+			sw.WriteLine(xml);
+			sw.Flush();
 
 			stream.Position = 0;
 			return ret;
@@ -158,13 +159,25 @@ namespace ACBr.Net.DFe.Core.Serializer
 		{
 			var xmldoc = Options.OmitirDeclaracao ? new XDocument() : new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
-			var rooTag = item.GetType().GetAttribute<DFeRootAttribute>();
-			var rootName = rooTag != null && !rooTag.Name.IsEmpty()
-				? rooTag.Name : tipoDFe.Name;
+			var rooTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+
+			var rootName = rooTag.Name;
+
+			if (rootName.IsEmpty())
+			{
+				var root = tipoDFe.GetRootName(item);
+				rootName = root.IsEmpty() ? tipoDFe.Name : root;
+			}
 
 			var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, Options);
 			xmldoc.Add(rootElement);
 			xmldoc.RemoveEmptyNs();
+
+			foreach (var errosAlerta in Options.ErrosAlertas)
+			{
+				this.Log().Warn(errosAlerta);
+			}
+
 			return xmldoc;
 		}
 
@@ -200,22 +213,36 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		private object Deserialize(XDocument xmlDoc)
 		{
+			Options.ErrosAlertas.Clear();
+
 			var rootTag = tipoDFe.GetAttribute<DFeRootAttribute>();
-			var rootName = rootTag != null && !rootTag.Name.IsEmpty()
-								? rootTag.Name : tipoDFe.Name;
 
-			var xmlNode = xmlDoc.Root;
-
-			if (xmlDoc.Root?.Name != rootName)
+			var rootNames = new List<string>();
+			if (!rootTag.Name.IsEmpty())
 			{
-				xmlNode = (from node in xmlDoc.Descendants()
-						   where node.Name.LocalName == rootName
-						   select node).FirstOrDefault();
+				rootNames.Add(rootTag.Name);
+				rootNames.Add(tipoDFe.Name);
+			}
+			else
+			{
+				rootNames.AddRange(tipoDFe.GetRootNames());
+				rootNames.Add(tipoDFe.Name);
 			}
 
-			Guard.Against<ACBrDFeException>(xmlNode == null, $"Nenhum objeto {rootName} encontrado !");
+			var xmlNode = (from node in xmlDoc.Descendants()
+						   where node.Name.LocalName.IsIn(rootNames)
+						   select node).FirstOrDefault();
 
-			return ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
+			Guard.Against<ACBrDFeException>(xmlNode == null, "Nenhum objeto root encontrado !");
+
+			var returnValue = ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
+
+			foreach (var errosAlerta in Options.ErrosAlertas)
+			{
+				this.Log().Warn(errosAlerta);
+			}
+
+			return returnValue;
 		}
 
 		#endregion Deserialize

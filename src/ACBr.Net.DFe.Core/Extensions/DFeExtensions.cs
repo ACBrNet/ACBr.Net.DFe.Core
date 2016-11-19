@@ -100,6 +100,24 @@ namespace ACBr.Net.DFe.Core.Extensions
 			return method.ToDelegate<Func<string>>(item);
 		}
 
+		internal static string GetRootName(this Type prop, object item)
+		{
+			var method = item.GetType().GetMethod("GetRootName", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+			if (method == null || method.ReturnType != typeof(string)) return string.Empty;
+
+			var func = method.ToDelegate<Func<string>>(item);
+			return func();
+		}
+
+		internal static string[] GetRootNames(this Type prop)
+		{
+			var method = prop.GetMethod("GetRootNames", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+			if (method == null || method.ReturnType != typeof(string[])) return new string[0];
+
+			var func = method.ToDelegate<Func<string[]>>();
+			return func();
+		}
+
 		internal static Func<string, object> GetDeserializer(this PropertyInfo prop, object item)
 		{
 			Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");

@@ -135,12 +135,28 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <value><c>true</c> if identar; otherwise, <c>false</c>.</value>
 		public bool FormatarXml { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether [omitir declaracao].
+		/// </summary>
+		/// <value><c>true</c> if [omitir declaracao]; otherwise, <c>false</c>.</value>
 		public bool OmitirDeclaracao { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether [assinar XML].
+		/// </summary>
+		/// <value><c>true</c> if [assinar XML]; otherwise, <c>false</c>.</value>
 		public bool AssinarXML { get; set; }
 
+		/// <summary>
+		/// Gets or sets the sign URI.
+		/// </summary>
+		/// <value>The sign URI.</value>
 		public string SignUri { get; set; }
 
+		/// <summary>
+		/// Gets or sets the certificado.
+		/// </summary>
+		/// <value>The certificado.</value>
 		public X509Certificate Certificado { get; set; }
 
 		/// <summary>

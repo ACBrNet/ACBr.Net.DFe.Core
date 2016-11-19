@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 04-26-2016
+// Created          : 07-28-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 04-26-2016
+// Last Modified On : 07-28-2016
 // ***********************************************************************
-// <copyright file="DFeItemAttribute.cs" company="ACBr.Net">
+// <copyright file="DFeServiceClientBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,38 +29,50 @@
 // <summary></summary>
 // ***********************************************************************
 
+using ACBr.Net.Core.Logging;
 using System;
+using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
 
-namespace ACBr.Net.DFe.Core.Attributes
+namespace ACBr.Net.DFe.Core.Service
 {
 	/// <summary>
-	/// Class DFeItemAttribute.
+	/// Class DFeServiceClientBase.
 	/// </summary>
-	/// <seealso cref="System.Attribute" />
-	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-	public class DFeItemAttribute : Attribute
+	/// <typeparam name="T"></typeparam>
+	/// <seealso cref="System.ServiceModel.ClientBase{T}" />
+	/// <seealso cref="ACBr.Net.Core.Logging.IACBrLog" />
+	public abstract class DFeServiceClientBase<T> : ClientBase<T>, IACBrLog where T : class
 	{
-		#region Constructors
-
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeItemAttribute" /> class.
+		///
 		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <param name="name">The name.</param>
-		public DFeItemAttribute(Type tipo, string name)
+		/// <param name="url"></param>
+		/// <param name="timeOut"></param>
+		/// <param name="certificado"></param>
+		protected DFeServiceClientBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(new BasicHttpBinding(), new EndpointAddress(url))
 		{
-			Tipo = tipo;
-			Name = name;
+			((BasicHttpBinding)Endpoint.Binding).UseDefaultWebProxy = true;
+
+			if (ClientCredentials != null)
+			{
+				ClientCredentials.ClientCertificate.Certificate = certificado;
+				if (certificado != null)
+				{
+					((BasicHttpBinding)Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+					((BasicHttpBinding)Endpoint.Binding).Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+				}
+			}
+
+			var endpointInspector = new DFeInspectorBehavior();
+			Endpoint.Behaviors.Add(endpointInspector);
+
+			if (!timeOut.HasValue)
+				return;
+
+			Endpoint.Binding.OpenTimeout = timeOut.Value;
+			Endpoint.Binding.ReceiveTimeout = timeOut.Value;
+			Endpoint.Binding.SendTimeout = timeOut.Value;
 		}
-
-		#endregion Constructors
-
-		#region Propriedades
-
-		public Type Tipo { get; set; }
-
-		public string Name { get; set; }
-
-		#endregion Propriedades
 	}
 }

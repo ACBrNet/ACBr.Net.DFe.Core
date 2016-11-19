@@ -1,5 +1,6 @@
 ﻿using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Collection;
+using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Document;
 using ACBr.Net.DFe.Core.Serializer;
 using System;
@@ -10,7 +11,7 @@ using System.Text;
 namespace ACBr.Net.DFe.Core.Tests
 {
 	[DFeRoot("RFTD")]
-	public class TesteXml
+	public class TesteXml : DFeDocument<TesteXml>
 	{
 		public TesteXml()
 		{
@@ -18,6 +19,7 @@ namespace ACBr.Net.DFe.Core.Tests
 			XmlProd = new DFeCollection<TesteXml4>();
 			TesteListEnum = new DFeCollection<TesteEnum>();
 			TesteDateTime = new DFeCollection<DateTime>();
+			Xml5 = new TesteXml5();
 			Signature = new DFeSignature();
 		}
 
@@ -65,11 +67,9 @@ namespace ACBr.Net.DFe.Core.Tests
 		[DFeElement("prod2")]
 		public DFeCollection<TesteXml4> XmlProd2 { get; set; }
 
-		[DFeItem(true)]
 		[DFeElement(TipoCampo.Enum, "TesteListEnum", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public DFeCollection<TesteEnum> TesteListEnum { get; set; }
 
-		[DFeItem(true)]
 		[DFeElement(TipoCampo.DatHor, "TesteDateTime", Min = 19, Max = 19, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public DFeCollection<DateTime> TesteDateTime { get; set; }
 
@@ -81,6 +81,8 @@ namespace ACBr.Net.DFe.Core.Tests
 
 		[DFeElement(TipoCampo.Enum, "TesteEnum2", Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
 		public TesteEnum? TesteEnum2 { get; set; }
+
+		public TesteXml5 Xml5 { get; set; }
 
 		public DFeSignature Signature { get; set; }
 

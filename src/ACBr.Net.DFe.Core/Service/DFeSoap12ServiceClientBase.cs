@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 07-28-2016
 // ***********************************************************************
-// <copyright file="DFeWebserviceBase.cs" company="ACBr.Net">
+// <copyright file="DFeServiceClientBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,44 +29,32 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Logging;
 using System;
 using System.Security.Cryptography.X509Certificates;
-using System.ServiceModel;
+using System.ServiceModel.Channels;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-	public abstract class DFeWebserviceBase<T> : ClientBase<T>, IACBrLog where T : class
+	/// <summary>
+	/// Class DFeSoap12ServiceClientBase.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <seealso cref="ACBr.Net.DFe.Core.Service.DFeServiceClientBase{T}" />
+	public abstract class DFeSoap12ServiceClientBase<T> : DFeServiceClientBase<T> where T : class
 	{
 		/// <summary>
-		///
+		/// Initializes a new instance of the <see cref="DFeSoap12ServiceClientBase{T}"/> class.
 		/// </summary>
-		/// <param name="url"></param>
-		/// <param name="timeOut"></param>
-		/// <param name="certificado"></param>
-		protected DFeWebserviceBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(new BasicHttpBinding(), new EndpointAddress(url))
+		/// <param name="url">The URL.</param>
+		/// <param name="timeOut">The time out.</param>
+		/// <param name="certificado">The certificado.</param>
+		protected DFeSoap12ServiceClientBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(url, timeOut, certificado)
 		{
-			((BasicHttpBinding)Endpoint.Binding).UseDefaultWebProxy = true;
+			var custom = new CustomBinding(Endpoint.Binding);
+			var version = custom.Elements.Find<TextMessageEncodingBindingElement>();
+			version.MessageVersion = MessageVersion.Soap12;
 
-			if (ClientCredentials != null)
-			{
-				ClientCredentials.ClientCertificate.Certificate = certificado;
-				if (certificado != null)
-				{
-					((BasicHttpBinding)Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
-					((BasicHttpBinding)Endpoint.Binding).Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
-				}
-			}
-
-			var endpointInspector = new DFeInspectorBehavior();
-			Endpoint.Behaviors.Add(endpointInspector);
-
-			if (!timeOut.HasValue)
-				return;
-
-			Endpoint.Binding.OpenTimeout = timeOut.Value;
-			Endpoint.Binding.ReceiveTimeout = timeOut.Value;
-			Endpoint.Binding.SendTimeout = timeOut.Value;
+			Endpoint.Binding = custom;
 		}
 	}
 }

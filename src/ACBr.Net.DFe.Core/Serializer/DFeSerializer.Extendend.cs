@@ -36,18 +36,18 @@ namespace ACBr.Net.DFe.Core.Serializer
 	/// <summary>
 	/// Class DFeSerializer. This class cannot be inherited.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TClass"></typeparam>
 	/// <seealso>
 	///     <cref>ACBr.Net.DFe.Core.Serializer.DFeSerializerBase</cref>
 	/// </seealso>
-	public sealed class DFeSerializer<T> : DFeSerializer where T : class
+	public sealed class DFeSerializer<TClass> : DFeSerializer where TClass : class
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeSerializer{T}"/> class.
+		/// Initializes a new instance of the <see cref="DFeSerializer{TClass}"/> class.
 		/// </summary>
-		internal DFeSerializer() : base(typeof(T))
+		internal DFeSerializer() : base(typeof(TClass))
 		{
 		}
 
@@ -60,7 +60,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		/// <param name="item">The item.</param>
 		/// <param name="path">The xml.</param>
-		public bool Serialize(T item, string path)
+		public bool Serialize(TClass item, string path)
 		{
 			return base.Serialize(item, path);
 		}
@@ -71,7 +71,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// <param name="item">The item.</param>
 		/// <param name="stream">The stream.</param>
 		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		public bool Serialize(T item, Stream stream)
+		public bool Serialize(TClass item, Stream stream)
 		{
 			return base.Serialize(item, stream);
 		}
@@ -81,9 +81,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		/// <param name="path">The xml.</param>
 		/// <returns>T.</returns>
-		public new T Deserialize(string path)
+		public new TClass Deserialize(string path)
 		{
-			return (T)base.Deserialize(path);
+			return (TClass)base.Deserialize(path);
 		}
 
 		/// <summary>
@@ -91,9 +91,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		/// <param name="stream">The xml.</param>
 		/// <returns>T.</returns>
-		public new T Deserialize(Stream stream)
+		public new TClass Deserialize(Stream stream)
 		{
-			return (T)base.Deserialize(stream);
+			return (TClass)base.Deserialize(stream);
 		}
 
 		#endregion Methods
