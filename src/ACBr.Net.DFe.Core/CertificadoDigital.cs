@@ -61,45 +61,7 @@ namespace ACBr.Net.DFe.Core
 		{
 			try
 			{
-				var doc = new XmlDocument();
-				doc.LoadXml(xml);
-
-				Guard.Against<ArgumentException>(!pUri.IsEmpty() && doc.GetElementsByTagName(pUri).Count != 1, "Referencia invalida ou não é unica.");
-
-				//Adiciona Certificado ao Key Info
-				var keyInfo = new KeyInfo();
-				keyInfo.AddClause(new KeyInfoX509Data(pCertificado));
-
-				//Seta chaves
-				var signedDocument = new SignedXml(doc)
-				{
-					SigningKey = pCertificado.PrivateKey,
-					KeyInfo = keyInfo
-				};
-
-				// Cria referencia
-				var reference = new Reference { Uri = $"#{doc.GetElementsByTagName(pUri)[0].Attributes["Id"].InnerText}" };
-
-				// Adiciona transformação a referencia
-				reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
-				reference.AddTransform(new XmlDsigC14NTransform(comments));
-
-				// Adiciona referencia ao xml
-				signedDocument.AddReference(reference);
-
-				// Calcula Assinatura
-				signedDocument.ComputeSignature();
-
-				// Pega representação da assinatura
-				var xmlDigitalSignature = signedDocument.GetXml();
-
-				// Adiciona ao doc XML
-				var xmlElement = doc.GetElementsByTagName(pNode).Cast<XmlElement>().FirstOrDefault();
-				Guard.Against<ACBrDFeException>(xmlElement == null, "Nome do elemento de assinatura incorreto");
-
-				var element = doc.ImportNode(xmlDigitalSignature, true);
-				xmlElement.AppendChild(element);
-
+				var doc = AssinarElemento(xml, pUri, pNode, pCertificado, comments);
 				return doc.AsString();
 			}
 			catch (Exception ex)
@@ -162,8 +124,10 @@ namespace ACBr.Net.DFe.Core
 				KeyInfo = keyInfo
 			};
 
+			var uri = pUri.IsEmpty() ? "" : $"#{doc.GetElementsByTagName(pUri)[0].Attributes["Id"]?.InnerText}";
+
 			// Cria referencia
-			var reference = new Reference { Uri = $"#{doc.GetElementsByTagName(pUri)[0].Attributes["Id"].InnerText}" };
+			var reference = new Reference { Uri = uri };
 
 			// Adiciona transformação a referencia
 			reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
