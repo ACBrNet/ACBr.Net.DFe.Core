@@ -64,6 +64,8 @@ namespace ACBr.Net.DFe.Core
 				var doc = new XmlDocument();
 				doc.LoadXml(xml);
 
+				Guard.Against<ArgumentException>(!pUri.IsEmpty() && doc.GetElementsByTagName(pUri).Count != 1, "Referencia invalida ou não é unica.");
+
 				//Adiciona Certificado ao Key Info
 				var keyInfo = new KeyInfo();
 				keyInfo.AddClause(new KeyInfoX509Data(pCertificado));
@@ -76,7 +78,7 @@ namespace ACBr.Net.DFe.Core
 				};
 
 				// Cria referencia
-				var reference = new Reference { Uri = pUri };
+				var reference = new Reference { Uri = $"#{doc.GetElementsByTagName(pUri)[0].Attributes["Id"].InnerText}" };
 
 				// Adiciona transformação a referencia
 				reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
@@ -147,6 +149,8 @@ namespace ACBr.Net.DFe.Core
 			var doc = new XmlDocument();
 			doc.LoadXml(elemento);
 
+			Guard.Against<ArgumentException>(!pUri.IsEmpty() && doc.GetElementsByTagName(pUri).Count != 1, "Referencia invalida ou não é unica.");
+
 			//Adiciona Certificado ao Key Info
 			var keyInfo = new KeyInfo();
 			keyInfo.AddClause(new KeyInfoX509Data(pCertificado));
@@ -159,7 +163,7 @@ namespace ACBr.Net.DFe.Core
 			};
 
 			// Cria referencia
-			var reference = new Reference { Uri = pUri };
+			var reference = new Reference { Uri = $"#{doc.GetElementsByTagName(pUri)[0].Attributes["Id"].InnerText}" };
 
 			// Adiciona transformação a referencia
 			reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
