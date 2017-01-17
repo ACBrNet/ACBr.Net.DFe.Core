@@ -61,7 +61,15 @@ namespace ACBr.Net.DFe.Core
 		{
 			try
 			{
-				var doc = AssinarElemento(xml, pUri, pNode, pCertificado, comments);
+				var doc = new XmlDocument();
+				doc.LoadXml(xml);
+
+				var element = doc.GetElementsByTagName(pNode).Cast<XmlElement>().SingleOrDefault();
+				Guard.Against<ACBrDFeException>(element == null, "Nome do elemento de assinatura incorreto");
+				var signed = AssinarElemento(element.OuterXml, pUri, pNode, pCertificado, comments);
+				var signedElement = doc.ImportNode(signed, true);
+				element.ParentNode?.ReplaceChild(signedElement, element);
+
 				return doc.AsString();
 			}
 			catch (Exception ex)
