@@ -100,9 +100,11 @@ namespace ACBr.Net.DFe.Core
 				foreach (var element in xmlElements)
 				{
 					var docElement = new XmlDocument();
-					docElement.Load(element.OuterXml);
+					docElement.LoadXml(element.OuterXml);
 					AssinarDocumento(docElement, pUri, pNode, pCertificado, comments);
-					var signedElement = doc.ImportNode(docElement, true);
+
+					// ReSharper disable once AssignNullToNotNullAttribute
+					var signedElement = doc.ImportNode(docElement.DocumentElement, true);
 					element.ParentNode?.ReplaceChild(signedElement, element);
 				}
 
