@@ -4,7 +4,7 @@
 // Created          : 07-27-2014
 //
 // Last Modified By : RFTD
-// Last Modified On : 09-02-2014
+// Last Modified On : 19-01-2017
 // ***********************************************************************
 // <copyright file="CertificadoDigital.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -42,6 +42,9 @@ using System.Xml.Schema;
 
 namespace ACBr.Net.DFe.Core
 {
+	/// <summary>
+	/// Classe CertificadoDigital.
+	/// </summary>
 	public static class CertificadoDigital
 	{
 		#region Methods
@@ -63,13 +66,7 @@ namespace ACBr.Net.DFe.Core
 			{
 				var doc = new XmlDocument();
 				doc.LoadXml(xml);
-
-				var element = doc.GetElementsByTagName(pNode).Cast<XmlElement>().SingleOrDefault();
-				Guard.Against<ACBrDFeException>(element == null, "Nome do elemento de assinatura incorreto");
-				var signed = AssinarElemento(element.OuterXml, pUri, pNode, pCertificado, comments);
-				var signedElement = doc.ImportNode(signed, true);
-				element.ParentNode?.ReplaceChild(signedElement, element);
-
+				AssinarDocumento(doc, pUri, pNode, pCertificado, comments);
 				return doc.AsString();
 			}
 			catch (Exception ex)
@@ -82,27 +79,30 @@ namespace ACBr.Net.DFe.Core
 		/// Assina Multiplos elementos dentro da Xml.
 		/// </summary>
 		/// <param name="xml">O Xml.</param>
+		/// <param name="pSignNode">O node inicial para o calculo da assinatura.</param>
 		/// <param name="pUri">A Uri da referencia.</param>
-		/// <param name="pNode">O node onde sera feito o append da assinatura.</param>
+		/// <param name="pNode">O node onde sera feito o append da assinatura</param>
 		/// <param name="pCertificado">O certificado.</param>
 		/// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
 		/// <returns>System.String.</returns>
 		/// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
 		/// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
-		public static string AssinarXmlTodos(string xml, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
+		public static string AssinarXmlTodos(string xml, string pSignNode, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
 		{
 			try
 			{
 				var doc = new XmlDocument();
 				doc.LoadXml(xml);
 
-				var xmlElements = doc.GetElementsByTagName(pNode).Cast<XmlElement>().ToArray();
+				var xmlElements = doc.GetElementsByTagName(pSignNode).Cast<XmlElement>().ToArray();
 				Guard.Against<ACBrDFeException>(!xmlElements.Any(), "Nome do elemento de assinatura incorreto");
 
 				foreach (var element in xmlElements)
 				{
-					var signed = AssinarElemento(element.OuterXml, pUri, pNode, pCertificado, comments);
-					var signedElement = doc.ImportNode(signed, true);
+					var docElement = new XmlDocument();
+					docElement.Load(element.OuterXml);
+					AssinarDocumento(docElement, pUri, pNode, pCertificado, comments);
+					var signedElement = doc.ImportNode(docElement, true);
 					element.ParentNode?.ReplaceChild(signedElement, element);
 				}
 
@@ -114,11 +114,8 @@ namespace ACBr.Net.DFe.Core
 			}
 		}
 
-		private static XmlElement AssinarElemento(string elemento, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
+		private static void AssinarDocumento(XmlDocument doc, string pUri, string pNode, X509Certificate2 pCertificado, bool comments = false)
 		{
-			var doc = new XmlDocument();
-			doc.LoadXml(elemento);
-
 			Guard.Against<ArgumentException>(!pUri.IsEmpty() && doc.GetElementsByTagName(pUri).Count != 1, "Referencia invalida ou não é unica.");
 
 			//Adiciona Certificado ao Key Info
@@ -132,7 +129,7 @@ namespace ACBr.Net.DFe.Core
 				KeyInfo = keyInfo
 			};
 
-			var uri = pUri.IsEmpty() ? "" : $"#{doc.GetElementsByTagName(pUri)[0].Attributes["Id"]?.InnerText}";
+			var uri = pUri.IsEmpty() ? "" : $"#{doc.GetElementsByTagName(pUri)[0].Attributes?["Id"]?.InnerText}";
 
 			// Cria referencia
 			var reference = new Reference { Uri = uri };
@@ -152,12 +149,10 @@ namespace ACBr.Net.DFe.Core
 
 			// Adiciona ao doc XML
 			var xmlElement = doc.GetElementsByTagName(pNode).Cast<XmlElement>().FirstOrDefault();
-			Guard.Against<ACBrDFeException>(xmlElement == null, "Nome do elemento de assinatura incorreto");
+			Guard.Against<ACBrDFeException>(xmlElement == null, "Nome do elemento para o append da assinatura incorreto");
 
 			var element = doc.ImportNode(xmlDigitalSignature, true);
 			xmlElement.AppendChild(element);
-
-			return xmlElement;
 		}
 
 		/// <summary>
@@ -267,8 +262,7 @@ namespace ACBr.Net.DFe.Core
 
 			try
 			{
-				var settings = new XmlReaderSettings();
-				var schema2 = XmlSchema.Read(new XmlTextReader(schema), (sender, args) =>
+				var xmlSchema = XmlSchema.Read(new XmlTextReader(schema), (sender, args) =>
 				{
 					switch (args.Severity)
 					{
@@ -292,13 +286,13 @@ namespace ACBr.Net.DFe.Core
 					}
 				});
 
+				var settings = new XmlReaderSettings();
 				settings.ValidationType = ValidationType.Schema;
-				settings.Schemas.Add(schema2);
+				settings.Schemas.Add(xmlSchema);
 
-				var input = new StringReader(arquivoXml);
-				using (var reader2 = XmlReader.Create(input, settings))
+				using (var xmlReader = XmlReader.Create(new StringReader(arquivoXml), settings))
 				{
-					while (reader2.Read())
+					while (xmlReader.Read())
 					{
 					}
 				}
