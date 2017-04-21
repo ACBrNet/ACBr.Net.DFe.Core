@@ -172,7 +172,7 @@ namespace ACBr.Net.DFe.Core
 		public static X509Certificate2 SelecionarCertificado(string cerSerie = "")
 		{
 			var store = new X509Store("MY", StoreLocation.CurrentUser);
-			store.Open(OpenFlags.MaxAllowed);
+			store.Open(OpenFlags.OpenExistingOnly);
 
 			try
 			{
@@ -193,7 +193,6 @@ namespace ACBr.Net.DFe.Core
 				}
 
 				var certificado = certificadosSelecionados.Count < 1 ? null : certificadosSelecionados[0];
-				store.Close();
 				return certificado;
 			}
 			catch (Exception ex)

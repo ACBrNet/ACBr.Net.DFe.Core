@@ -33,6 +33,7 @@ using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.Collections;
+using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
