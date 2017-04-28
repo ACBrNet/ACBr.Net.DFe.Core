@@ -34,6 +34,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Common
 {
@@ -75,6 +76,13 @@ namespace ACBr.Net.DFe.Core.Common
 		public string Certificado { get; set; }
 
 		/// <summary>
+		/// Retorna ou estabelece o certificado em bytes.
+		/// </summary>
+		/// <value>O Certificado.</value>
+		[Browsable(true)]
+		public byte[] CertificadoBytes { get; set; }
+
+		/// <summary>
 		/// Retorna ou estabelece a senha do certificado.
 		/// </summary>
 		/// <value>A senha.</value>
@@ -89,7 +97,7 @@ namespace ACBr.Net.DFe.Core.Common
 		{
 			get
 			{
-				if (dataVenc == DateTime.MinValue && !Certificado.IsEmpty())
+				if (dataVenc == DateTime.MinValue && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
 					GetCertificado();
 
 				return dataVenc;
@@ -104,7 +112,7 @@ namespace ACBr.Net.DFe.Core.Common
 		{
 			get
 			{
-				if (subjectName.IsEmpty() && !Certificado.IsEmpty())
+				if (subjectName.IsEmpty() && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
 					GetCertificado();
 
 				return subjectName;
@@ -119,7 +127,7 @@ namespace ACBr.Net.DFe.Core.Common
 		{
 			get
 			{
-				if (cnpj.IsEmpty() && !Certificado.IsEmpty())
+				if (cnpj.IsEmpty() && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
 					GetCertificado();
 
 				return cnpj;
@@ -141,11 +149,16 @@ namespace ACBr.Net.DFe.Core.Common
 		}
 
 		/// <summary>
-		/// Obters the certficado.
+		/// retorna o certificado digital.
 		/// </summary>
 		/// <returns>X509Certificate2.</returns>
 		public X509Certificate2 ObterCertificado()
 		{
+			if (!CertificadoBytes.IsNullOrEmpty())
+			{
+				return new X509Certificate2(CertificadoBytes, Senha);
+			}
+
 			if (File.Exists(Certificado))
 			{
 				return CertificadoDigital.SelecionarCertificado(Certificado, Senha);

@@ -37,44 +37,12 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
 	internal static class DFeExtensions
 	{
-		internal static TValue GetAttributeValue<TAttribute, TValue>(
-			this ICustomAttributeProvider type,
-			Func<TAttribute, TValue> valueSelector)
-			where TAttribute : Attribute
-		{
-			var att = type.GetCustomAttributes(
-				typeof(TAttribute), true
-				).FirstOrDefault() as TAttribute;
-
-			return att != null ? valueSelector(att) : default(TValue);
-		}
-
-		internal static TAttribute GetAttribute<TAttribute>(this ICustomAttributeProvider type)
-			where TAttribute : Attribute
-		{
-			var att = type.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>().FirstOrDefault();
-			return att;
-		}
-
-		internal static TAttribute[] GetAttributes<TAttribute>(this ICustomAttributeProvider type)
-			where TAttribute : Attribute
-		{
-			var att = type.GetCustomAttributes(typeof(TAttribute), true)
-				.Cast<TAttribute>().ToArray();
-			return att;
-		}
-
-		internal static bool HasAttribute<T>(this ICustomAttributeProvider provider) where T : Attribute
-		{
-			var atts = provider.GetCustomAttributes(typeof(T), true);
-			return atts.Length > 0;
-		}
-
 		internal static IDFeElement GetTag(this PropertyInfo prop)
 		{
 			return prop.HasAttribute<DFeElementAttribute>()
@@ -173,10 +141,12 @@ namespace ACBr.Net.DFe.Core.Extensions
 			return true;
 		}
 
-		internal static IEnumerable Cast(this IEnumerable lista, Type tipo)
+		/// <summary>Indicates whether the specified array is null or has a length of zero.</summary>
+		/// <param name="array">The array to test.</param>
+		/// <returns>true if the array parameter is null or has a length of zero; otherwise, false.</returns>
+		internal static bool IsNullOrEmpty(this Array array)
 		{
-			var method = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(tipo);
-			return (IEnumerable)method.Invoke(null, new object[] { lista });
+			return (array == null || array.Length == 0);
 		}
 	}
 }
