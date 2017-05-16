@@ -36,6 +36,9 @@ using System.Reflection;
 
 namespace ACBr.Net.DFe.Core.Common
 {
+	/// <summary>
+	///
+	/// </summary>
 	public abstract class DFeGeralConfigBase
 	{
 		#region Constructor
@@ -47,7 +50,7 @@ namespace ACBr.Net.DFe.Core.Common
 		{
 			Salvar = false;
 
-			var path = Path.GetDirectoryName(Assembly.GetCallingAssembly().CodeBase);
+			var path = Assembly.GetExecutingAssembly().GetPath();
 			if (!path.IsEmpty())
 			{
 				PathSchemas = Path.Combine(path, "Schemas");

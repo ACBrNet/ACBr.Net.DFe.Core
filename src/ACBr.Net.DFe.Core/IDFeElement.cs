@@ -32,7 +32,7 @@
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
-namespace ACBr.Net.DFe.Core.Interfaces
+namespace ACBr.Net.DFe.Core
 {
 	/// <summary>
 	/// Interface IDFeElement
