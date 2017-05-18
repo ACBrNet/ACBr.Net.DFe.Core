@@ -177,7 +177,7 @@ namespace ACBr.Net.DFe.Core
 			try
 			{
 				var certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now, true)
-					.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
+					.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
 
 				X509Certificate2Collection certificadosSelecionados;
 
@@ -188,7 +188,7 @@ namespace ACBr.Net.DFe.Core
 				}
 				else
 				{
-					certificadosSelecionados = certificates.Find(X509FindType.FindBySerialNumber, cerSerie, true);
+					certificadosSelecionados = certificates.Find(X509FindType.FindBySerialNumber, cerSerie, false);
 					Guard.Against<ACBrDFeException>(certificadosSelecionados.Count == 0, "Certificado digital não encontrado");
 				}
 
@@ -206,17 +206,6 @@ namespace ACBr.Net.DFe.Core
 		}
 
 		/// <summary>
-		/// Exibi o certificado usando a ui nativa do windows.
-		/// </summary>
-		/// <param name="certificado"></param>
-		public static void ExibirCertificado(this X509Certificate2 certificado)
-		{
-			Guard.Against<ArgumentNullException>(certificado == null, nameof(certificado));
-
-			X509Certificate2UI.DisplayCertificate(certificado);
-		}
-
-		/// <summary>
 		/// Seleciona um certificado informando o caminho e a senha.
 		/// </summary>
 		/// <param name="caminho">O caminho.</param>
@@ -228,8 +217,35 @@ namespace ACBr.Net.DFe.Core
 			Guard.Against<ArgumentNullException>(caminho.IsEmpty(), "Caminho do arquivo não poder ser nulo ou vazio !");
 			Guard.Against<ArgumentException>(!File.Exists(caminho), "Arquivo do Certificado digital não encontrado !");
 
-			var cert = new X509Certificate2(caminho, senha, X509KeyStorageFlags.MachineKeySet);
+			var cert = new X509Certificate2(caminho, senha);
 			return cert;
+		}
+
+		/// <summary>
+		/// Seleciona um certificado passando um array de bytes.
+		/// </summary>
+		/// <param name="certificado">O certificado.</param>
+		/// <param name="senha">A senha.</param>
+		/// <returns>X509Certificate2.</returns>
+		/// <exception cref="System.Exception">Arquivo do Certificado digital não encontrado</exception>
+		public static X509Certificate2 SelecionarCertificado(byte[] certificado, string senha = "")
+		{
+			Guard.Against<ArgumentNullException>(certificado != null, "O certificado não poder ser nulo ou vazio !");
+			Guard.Against<ArgumentException>(certificado.Length > 0, "O tamanhado do certificado não pode ser zero !");
+
+			var cert = new X509Certificate2(certificado, senha);
+			return cert;
+		}
+
+		/// <summary>
+		/// Exibi o certificado usando a ui nativa do windows.
+		/// </summary>
+		/// <param name="certificado"></param>
+		public static void ExibirCertificado(this X509Certificate2 certificado)
+		{
+			Guard.Against<ArgumentNullException>(certificado == null, nameof(certificado));
+
+			X509Certificate2UI.DisplayCertificate(certificado);
 		}
 
 		/// <summary>

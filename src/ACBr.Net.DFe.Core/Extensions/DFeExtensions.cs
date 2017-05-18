@@ -31,7 +31,6 @@
 
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Interfaces;
 using ExtraConstraints;
 using System;
 using System.Collections;

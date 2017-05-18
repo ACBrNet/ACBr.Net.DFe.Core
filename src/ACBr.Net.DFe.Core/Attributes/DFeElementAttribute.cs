@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.DFe.Core.Interfaces;
 using ACBr.Net.DFe.Core.Serializer;
 using System;
 
@@ -39,7 +38,7 @@ namespace ACBr.Net.DFe.Core.Attributes
 	/// Classe DFeElementAttribute.
 	/// </summary>
 	/// <seealso cref="System.Attribute" />
-	/// <seealso cref="ACBr.Net.DFe.Core.Interfaces.IDFeElement" />
+	/// <seealso cref="IDFeElement" />
 	[AttributeUsage(AttributeTargets.Property)]
 	public class DFeElementAttribute : Attribute, IDFeElement
 	{

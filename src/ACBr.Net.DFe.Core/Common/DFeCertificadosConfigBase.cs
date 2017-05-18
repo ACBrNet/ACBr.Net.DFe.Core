@@ -69,21 +69,21 @@ namespace ACBr.Net.DFe.Core.Common
 		#region Properties
 
 		/// <summary>
-		/// Retorna ou estabelece o certificado ou Numero de Serie.
+		/// Define/retorna o certificado ou Numero de Serie.
 		/// </summary>
 		/// <value>O Certificado/Numero de Serie.</value>
 		[Browsable(true)]
 		public string Certificado { get; set; }
 
 		/// <summary>
-		/// Retorna ou estabelece o certificado em bytes.
+		/// Define/retorna o certificado em bytes.
 		/// </summary>
 		/// <value>O Certificado.</value>
 		[Browsable(true)]
 		public byte[] CertificadoBytes { get; set; }
 
 		/// <summary>
-		/// Retorna ou estabelece a senha do certificado.
+		/// Define/retorna a senha do certificado.
 		/// </summary>
 		/// <value>A senha.</value>
 		[Browsable(true)]
@@ -105,10 +105,10 @@ namespace ACBr.Net.DFe.Core.Common
 		}
 
 		/// <summary>
-		/// Gets or sets the name of the subject.
+		/// Define/retorna o nome do responsável pelo certificado.
 		/// </summary>
 		/// <value>The name of the subject.</value>
-		public string SubjectName
+		public string Nome
 		{
 			get
 			{
@@ -149,14 +149,14 @@ namespace ACBr.Net.DFe.Core.Common
 		}
 
 		/// <summary>
-		/// retorna o certificado digital.
+		/// retorna o certificado digital de acordo com os dados informados.
 		/// </summary>
 		/// <returns>X509Certificate2.</returns>
 		public X509Certificate2 ObterCertificado()
 		{
-			if (!CertificadoBytes.IsNullOrEmpty())
+			if (CertificadoBytes?.Length > 0)
 			{
-				return new X509Certificate2(CertificadoBytes, Senha);
+				return CertificadoDigital.SelecionarCertificado(CertificadoBytes, Senha);
 			}
 
 			if (File.Exists(Certificado))

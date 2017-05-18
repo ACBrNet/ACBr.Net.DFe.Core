@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.DFe.Core.Interfaces;
 using ACBr.Net.DFe.Core.Serializer;
 using System;
 
