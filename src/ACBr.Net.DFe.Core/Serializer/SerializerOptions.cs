@@ -29,6 +29,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -111,7 +112,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 		/// </summary>
 		internal SerializerOptions()
 		{
-			ErrosAlertas = new BindingList<string>();
+			ErrosAlertas = new List<string>();
 			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
 			RemoverAcentos = false;
 			FormatarXml = true;
@@ -123,72 +124,29 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 		#region Propriedades
 
-		/// <summary>
-		/// Indica se é para retirar acentos do XML ou não.
-		/// </summary>
-		/// <value><c>true</c> if [retirar acentos]; otherwise, <c>false</c>.</value>
 		public bool RemoverAcentos { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="SerializerOptions"/> is identar.
-		/// </summary>
-		/// <value><c>true</c> if identar; otherwise, <c>false</c>.</value>
 		public bool FormatarXml { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether [omitir declaracao].
-		/// </summary>
-		/// <value><c>true</c> if [omitir declaracao]; otherwise, <c>false</c>.</value>
 		public bool OmitirDeclaracao { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether [assinar XML].
-		/// </summary>
-		/// <value><c>true</c> if [assinar XML]; otherwise, <c>false</c>.</value>
 		public bool AssinarXML { get; set; }
 
-		/// <summary>
-		/// Gets or sets the sign URI.
-		/// </summary>
-		/// <value>The sign URI.</value>
 		public string SignUri { get; set; }
 
-		/// <summary>
-		/// Gets or sets the certificado.
-		/// </summary>
-		/// <value>The certificado.</value>
 		public X509Certificate Certificado { get; set; }
 
-		/// <summary>
-		/// Gets or sets the encoder.
-		/// </summary>
-		/// <value>The encoder.</value>
 		public Encoding Encoder { get; set; }
 
-		/// <summary>
-		/// Gets the lista de alertas.
-		/// </summary>
-		/// <value>The lista de alertas.</value>
-		public BindingList<string> ErrosAlertas { get; }
+		public List<string> ErrosAlertas { get; }
 
-		/// <summary>
-		/// Gets or sets the formato alerta.
-		/// </summary>
-		/// <value>The formato alerta.</value>
 		public string FormatoAlerta { get; set; }
 
 		#endregion Propriedades
 
 		#region Methods
 
-		/// <summary>
-		/// Ws the alerta.
-		/// </summary>
-		/// <param name="id">The identifier.</param>
-		/// <param name="tag">The tag.</param>
-		/// <param name="descricao">The descricao.</param>
-		/// <param name="alerta">The alerta.</param>
-		internal void WAlerta(string id, string tag, string descricao, string alerta)
+		internal void AddAlerta(string id, string tag, string descricao, string alerta)
 		{
 			// O Formato da mensagem de erro pode ser alterado pelo usuario alterando-se a property FormatoAlerta: onde;
 			// %TAG%       : Representa a TAG; ex: <nLacre>

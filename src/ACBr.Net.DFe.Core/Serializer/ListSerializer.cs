@@ -84,7 +84,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			if (values.Count < tag.Min || values.Count > tag.Max)
 			{
 				var msg = values.Count > tag.Max ? SerializerOptions.ErrMsgMaiorMaximo : SerializerOptions.ErrMsgMenorMinimo;
-				options.WAlerta(tag.Id, tag.Name, tag.Descricao, msg);
+				options.AddAlerta(tag.Id, tag.Name, tag.Descricao, msg);
 			}
 
 			if (values.Count == 0 && tag.Min == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;

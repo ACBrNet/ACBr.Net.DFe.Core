@@ -37,6 +37,8 @@ namespace ACBr.Net.DFe.Core.Service
 {
 	internal class DFeInspectorBehavior : IEndpointBehavior
 	{
+		#region Methods
+
 		public void Validate(ServiceEndpoint endpoint)
 		{
 		}
@@ -54,5 +56,7 @@ namespace ACBr.Net.DFe.Core.Service
 			var messageInspector = new DFeMessageInspector();
 			clientRuntime.MessageInspectors.Add(messageInspector);
 		}
+
+		#endregion Methods
 	}
 }

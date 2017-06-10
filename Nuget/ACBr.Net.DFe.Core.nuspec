@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>ACBr.Net.DFe.Core</id>
-		<version>1.0.2.3</version>
+		<version>1.0.2.4-beta1</version>
 		<title>ACBr.Net.DFe.Core</title>
 		<authors>Grupo ACBr.Net</authors>
 		<owners>Grupo ACBr.Net</owners>
@@ -14,7 +14,7 @@
 		<language>pt-BR</language>
 		<tags>ACBr ACBr.Net Automação Comercial</tags>
 		<dependencies>
-			<dependency id="ACBr.Net.Core" version="1.0.1.6" />
+			<dependency id="ACBr.Net.Core" version="1.0.1.7" />
 		</dependencies>
 	</metadata>
 	<files>

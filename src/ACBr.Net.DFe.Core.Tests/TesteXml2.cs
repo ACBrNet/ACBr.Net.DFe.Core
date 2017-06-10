@@ -23,21 +23,11 @@ namespace ACBr.Net.DFe.Core.Tests
 		[DFeAttribute(TipoCampo.Int, "id", Id = "AT2", Min = 2, Max = 2, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public int Id { get; set; }
 
-		[DFeElement(TipoCampo.Custom, "custom1", Id = "ST2", Min = 0, Max = 19, Ocorrencia = Ocorrencia.NaoObrigatoria)]
+		[DFeElement(TipoCampo.Str, "CData", Id = "ST2", Min = 0, Max = 19, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public string TestString { get; set; }
 
 		[DFeElement(TipoCampo.De3, "decimal2", Id = "DC2", Min = 0, Max = 9, Ocorrencia = Ocorrencia.NaoObrigatoria)]
 		public decimal TestDecimal { get; set; }
-
-		private string SerializeTestString()
-		{
-			return $"{TestString} || SerializeTestString {Id:00}";
-		}
-
-		private object DeserializeTestString(string value)
-		{
-			return value.Replace($" || SerializeTestString {Id:00}", string.Empty);
-		}
 
 		#region Overrides
 

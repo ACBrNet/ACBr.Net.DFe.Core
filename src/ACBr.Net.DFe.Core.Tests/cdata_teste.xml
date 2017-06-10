@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RFTD id="01">
+  <dateTime1></dateTime1>
+  <decimal1></decimal1>
+  <nullInt></nullInt>
+  <testString1 />
+  <Interface1 id="01">
+    <custom1><![CDATA[XmlItem2 1]]></custom1>
+    <decimal2></decimal2>
+  </Interface1>
+  <Interface1 id="02">
+    <custom1><![CDATA[XmlItem2 2]]></custom1>
+    <decimal2></decimal2>
+  </Interface1>
+  <Itens>
+    <Item2 id="01">
+      <custom1><![CDATA[XmlItem2 1]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item2 id="02">
+      <custom1><![CDATA[XmlItem2 2]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item2 id="03">
+      <custom1><![CDATA[XmlItem2 3]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item3 id="01">
+      <custom2></custom2>
+      <decimal2></decimal2>
+    </Item3>
+    <Item3 id="02">
+      <custom2></custom2>
+      <decimal2></decimal2>
+    </Item3>
+    <Item3 id="03">
+      <custom2></custom2>
+      <decimal2></decimal2>
+    </Item3>
+  </Itens>
+  <Itens2>
+    <Item2 id="01">
+      <custom1><![CDATA[XmlItem2 1]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item2 id="02">
+      <custom1><![CDATA[XmlItem2 2]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item2 id="03">
+      <custom1><![CDATA[XmlItem2 3]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item3 id="01">
+      <custom2></custom2>
+      <decimal2></decimal2>
+    </Item3>
+    <Item3 id="02">
+      <custom2></custom2>
+      <decimal2></decimal2>
+    </Item3>
+    <Item3 id="03">
+      <custom2></custom2>
+      <decimal2></decimal2>
+    </Item3>
+  </Itens2>
+  <Itens3>
+    <Item2 id="01">
+      <custom1><![CDATA[XmlItem2 1]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item2 id="02">
+      <custom1><![CDATA[XmlItem2 2]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+    <Item2 id="03">
+      <custom1><![CDATA[XmlItem2 3]]></custom1>
+      <decimal2></decimal2>
+    </Item2>
+  </Itens3>
+  <prod id="01">
+    <custom3></custom3>
+    <decimal2></decimal2>
+  </prod>
+  <TesteListEnum></TesteListEnum>
+  <TesteListEnum></TesteListEnum>
+  <TesteListEnum></TesteListEnum>
+  <TesteDateTime></TesteDateTime>
+  <TesteDateTime></TesteDateTime>
+  <TesteDateTime></TesteDateTime>
+  <TesteEnum></TesteEnum>
+  <TesteEnum1></TesteEnum1>
+  <TesteEnum2 />
+  <RootTeste id="10">
+    <decimal2></decimal2>
+  </RootTeste>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="" />
+      <SignatureMethod Algorithm="" />
+      <Reference URI="">
+        <DigestMethod Algorithm="" />
+        <DigestValue />
+      </Reference>
+    </SignedInfo>
+    <SignatureValue />
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate />
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</RFTD>

@@ -130,6 +130,8 @@ namespace ACBr.Net.DFe.Core.Attributes
 		/// <value>The descricao.</value>
 		public string Descricao { get; set; }
 
+		public bool UseCData { get; set; }
+
 		#endregion Propriedades
 	}
 }

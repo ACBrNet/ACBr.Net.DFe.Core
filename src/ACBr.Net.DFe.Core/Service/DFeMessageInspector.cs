@@ -38,6 +38,8 @@ namespace ACBr.Net.DFe.Core.Service
 {
 	internal class DFeMessageInspector : IClientMessageInspector, IACBrLog
 	{
+		#region Methods
+
 		public object BeforeSendRequest(ref Message request, IClientChannel channel)
 		{
 			this.Log().Debug(request);
@@ -48,5 +50,7 @@ namespace ACBr.Net.DFe.Core.Service
 		{
 			this.Log().Debug(reply);
 		}
+
+		#endregion Methods
 	}
 }

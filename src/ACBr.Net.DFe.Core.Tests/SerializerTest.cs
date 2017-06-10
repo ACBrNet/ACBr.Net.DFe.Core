@@ -21,13 +21,15 @@ namespace ACBr.Net.DFe.Core.Tests
 				TestNullInt = 999
 			};
 
+			var cdata = File.ReadAllText("cdata_teste.xml");
+
 			for (var i = 0; i < 3; i++)
 			{
 				var item = new TesteXml2
 				{
 					Id = i + 1,
 					TestDecimal = xml.TestDecimal + i + 1.000M,
-					TestString = $"XmlItem2 {i + 1}"
+					TestString = $"<![CDATA[{cdata}]]>"
 				};
 				xml.XmlItems.Add(item);
 			}

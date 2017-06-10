@@ -51,14 +51,15 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <returns>TDocument.</returns>
 		public static TDocument Load(string document, Encoding encoding = null)
 		{
-			var serializer = new DFeSerializer(typeof(TDocument));
-
-			if (encoding != null)
+			using (var serializer = new DFeSerializer(typeof(TDocument)))
 			{
-				serializer.Options.Encoder = encoding;
-			}
+				if (encoding != null)
+				{
+					serializer.Options.Encoder = encoding;
+				}
 
-			return (TDocument)serializer.Deserialize(document);
+				return (TDocument)serializer.Deserialize(document);
+			}
 		}
 
 		/// <summary>
@@ -69,13 +70,15 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <returns>TDocument.</returns>
 		public static TDocument Load(Stream document, Encoding encoding = null)
 		{
-			var serializer = new DFeSerializer(typeof(TDocument));
-			if (encoding != null)
+			using (var serializer = new DFeSerializer(typeof(TDocument)))
 			{
-				serializer.Options.Encoder = encoding;
-			}
+				if (encoding != null)
+				{
+					serializer.Options.Encoder = encoding;
+				}
 
-			return (TDocument)serializer.Deserialize(document);
+				return (TDocument)serializer.Deserialize(document);
+			}
 		}
 
 		/// <summary>
@@ -106,21 +109,22 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <returns>TDocument.</returns>
 		public void Save(string path, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
 		{
-			var serializer = new DFeSerializer(typeof(TDocument));
-
-			if (!options.HasFlag(DFeSaveOptions.None))
+			using (var serializer = new DFeSerializer(typeof(TDocument)))
 			{
-				serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
-				serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
-				serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
-			}
+				if (!options.HasFlag(DFeSaveOptions.None))
+				{
+					serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
+					serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
+					serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
+				}
 
-			if (encoding != null)
-			{
-				serializer.Options.Encoder = encoding;
-			}
+				if (encoding != null)
+				{
+					serializer.Options.Encoder = encoding;
+				}
 
-			serializer.Serialize(this, path);
+				serializer.Serialize(this, path);
+			}
 		}
 
 		/// <summary>
@@ -132,21 +136,22 @@ namespace ACBr.Net.DFe.Core.Common
 		/// <returns>TDocument.</returns>
 		public void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
 		{
-			var serializer = new DFeSerializer(typeof(TDocument));
-
-			if (!options.HasFlag(DFeSaveOptions.None))
+			using (var serializer = new DFeSerializer(typeof(TDocument)))
 			{
-				serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
-				serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
-				serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
-			}
+				if (!options.HasFlag(DFeSaveOptions.None))
+				{
+					serializer.Options.RemoverAcentos = options.HasFlag(DFeSaveOptions.RemoveAccents);
+					serializer.Options.FormatarXml = !options.HasFlag(DFeSaveOptions.DisableFormatting);
+					serializer.Options.OmitirDeclaracao = !options.HasFlag(DFeSaveOptions.OmitDeclaration);
+				}
 
-			if (encoding != null)
-			{
-				serializer.Options.Encoder = encoding;
-			}
+				if (encoding != null)
+				{
+					serializer.Options.Encoder = encoding;
+				}
 
-			serializer.Serialize(this, stream);
+				serializer.Serialize(this, stream);
+			}
 		}
 	}
 }

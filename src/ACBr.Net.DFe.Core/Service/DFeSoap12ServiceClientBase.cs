@@ -43,7 +43,7 @@ namespace ACBr.Net.DFe.Core.Service
 	public abstract class DFeSoap12ServiceClientBase<T> : DFeServiceClientBase<T> where T : class
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeSoap12ServiceClientBase{T}"/> class.
+		/// Inicializa uma nova instancia da classe <see cref="DFeSoap12ServiceClientBase{T}"/>.
 		/// </summary>
 		/// <param name="url">The URL.</param>
 		/// <param name="timeOut">The time out.</param>

@@ -45,7 +45,7 @@ namespace ACBr.Net.DFe.Core.Service
 	public abstract class DFeServiceClientBase<T> : ClientBase<T>, IACBrLog where T : class
 	{
 		/// <summary>
-		///
+		/// Inicializa uma nova instancia da classe <see cref="DFeServiceClientBase{T}"/>.
 		/// </summary>
 		/// <param name="url"></param>
 		/// <param name="timeOut"></param>
