@@ -86,7 +86,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 					alerta += $" [{value}]";
 				}
 
-				options.WAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
+				options.AddAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
 
 				XObject xmlTag = null;
 				if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
@@ -96,13 +96,22 @@ namespace ACBr.Net.DFe.Core.Serializer
 
 				if (estaVazio) return xmlTag;
 
-				var retValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
-				var ret = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name, retValue) : new XAttribute(tag.Name, retValue);
-				return ret;
+				var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
+
+				if (tag is DFeAttributeAttribute) return new XAttribute(tag.Name, elementValue);
+
+				var cData = ((DFeElementAttribute)tag).UseCData;
+				if (elementValue.StartsWith("<![CDATA[") && elementValue.EndsWith("]]>"))
+				{
+					elementValue = elementValue.GetStrBetween(9, elementValue.Length - 4);
+					cData = true;
+				}
+
+				return cData ? new XElement(tag.Name, new XCData(elementValue)) : new XElement(tag.Name, elementValue);
 			}
 			catch (Exception ex)
 			{
-				options.WAlerta(tag.Id, tag.Name, tag.Descricao, ex.ToString());
+				options.AddAlerta(tag.Id, tag.Name, tag.Descricao, ex.ToString());
 				return null;
 			}
 		}

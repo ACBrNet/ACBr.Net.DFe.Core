@@ -42,7 +42,7 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	public class DFeSerializer : IACBrLog
+	public class DFeSerializer : IACBrLog, IDisposable
 	{
 		#region Fields
 
@@ -59,8 +59,15 @@ namespace ACBr.Net.DFe.Core.Serializer
 		{
 			Guard.Against<ArgumentException>(tipo.IsGenericType, "Não é possivel serializar uma classe generica !");
 			Guard.Against<ArgumentException>(!tipo.HasAttribute<DFeRootAttribute>(), "Não é uma classe DFe !");
+
 			tipoDFe = tipo;
 			Options = new SerializerOptions();
+		}
+
+		~DFeSerializer()
+		{
+			// Finalizer calls Dispose(false)
+			Dispose(false);
 		}
 
 		#endregion Constructors
@@ -113,6 +120,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
 
 			Options.ErrosAlertas.Clear();
+
 			if (item.IsNull())
 			{
 				Options.ErrosAlertas.Add("O item é nulo !");
@@ -122,7 +130,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
 			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
-			File.WriteAllText(path, xml);
+			File.WriteAllText(path, xml, Options.Encoder);
 
 			return ret;
 		}
@@ -147,9 +155,14 @@ namespace ACBr.Net.DFe.Core.Serializer
 			var xmldoc = Serialize(item);
 			var ret = !Options.ErrosAlertas.Any();
 			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
-			var sw = new StreamWriter(stream, Options.Encoder);
-			sw.WriteLine(xml);
-			sw.Flush();
+
+			using (var ms = new MemoryStream())
+			using (var sw = new StreamWriter(ms, Options.Encoder))
+			{
+				sw.WriteLine(xml);
+				sw.Flush();
+				ms.WriteTo(stream);
+			}
 
 			stream.Position = 0;
 			return ret;
@@ -246,6 +259,24 @@ namespace ACBr.Net.DFe.Core.Serializer
 		}
 
 		#endregion Deserialize
+
+		#region IDisposable
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				Options.Certificado?.Reset();
+			}
+		}
+
+		#endregion IDisposable
 
 		#endregion Methods
 	}

@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACBr.Net.Core, Version=1.0.1.7, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7-beta1\lib\net40\ACBr.Net.Core.dll</HintPath>
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7\lib\net40\ACBr.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -82,6 +82,11 @@
       <Project>{d5613362-449b-4c9d-ac82-7e234cfe545a}</Project>
       <Name>ACBr.Net.DFe.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cdata_teste.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
