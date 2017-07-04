@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACBrDFeException.cs" />
+    <Compile Include="Attributes\DFeCollectionAttribute.cs" />
     <Compile Include="Attributes\DFeEnumAttribute.cs" />
     <Compile Include="Attributes\DFeIgnoreAttribute.cs" />
     <Compile Include="Attributes\Ocorrencia.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Common\DFeTipoEmissao.cs" />
     <Compile Include="Common\DFeUnidTransp.cs" />
     <Compile Include="Serializer\DFeSerializer.Extendend.cs" />
+    <Compile Include="Serializer\InterfaceSerializer.cs" />
     <Compile Include="Service\DFeInspectorBehavior.cs" />
     <Compile Include="Service\DFeMessageInspector.cs" />
     <Compile Include="Common\DFeArquivosConfigBase.cs" />

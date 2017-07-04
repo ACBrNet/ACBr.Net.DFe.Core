@@ -40,324 +40,324 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	internal static class PrimitiveSerializer
-	{
-		#region Serialize
+    internal static class PrimitiveSerializer
+    {
+        #region Serialize
 
-		/// <summary>
-		/// Serializes a fundamental primitive object (e.g. string, int etc.) into a XElement using options.
-		/// </summary>
-		/// <param name="tag">The name of the primitive to serialize.</param>
-		/// <param name="item">The item.</param>
-		/// <param name="prop">The property.</param>
-		/// <param name="options">Indicates how the output is formatted or serialized.</param>
-		/// <returns>The XElement representation of the primitive.</returns>
-		public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
-		{
-			try
-			{
-				var value = prop.GetValueOrIndex(item, idx);
-				var estaVazio = value == null || value.ToString().IsEmpty();
-				var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Ocorrencia, tag.Min, prop, item);
+        /// <summary>
+        /// Serializes a fundamental primitive object (e.g. string, int etc.) into a XElement using options.
+        /// </summary>
+        /// <param name="tag">The name of the primitive to serialize.</param>
+        /// <param name="item">The item.</param>
+        /// <param name="prop">The property.</param>
+        /// <param name="options">Indicates how the output is formatted or serialized.</param>
+        /// <returns>The XElement representation of the primitive.</returns>
+        public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
+        {
+            try
+            {
+                var value = prop.GetValueOrIndex(item, idx);
+                var estaVazio = value == null || value.ToString().IsEmpty();
+                var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Ocorrencia, tag.Min, prop, item);
 
-				string alerta;
-				if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio && tag.Min > 0)
-				{
-					alerta = SerializerOptions.ErrMsgVazio;
-				}
-				else
-				{
-					alerta = string.Empty;
-				}
+                string alerta;
+                if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio && tag.Min > 0)
+                {
+                    alerta = DFeSerializer.ErrMsgVazio;
+                }
+                else
+                {
+                    alerta = string.Empty;
+                }
 
-				if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() &&
-					conteudoProcessado.Length > 1)
-				{
-					alerta = SerializerOptions.ErrMsgMenor;
-				}
+                if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() &&
+                    conteudoProcessado.Length > 1)
+                {
+                    alerta = DFeSerializer.ErrMsgMenor;
+                }
 
-				if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) && conteudoProcessado.Length > tag.Max)
-				{
-					alerta = SerializerOptions.ErrMsgMaior;
-				}
+                if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) && conteudoProcessado.Length > tag.Max)
+                {
+                    alerta = DFeSerializer.ErrMsgMaior;
+                }
 
-				if (!string.IsNullOrEmpty(alerta.Trim()) && SerializerOptions.ErrMsgVazio.Equals(alerta) && !estaVazio)
-				{
-					alerta += $" [{value}]";
-				}
+                if (!string.IsNullOrEmpty(alerta.Trim()) && DFeSerializer.ErrMsgVazio.Equals(alerta) && !estaVazio)
+                {
+                    alerta += $" [{value}]";
+                }
 
-				options.AddAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
+                options.AddAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
 
-				XObject xmlTag = null;
-				if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
-				{
-					xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name) : new XAttribute(tag.Name, "");
-				}
+                XObject xmlTag = null;
+                if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
+                {
+                    xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name) : new XAttribute(tag.Name, "");
+                }
 
-				if (estaVazio) return xmlTag;
+                if (estaVazio) return xmlTag;
 
-				var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
+                var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
 
-				if (tag is DFeAttributeAttribute) return new XAttribute(tag.Name, elementValue);
+                if (tag is DFeAttributeAttribute) return new XAttribute(tag.Name, elementValue);
 
-				var cData = ((DFeElementAttribute)tag).UseCData;
-				if (elementValue.StartsWith("<![CDATA[") && elementValue.EndsWith("]]>"))
-				{
-					elementValue = elementValue.GetStrBetween(9, elementValue.Length - 4);
-					cData = true;
-				}
+                var cData = ((DFeElementAttribute)tag).UseCData;
+                if (elementValue.IsCData())
+                {
+                    elementValue = elementValue.RemoveCData();
+                    cData = true;
+                }
 
-				return cData ? new XElement(tag.Name, new XCData(elementValue)) : new XElement(tag.Name, elementValue);
-			}
-			catch (Exception ex)
-			{
-				options.AddAlerta(tag.Id, tag.Name, tag.Descricao, ex.ToString());
-				return null;
-			}
-		}
+                return cData ? new XElement(tag.Name, new XCData(elementValue)) : new XElement(tag.Name, elementValue);
+            }
+            catch (Exception ex)
+            {
+                options.AddAlerta(tag.Id, tag.Name, tag.Descricao, ex.ToString());
+                return null;
+            }
+        }
 
-		private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, Ocorrencia ocorrencia, int min, PropertyInfo prop, object item)
-		{
-			var conteudoProcessado = string.Empty;
+        private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, Ocorrencia ocorrencia, int min, PropertyInfo prop, object item)
+        {
+            var conteudoProcessado = string.Empty;
 
-			if (estaVazio) return conteudoProcessado;
+            if (estaVazio) return conteudoProcessado;
 
-			// ReSharper disable once SwitchStatementMissingSomeCases
-			switch (tipo)
-			{
-				case TipoCampo.Str:
-					conteudoProcessado = valor.ToString().Trim();
-					break;
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (tipo)
+            {
+                case TipoCampo.Str:
+                    conteudoProcessado = valor.ToString().Trim();
+                    break;
 
-				case TipoCampo.Dat:
-				case TipoCampo.DatCFe:
-					DateTime data;
-					if (DateTime.TryParse(valor.ToString(), out data))
-					{
-						conteudoProcessado = data.ToString(tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd");
-					}
-					else
-					{
-						estaVazio = true;
-					}
-					break;
+                case TipoCampo.Dat:
+                case TipoCampo.DatCFe:
+                    DateTime data;
+                    if (DateTime.TryParse(valor.ToString(), out data))
+                    {
+                        conteudoProcessado = data.ToString(tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd");
+                    }
+                    else
+                    {
+                        estaVazio = true;
+                    }
+                    break;
 
-				case TipoCampo.Hor:
-				case TipoCampo.HorCFe:
-					DateTime hora;
-					if (DateTime.TryParse(valor.ToString(), out hora))
-					{
-						conteudoProcessado = hora.ToString(tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss");
-					}
-					else
-					{
-						estaVazio = true;
-					}
-					break;
+                case TipoCampo.Hor:
+                case TipoCampo.HorCFe:
+                    DateTime hora;
+                    if (DateTime.TryParse(valor.ToString(), out hora))
+                    {
+                        conteudoProcessado = hora.ToString(tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss");
+                    }
+                    else
+                    {
+                        estaVazio = true;
+                    }
+                    break;
 
-				case TipoCampo.DatHor:
-					DateTime dthora;
-					if (DateTime.TryParse(valor.ToString(), out dthora))
-					{
-						conteudoProcessado = dthora.ToString("s");
-					}
-					else
-					{
-						estaVazio = true;
-					}
-					break;
+                case TipoCampo.DatHor:
+                    DateTime dthora;
+                    if (DateTime.TryParse(valor.ToString(), out dthora))
+                    {
+                        conteudoProcessado = dthora.ToString("s");
+                    }
+                    else
+                    {
+                        estaVazio = true;
+                    }
+                    break;
 
-				case TipoCampo.DatHorTz:
-					DateTime dthoratz;
-					if (DateTime.TryParse(valor.ToString(), out dthoratz))
-					{
-						conteudoProcessado = dthoratz.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
-					}
-					else
-					{
-						estaVazio = true;
-					}
-					break;
+                case TipoCampo.DatHorTz:
+                    DateTime dthoratz;
+                    if (DateTime.TryParse(valor.ToString(), out dthoratz))
+                    {
+                        conteudoProcessado = dthoratz.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+                    }
+                    else
+                    {
+                        estaVazio = true;
+                    }
+                    break;
 
-				case TipoCampo.De2:
-				case TipoCampo.De3:
-				case TipoCampo.De4:
-				case TipoCampo.De6:
-				case TipoCampo.De10:
-					decimal vDecimal;
-					if (decimal.TryParse(valor.ToString(), out vDecimal))
-					{
-						if (ocorrencia == Ocorrencia.MaiorQueZero && vDecimal == 0)
-						{
-							estaVazio = true;
-						}
-						else
-						{
-							// ReSharper disable once SwitchStatementMissingSomeCases
-							switch (tipo)
-							{
-								case TipoCampo.De2:
-									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", vDecimal);
-									break;
+                case TipoCampo.De2:
+                case TipoCampo.De3:
+                case TipoCampo.De4:
+                case TipoCampo.De6:
+                case TipoCampo.De10:
+                    decimal vDecimal;
+                    if (decimal.TryParse(valor.ToString(), out vDecimal))
+                    {
+                        if (ocorrencia == Ocorrencia.MaiorQueZero && vDecimal == 0)
+                        {
+                            estaVazio = true;
+                        }
+                        else
+                        {
+                            // ReSharper disable once SwitchStatementMissingSomeCases
+                            switch (tipo)
+                            {
+                                case TipoCampo.De2:
+                                    conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", vDecimal);
+                                    break;
 
-								case TipoCampo.De3:
-									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.000}", vDecimal);
-									break;
+                                case TipoCampo.De3:
+                                    conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.000}", vDecimal);
+                                    break;
 
-								case TipoCampo.De4:
-									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.0000}", vDecimal);
-									break;
+                                case TipoCampo.De4:
+                                    conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.0000}", vDecimal);
+                                    break;
 
-								case TipoCampo.De6:
-									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.000000}", vDecimal);
-									break;
+                                case TipoCampo.De6:
+                                    conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.000000}", vDecimal);
+                                    break;
 
-								default:
-									conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.0000000000}", vDecimal);
-									break;
-							}
-						}
-					}
-					else
-					{
-						estaVazio = true;
-					}
-					break;
+                                default:
+                                    conteudoProcessado = string.Format(CultureInfo.InvariantCulture, "{0:0.0000000000}", vDecimal);
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        estaVazio = true;
+                    }
+                    break;
 
-				case TipoCampo.Int:
-					int vInt;
-					if (int.TryParse(valor.ToString(), out vInt))
-					{
-						if (ocorrencia == Ocorrencia.MaiorQueZero && vInt == 0)
-						{
-							estaVazio = true;
-						}
-						else
-						{
-							conteudoProcessado = valor.ToString();
-							if (conteudoProcessado.Length < min)
-							{
-								conteudoProcessado = conteudoProcessado.ZeroFill(min);
-							}
-						}
-					}
-					else
-					{
-						estaVazio = true;
-					}
-					break;
+                case TipoCampo.Int:
+                    int vInt;
+                    if (int.TryParse(valor.ToString(), out vInt))
+                    {
+                        if (ocorrencia == Ocorrencia.MaiorQueZero && vInt == 0)
+                        {
+                            estaVazio = true;
+                        }
+                        else
+                        {
+                            conteudoProcessado = valor.ToString();
+                            if (conteudoProcessado.Length < min)
+                            {
+                                conteudoProcessado = conteudoProcessado.ZeroFill(min);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        estaVazio = true;
+                    }
+                    break;
 
-				case TipoCampo.StrNumberFill:
-					conteudoProcessado = valor.ToString();
-					if (conteudoProcessado.Length < min)
-					{
-						conteudoProcessado = conteudoProcessado.ZeroFill(min);
-					}
-					break;
+                case TipoCampo.StrNumberFill:
+                    conteudoProcessado = valor.ToString();
+                    if (conteudoProcessado.Length < min)
+                    {
+                        conteudoProcessado = conteudoProcessado.ZeroFill(min);
+                    }
+                    break;
 
-				case TipoCampo.StrNumber:
-					conteudoProcessado = valor.ToString().OnlyNumbers();
-					break;
+                case TipoCampo.StrNumber:
+                    conteudoProcessado = valor.ToString().OnlyNumbers();
+                    break;
 
-				case TipoCampo.Enum:
-					var member = valor.GetType().GetMember(valor.ToString()).FirstOrDefault();
-					var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-					var enumValue = enumAttribute?.Value;
-					conteudoProcessado = enumValue ?? valor.ToString();
-					break;
+                case TipoCampo.Enum:
+                    var member = valor.GetType().GetMember(valor.ToString()).FirstOrDefault();
+                    var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
+                    var enumValue = enumAttribute?.Value;
+                    conteudoProcessado = enumValue ?? valor.ToString();
+                    break;
 
-				case TipoCampo.Custom:
-					var serialize = prop.GetSerializer(item);
-					conteudoProcessado = serialize();
-					break;
+                case TipoCampo.Custom:
+                    var serialize = prop.GetSerializer(item);
+                    conteudoProcessado = serialize();
+                    break;
 
-				default:
-					conteudoProcessado = valor.ToString();
-					break;
-			}
+                default:
+                    conteudoProcessado = valor.ToString();
+                    break;
+            }
 
-			return conteudoProcessado;
-		}
+            return conteudoProcessado;
+        }
 
-		#endregion Serialize
+        #endregion Serialize
 
-		#region Deserialize
+        #region Deserialize
 
-		/// <summary>
-		/// Deserializes the XElement to the fundamental primitive (e.g. string, int etc.) of a specified type using options.
-		/// </summary>
-		/// <param name="tag">The tag.</param>
-		/// <param name="parentElement">The parent XElement used to deserialize the fundamental primitive.</param>
-		/// <param name="item">The item.</param>
-		/// <param name="prop">The property.</param>
-		/// <param name="options">The options.</param>
-		/// <returns>The deserialized fundamental primitive from the XElement.</returns>
-		public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
-		{
-			if (parentElement == null) return null;
+        /// <summary>
+        /// Deserializes the XElement to the fundamental primitive (e.g. string, int etc.) of a specified type using options.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <param name="parentElement">The parent XElement used to deserialize the fundamental primitive.</param>
+        /// <param name="item">The item.</param>
+        /// <param name="prop">The property.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The deserialized fundamental primitive from the XElement.</returns>
+        public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
+        {
+            if (parentElement == null) return null;
 
-			var element = parentElement as XElement;
-			var value = element?.Value ?? ((XAttribute)parentElement).Value;
-			return GetValue(tag.Tipo, value, item, prop);
-		}
+            var element = parentElement as XElement;
+            var value = element?.Value ?? ((XAttribute)parentElement).Value;
+            return GetValue(tag.Tipo, value, item, prop);
+        }
 
-		private static object GetValue(TipoCampo tipo, string valor, object item, PropertyInfo prop)
-		{
-			if (valor.IsEmpty()) return null;
+        private static object GetValue(TipoCampo tipo, string valor, object item, PropertyInfo prop)
+        {
+            if (valor.IsEmpty()) return null;
 
-			object ret;
-			// ReSharper disable once SwitchStatementMissingSomeCases
-			switch (tipo)
-			{
-				case TipoCampo.Int:
-					ret = valor.ToInt32();
-					break;
+            object ret;
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (tipo)
+            {
+                case TipoCampo.Int:
+                    ret = valor.ToInt32();
+                    break;
 
-				case TipoCampo.DatHor:
-				case TipoCampo.DatHorTz:
-					ret = valor.ToData();
-					break;
+                case TipoCampo.DatHor:
+                case TipoCampo.DatHorTz:
+                    ret = valor.ToData();
+                    break;
 
-				case TipoCampo.Dat:
-				case TipoCampo.DatCFe:
-					ret = DateTime.ParseExact(valor, tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd", CultureInfo.InvariantCulture);
-					break;
+                case TipoCampo.Dat:
+                case TipoCampo.DatCFe:
+                    ret = DateTime.ParseExact(valor, tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    break;
 
-				case TipoCampo.Hor:
-				case TipoCampo.HorCFe:
-					ret = DateTime.ParseExact(valor, tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss", CultureInfo.InvariantCulture);
-					break;
+                case TipoCampo.Hor:
+                case TipoCampo.HorCFe:
+                    ret = DateTime.ParseExact(valor, tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss", CultureInfo.InvariantCulture);
+                    break;
 
-				case TipoCampo.De2:
-				case TipoCampo.De3:
-				case TipoCampo.De4:
-				case TipoCampo.De10:
-				case TipoCampo.De6:
-					var numberFormat = CultureInfo.InvariantCulture.NumberFormat;
-					ret = decimal.Parse(valor, numberFormat);
-					break;
+                case TipoCampo.De2:
+                case TipoCampo.De3:
+                case TipoCampo.De4:
+                case TipoCampo.De10:
+                case TipoCampo.De6:
+                    var numberFormat = CultureInfo.InvariantCulture.NumberFormat;
+                    ret = decimal.Parse(valor, numberFormat);
+                    break;
 
-				case TipoCampo.Enum:
-					var type = prop.PropertyType.IsGenericType ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
-					object value1 = type.GetMembers().Where(x => x.HasAttribute<DFeEnumAttribute>())
-								 .SingleOrDefault(x => x.GetAttribute<DFeEnumAttribute>().Value == valor)?.Name ?? valor;
+                case TipoCampo.Enum:
+                    var type = prop.PropertyType.IsGenericType ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+                    object value1 = type.GetMembers().Where(x => x.HasAttribute<DFeEnumAttribute>())
+                                 .SingleOrDefault(x => x.GetAttribute<DFeEnumAttribute>().Value == valor)?.Name ?? valor;
 
-					ret = Enum.Parse(type, value1.ToString());
-					break;
+                    ret = Enum.Parse(type, value1.ToString());
+                    break;
 
-				case TipoCampo.Custom:
-					var deserialize = prop.GetDeserializer(item);
-					ret = deserialize(valor);
-					break;
+                case TipoCampo.Custom:
+                    var deserialize = prop.GetDeserializer(item);
+                    ret = deserialize(valor);
+                    break;
 
-				default:
-					ret = valor;
-					break;
-			}
+                default:
+                    ret = valor.RemoveCData();
+                    break;
+            }
 
-			return ret;
-		}
+            return ret;
+        }
 
-		#endregion Deserialize
-	}
+        #endregion Deserialize
+    }
 }

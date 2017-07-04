@@ -42,242 +42,307 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	public class DFeSerializer : IACBrLog, IDisposable
-	{
-		#region Fields
+    public class DFeSerializer : IACBrLog, IDisposable
+    {
+        #region Constantes
 
-		private readonly Type tipoDFe;
+        /// <summary>
+        /// The er r_ ms g_ maior
+        /// </summary>
+        internal const string ErrMsgMaior = "Tamanho maior que o máximo permitido";
 
-		#endregion Fields
+        /// <summary>
+        /// The er r_ ms g_ menor
+        /// </summary>
+        internal const string ErrMsgMenor = "Tamanho menor que o mínimo permitido";
 
-		#region Constructors
+        /// <summary>
+        /// The er r_ ms g_ vazio
+        /// </summary>
+        internal const string ErrMsgVazio = "Nenhum valor informado";
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeSerializer{T}"/> class.
-		/// </summary>
-		internal DFeSerializer(Type tipo)
-		{
-			Guard.Against<ArgumentException>(tipo.IsGenericType, "Não é possivel serializar uma classe generica !");
-			Guard.Against<ArgumentException>(!tipo.HasAttribute<DFeRootAttribute>(), "Não é uma classe DFe !");
+        /// <summary>
+        /// The er r_ ms g_ invalido
+        /// </summary>
+        internal const string ErrMsgInvalido = "Conteúdo inválido";
 
-			tipoDFe = tipo;
-			Options = new SerializerOptions();
-		}
+        /// <summary>
+        /// The er r_ ms g_ maxim o_ decimais
+        /// </summary>
+        internal const string ErrMsgMaximoDecimais = "Numero máximo de casas decimais permitidas";
 
-		~DFeSerializer()
-		{
-			// Finalizer calls Dispose(false)
-			Dispose(false);
-		}
+        /// <summary>
+        /// The er r_ ms g_ maio r_ maximo
+        /// </summary>
+        internal const string ErrMsgMaiorMaximo = "Número de ocorrências maior que o máximo permitido - Máximo ";
 
-		#endregion Constructors
+        /// <summary>
+        /// The er r_ ms g_ fina l_ meno r_ inicial
+        /// </summary>
+        internal const string ErrMsgFinalMenorInicial = "O numero final não pode ser menor que o inicial";
 
-		#region Propriedades
+        /// <summary>
+        /// The er r_ ms g_ arquiv o_ na o_ encontrado
+        /// </summary>
+        internal const string ErrMsgArquivoNaoEncontrado = "Arquivo não encontrado";
 
-		/// <summary>
-		/// Gets the options.
-		/// </summary>
-		/// <value>The options.</value>
-		public SerializerOptions Options { get; }
+        /// <summary>
+        /// The er r_ ms g_ soment e_ um
+        /// </summary>
+        internal const string ErrMsgSomenteUm = "Somente um campo deve ser preenchido";
 
-		#endregion Propriedades
+        /// <summary>
+        /// The er r_ ms g_ meno r_ minimo
+        /// </summary>
+        internal const string ErrMsgMenorMinimo = "Número de ocorrências menor que o mínimo permitido - Mínimo ";
 
-		#region Methods
+        /// <summary>
+        /// The ds c_ CNPJ
+        /// </summary>
+        internal const string DscCnpj = "CNPJ(MF)";
 
-		#region Create
+        /// <summary>
+        /// The ds c_ CPF
+        /// </summary>
+        internal const string DscCpf = "CPF";
 
-		/// <summary>
-		/// Creates the serializer.
-		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <returns>ACBr.Net.DFe.Core.Serializer.DFeSerializer.</returns>
-		public static DFeSerializer CreateSerializer(Type tipo)
-		{
-			return new DFeSerializer(tipo);
-		}
+        #endregion Constantes
 
-		/// <summary>
-		/// Creates the serializer.
-		/// </summary>
-		/// <typeparam name="TCreate"></typeparam>
-		/// <returns>DFeSerializer.</returns>
-		public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
-		{
-			return new DFeSerializer<TCreate>();
-		}
+        #region Fields
 
-		#endregion Create
+        private readonly Type tipoDFe;
 
-		#region Serialize
+        #endregion Fields
 
-		/// <summary>
-		/// Serializes the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="path">The xml.</param>
-		public bool Serialize(object item, string path)
-		{
-			Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
+        #region Constructors
 
-			Options.ErrosAlertas.Clear();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeSerializer{T}"/> class.
+        /// </summary>
+        internal DFeSerializer(Type tipo)
+        {
+            Guard.Against<ArgumentException>(tipo.IsGenericType, "Não é possivel serializar uma classe generica !");
+            Guard.Against<ArgumentException>(!tipo.HasAttribute<DFeRootAttribute>(), "Não é uma classe DFe !");
 
-			if (item.IsNull())
-			{
-				Options.ErrosAlertas.Add("O item é nulo !");
-				return false;
-			}
+            tipoDFe = tipo;
+            Options = new SerializerOptions();
+        }
 
-			var xmldoc = Serialize(item);
-			var ret = !Options.ErrosAlertas.Any();
-			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
-			File.WriteAllText(path, xml, Options.Encoder);
+        ~DFeSerializer()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
+        }
 
-			return ret;
-		}
+        #endregion Constructors
 
-		/// <summary>
-		/// Serializes the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="stream">The stream.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		public bool Serialize(object item, Stream stream)
-		{
-			Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
+        #region Propriedades
 
-			Options.ErrosAlertas.Clear();
-			if (item.IsNull())
-			{
-				Options.ErrosAlertas.Add("O item é nulo !");
-				return false;
-			}
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
+        /// <value>The options.</value>
+        public SerializerOptions Options { get; }
 
-			var xmldoc = Serialize(item);
-			var ret = !Options.ErrosAlertas.Any();
-			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
+        #endregion Propriedades
 
-			using (var ms = new MemoryStream())
-			using (var sw = new StreamWriter(ms, Options.Encoder))
-			{
-				sw.WriteLine(xml);
-				sw.Flush();
-				ms.WriteTo(stream);
-			}
+        #region Methods
 
-			stream.Position = 0;
-			return ret;
-		}
+        #region Create
 
-		private XDocument Serialize(object item)
-		{
-			var xmldoc = Options.OmitirDeclaracao ? new XDocument() : new XDocument(new XDeclaration("1.0", "UTF-8", null));
+        /// <summary>
+        /// Creates the serializer.
+        /// </summary>
+        /// <param name="tipo">The tipo.</param>
+        /// <returns>ACBr.Net.DFe.Core.Serializer.DFeSerializer.</returns>
+        public static DFeSerializer CreateSerializer(Type tipo)
+        {
+            return new DFeSerializer(tipo);
+        }
 
-			var rooTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+        /// <summary>
+        /// Creates the serializer.
+        /// </summary>
+        /// <typeparam name="TCreate"></typeparam>
+        /// <returns>DFeSerializer.</returns>
+        public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
+        {
+            return new DFeSerializer<TCreate>();
+        }
 
-			var rootName = rooTag.Name;
+        #endregion Create
 
-			if (rootName.IsEmpty())
-			{
-				var root = tipoDFe.GetRootName(item);
-				rootName = root.IsEmpty() ? tipoDFe.Name : root;
-			}
+        #region Serialize
 
-			var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, Options);
-			xmldoc.Add(rootElement);
-			xmldoc.RemoveEmptyNs();
+        /// <summary>
+        /// Serializes the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="path">The xml.</param>
+        public bool Serialize(object item, string path)
+        {
+            Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
 
-			foreach (var errosAlerta in Options.ErrosAlertas)
-			{
-				this.Log().Warn(errosAlerta);
-			}
+            Options.ErrosAlertas.Clear();
 
-			return xmldoc;
-		}
+            if (item.IsNull())
+            {
+                Options.ErrosAlertas.Add("O item é nulo !");
+                return false;
+            }
 
-		#endregion Serialize
+            var xmldoc = Serialize(item);
+            var ret = !Options.ErrosAlertas.Any();
+            var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
+            File.WriteAllText(path, xml, Options.Encoder);
 
-		#region Deserialize
+            return ret;
+        }
 
-		/// <summary>
-		/// Deserializes the specified xml.
-		/// </summary>
-		/// <param name="xml">The xml.</param>
-		/// <returns>System.Object.</returns>
-		public object Deserialize(string xml)
-		{
-			var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) : xml;
-			var xmlDoc = XDocument.Parse(content);
-			return Deserialize(xmlDoc);
-		}
+        /// <summary>
+        /// Serializes the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="stream">The stream.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public bool Serialize(object item, Stream stream)
+        {
+            Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
 
-		/// <summary>
-		/// Deserializes the specified stream.
-		/// </summary>
-		/// <param name="stream">The stream.</param>
-		/// <returns>System.Object.</returns>
-		public object Deserialize(Stream stream)
-		{
-			using (var reader = new StreamReader(stream, Options.Encoder))
-			{
-				var xmlDoc = XDocument.Parse(reader.ReadToEnd());
-				return Deserialize(xmlDoc);
-			}
-		}
+            Options.ErrosAlertas.Clear();
+            if (item.IsNull())
+            {
+                Options.ErrosAlertas.Add("O item é nulo !");
+                return false;
+            }
 
-		private object Deserialize(XDocument xmlDoc)
-		{
-			Options.ErrosAlertas.Clear();
+            var xmldoc = Serialize(item);
+            var ret = !Options.ErrosAlertas.Any();
+            var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
 
-			var rootTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+            using (var ms = new MemoryStream())
+            using (var sw = new StreamWriter(ms, Options.Encoder))
+            {
+                sw.WriteLine(xml);
+                sw.Flush();
+                ms.WriteTo(stream);
+            }
 
-			var rootNames = new List<string>();
-			if (!rootTag.Name.IsEmpty())
-			{
-				rootNames.Add(rootTag.Name);
-				rootNames.Add(tipoDFe.Name);
-			}
-			else
-			{
-				rootNames.AddRange(tipoDFe.GetRootNames());
-				rootNames.Add(tipoDFe.Name);
-			}
+            stream.Position = 0;
+            return ret;
+        }
 
-			var xmlNode = (from node in xmlDoc.Descendants()
-						   where node.Name.LocalName.IsIn(rootNames)
-						   select node).FirstOrDefault();
+        private XDocument Serialize(object item)
+        {
+            var xmldoc = Options.OmitirDeclaracao ? new XDocument() : new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
-			Guard.Against<ACBrDFeException>(xmlNode == null, "Nenhum objeto root encontrado !");
+            var rooTag = tipoDFe.GetAttribute<DFeRootAttribute>();
 
-			var returnValue = ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
+            var rootName = rooTag.Name;
 
-			foreach (var errosAlerta in Options.ErrosAlertas)
-			{
-				this.Log().Warn(errosAlerta);
-			}
+            if (rootName.IsEmpty())
+            {
+                var root = tipoDFe.GetRootName(item);
+                rootName = root.IsEmpty() ? tipoDFe.Name : root;
+            }
 
-			return returnValue;
-		}
+            var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, rooTag.Namespace, Options);
+            xmldoc.Add(rootElement);
+            xmldoc.RemoveEmptyNs();
 
-		#endregion Deserialize
+            foreach (var errosAlerta in Options.ErrosAlertas)
+            {
+                this.Log().Warn(errosAlerta);
+            }
 
-		#region IDisposable
+            return xmldoc;
+        }
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
+        #endregion Serialize
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Options.Certificado?.Reset();
-			}
-		}
+        #region Deserialize
 
-		#endregion IDisposable
+        /// <summary>
+        /// Deserializes the specified xml.
+        /// </summary>
+        /// <param name="xml">The xml.</param>
+        /// <returns>System.Object.</returns>
+        public object Deserialize(string xml)
+        {
+            var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) : xml;
+            var xmlDoc = XDocument.Parse(content);
+            return Deserialize(xmlDoc);
+        }
 
-		#endregion Methods
-	}
+        /// <summary>
+        /// Deserializes the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>System.Object.</returns>
+        public object Deserialize(Stream stream)
+        {
+            using (var reader = new StreamReader(stream, Options.Encoder))
+            {
+                var xmlDoc = XDocument.Parse(reader.ReadToEnd());
+                return Deserialize(xmlDoc);
+            }
+        }
+
+        private object Deserialize(XDocument xmlDoc)
+        {
+            Options.ErrosAlertas.Clear();
+
+            var rootTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+
+            var rootNames = new List<string>();
+            if (!rootTag.Name.IsEmpty())
+            {
+                rootNames.Add(rootTag.Name);
+                rootNames.Add(tipoDFe.Name);
+            }
+            else
+            {
+                rootNames.AddRange(tipoDFe.GetRootNames());
+                rootNames.Add(tipoDFe.Name);
+            }
+
+            var xmlNode = (from node in xmlDoc.Descendants()
+                           where node.Name.LocalName.IsIn(rootNames)
+                           select node).FirstOrDefault();
+
+            Guard.Against<ACBrDFeException>(xmlNode == null, "Nenhum objeto root encontrado !");
+
+            var returnValue = ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
+
+            foreach (var errosAlerta in Options.ErrosAlertas)
+            {
+                this.Log().Warn(errosAlerta);
+            }
+
+            return returnValue;
+        }
+
+        #endregion Deserialize
+
+        #region IDisposable
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Options.Certificado?.Reset();
+            }
+        }
+
+        #endregion IDisposable
+
+        #endregion Methods
+    }
 }

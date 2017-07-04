@@ -73,6 +73,7 @@
     <Compile Include="TesteXml3.cs" />
     <Compile Include="TesteXml4.cs" />
     <Compile Include="TesteXml5.cs" />
+    <Compile Include="Xml3Collection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
