@@ -66,6 +66,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <param name="value">The object to serialize.</param>
         /// <param name="tipo">The tipo.</param>
         /// <param name="name">The name of the object to serialize.</param>
+        /// <param name="nameSpace"></param>
         /// <param name="options">Indicates how the output is formatted or serialized.</param>
         /// <returns>The XElement representation of the object.</returns>
         /// <exception cref="ACBrDFeException"></exception>

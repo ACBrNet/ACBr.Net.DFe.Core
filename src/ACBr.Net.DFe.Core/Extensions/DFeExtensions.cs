@@ -126,7 +126,7 @@ namespace ACBr.Net.DFe.Core.Extensions
         }
 
         /// <summary>
-        /// Shoulds the ignore property.
+        /// Checks if a property should not be serialized.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="item">The item.</param>
