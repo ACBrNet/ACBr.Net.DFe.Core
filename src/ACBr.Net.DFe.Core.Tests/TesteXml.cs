@@ -40,10 +40,12 @@ namespace ACBr.Net.DFe.Core.Tests
 
         [DFeItem(typeof(TesteXml2), "Interface11")]
         [DFeItem(typeof(TesteXml3), "Interface12")]
+        [DFeItem(typeof(Xml3Collection), "Interface13")]
         public IXmlItem TestInterface1 { get; set; }
 
         [DFeItem(typeof(TesteXml2), "Interface21")]
         [DFeItem(typeof(TesteXml3), "Interface22")]
+        [DFeItem(typeof(Xml3Collection), "Interface23")]
         public IXmlItem TestInterface2 { get; set; }
 
         [DFeItem(typeof(TesteXml2), "Interface31")]
@@ -88,6 +90,9 @@ namespace ACBr.Net.DFe.Core.Tests
         public TesteEnum? TesteEnum2 { get; set; }
 
         public TesteXml5 Xml5 { get; set; }
+
+        [DFeElement("TesteXML6", Ocorrencia = Ocorrencia.NaoObrigatoria)]
+        public TesteXml2 Xml6 { get; set; }
 
         public DFeSignature Signature { get; set; }
 

@@ -76,6 +76,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             {
                 XNamespace aw = nameSpace ?? string.Empty;
                 var objectElement = new XElement(aw + name);
+
                 var properties = tipo.GetProperties();
                 foreach (var prop in properties)
                 {
@@ -134,11 +135,14 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (objectType == ObjectType.ClassType)
                 {
                     var attribute = prop.GetAttribute<DFeElementAttribute>();
+                    if (attribute.Ocorrencia == Ocorrencia.NaoObrigatoria && value == null) return null;
                     return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
                 }
 
                 if (objectType == ObjectType.RootType)
                 {
+                    if (value == null) return null;
+
                     var rooTag = prop.PropertyType.GetAttribute<DFeRootAttribute>();
                     var rootName = rooTag.Name;
 

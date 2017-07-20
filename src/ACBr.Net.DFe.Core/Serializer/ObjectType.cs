@@ -140,22 +140,8 @@ namespace ACBr.Net.DFe.Core.Serializer
                    || type == typeof(decimal)
                    || type == typeof(bool)
                    || type == typeof(DateTime)
-                   || type == typeof(char?)
-                   || type == typeof(sbyte?)
-                   || type == typeof(short?)
-                   || type == typeof(int?)
-                   || type == typeof(long?)
-                   || type == typeof(byte?)
-                   || type == typeof(ushort?)
-                   || type == typeof(uint?)
-                   || type == typeof(ulong?)
-                   || type == typeof(double?)
-                   || type == typeof(float?)
-                   || type == typeof(decimal?)
-                   || type == typeof(bool?)
-                   || type == typeof(DateTime?)
                    || type.IsEnum
-                   || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && type.GetGenericArguments()[0].IsEnum);
+                   || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && IsPrimitive(type.GetGenericArguments()[0]);
         }
 
         private static bool IsList(Type type)
