@@ -249,7 +249,7 @@ namespace ACBr.Net.DFe.Core
         }
 
         /// <summary>
-        /// Validars the XML.
+        /// Valida o arquivo XML com o schema informado.
         /// </summary>
         /// <param name="arquivoXml">The arquivo XML.</param>
         /// <param name="schema">The schema nf.</param>
