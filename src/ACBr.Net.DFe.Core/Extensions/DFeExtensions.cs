@@ -140,11 +140,6 @@ namespace ACBr.Net.DFe.Core.Extensions
             return true;
         }
 
-        public static bool IsNullOrEmpty(this Array array)
-        {
-            return (array == null || array.Length == 0);
-        }
-
         public static string RemoveCData(this string value)
         {
             if (value.IsEmpty()) return value;
