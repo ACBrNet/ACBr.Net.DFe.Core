@@ -52,7 +52,7 @@ namespace ACBr.Net.DFe.Core.Service
 		{
 			var custom = new CustomBinding(Endpoint.Binding);
 			var version = custom.Elements.Find<TextMessageEncodingBindingElement>();
-			version.MessageVersion = MessageVersion.Soap12;
+			version.MessageVersion = MessageVersion.Soap12WSAddressing10;
 
 			Endpoint.Binding = custom;
 		}

@@ -39,12 +39,12 @@ namespace ACBr.Net.DFe.Core.Common
 		Container,
 
 		[DFeEnum("2")]
-		ucULD,
+		ULD,
 
 		[DFeEnum("3")]
-		ucPallet,
+		Pallet,
 
 		[DFeEnum("4")]
-		ucOutros
+		Outros
 	}
 }

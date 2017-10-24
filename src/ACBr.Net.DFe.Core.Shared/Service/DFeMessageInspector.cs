@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 07-28-2016
 // ***********************************************************************
-// <copyright file="DFeInspectorBehavior.cs" company="ACBr.Net">
+// <copyright file="DFeMessageInspector.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,32 +29,40 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+using ACBr.Net.Core.Logging;
+using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
+using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-	internal class DFeInspectorBehavior : IEndpointBehavior
+	internal class DFeMessageInspector : IClientMessageInspector, IACBrLog
 	{
+		#region Events
+
+		public EventHandler<DFeMessageEventArgs> BeforeSendDFeRequest;
+
+		public EventHandler<DFeMessageEventArgs> AfterReceiveDFeReply;
+
+		#endregion Events
+
 		#region Methods
 
-		public void Validate(ServiceEndpoint endpoint)
+		public object BeforeSendRequest(ref Message request, IClientChannel channel)
 		{
+			var dfeArgs = new DFeMessageEventArgs(request.ToString());
+			this.Log().Debug(dfeArgs.Message);
+			BeforeSendDFeRequest.Raise(this, dfeArgs);
+			return null;
 		}
 
-		public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
+		public void AfterReceiveReply(ref Message reply, object correlationState)
 		{
-		}
-
-		public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
-		{
-		}
-
-		public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
-		{
-			var messageInspector = new DFeMessageInspector();
-			clientRuntime.MessageInspectors.Add(messageInspector);
+			var dfeArgs = new DFeMessageEventArgs(reply.ToString());
+			this.Log().Debug(dfeArgs.Message);
+			AfterReceiveDFeReply.Raise(this, dfeArgs);
 		}
 
 		#endregion Methods

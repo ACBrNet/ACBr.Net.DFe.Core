@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a391a2ed-c1f2-472c-93da-0c493ba8ea6b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ACBr.Net.DFe.Core.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ACBrDFeException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeAttributeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeCollectionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeElementAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeEnumAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeIgnoreAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeItemAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeRootAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\Ocorrencia.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CertificadoDigital.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collection\DFeCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeArquivosConfigBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCertificadosConfigBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCodUF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeDocument.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeGeralConfigBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeICMSCst.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeModeloNF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeProcessoEmissao.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeSaveOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeSiglaUF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeTipoAmbiente.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeTipoEmissao.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeTipoImpressao.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeUnidCarga.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeUnidMed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeUnidTransp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeWebserviceConfigBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\CanonicalizationMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\DFeSignature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\DigestMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\KeyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\Reference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\SignatureMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\SignedInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\Transform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\X509Data.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DFeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\XDocumentExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDFeElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.Extendend.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\InterfaceSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\ListSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\ObjectSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\ObjectType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\PrimitiveSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\SerializerOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\TipoCampo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeInspectorBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeMessageEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeMessageInspector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceClientBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeSoap12ServiceClientBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.dll" />
+    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.pdb" />
+    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\DesignTimeResolveAssemblyReferences.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.csprojResolveAssemblyReference.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.dll" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.dll.tmp" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.pdb" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.pdb.tmp" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\CoreCompileInputs.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csproj.CopyComplete" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csproj.CoreCompileInputs.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csprojResolveAssemblyReference.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.dll" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.dll.tmp" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.pdb" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.pdb.tmp" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\CoreCompileInputs.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\DesignTimeResolveAssemblyReferences.cache" />
+    <None Include="$(MSBuildThisFileDirectory)obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)obj\COM Interop\TempPE\" />
+    <Folder Include="$(MSBuildThisFileDirectory)obj\Debug\TempPE\" />
+    <Folder Include="$(MSBuildThisFileDirectory)obj\Release\TempPE\" />
+  </ItemGroup>
+</Project>

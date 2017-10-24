@@ -64,8 +64,13 @@ namespace ACBr.Net.DFe.Core.Service
 				}
 			}
 
-			var endpointInspector = new DFeInspectorBehavior();
+			var endpointInspector = new DFeInspectorBehavior((sender, args) => BeforeSendDFeRequest(args.Message),
+															 (sender, args) => AfterReceiveDFeReply(args.Message));
+#if NETSTANDARD2_0
+			Endpoint.EndpointBehaviors.Add(endpointInspector);
+#else
 			Endpoint.Behaviors.Add(endpointInspector);
+#endif
 
 			if (!timeOut.HasValue)
 				return;
@@ -73,6 +78,14 @@ namespace ACBr.Net.DFe.Core.Service
 			Endpoint.Binding.OpenTimeout = timeOut.Value;
 			Endpoint.Binding.ReceiveTimeout = timeOut.Value;
 			Endpoint.Binding.SendTimeout = timeOut.Value;
+		}
+
+		protected virtual void BeforeSendDFeRequest(string message)
+		{
+		}
+
+		protected virtual void AfterReceiveDFeReply(string message)
+		{
 		}
 	}
 }

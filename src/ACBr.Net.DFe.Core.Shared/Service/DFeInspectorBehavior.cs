@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 07-28-2016
 // ***********************************************************************
-// <copyright file="DFeMessageInspector.cs" company="ACBr.Net">
+// <copyright file="DFeInspectorBehavior.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,26 +29,58 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Logging;
-using System.ServiceModel;
+using System;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-	internal class DFeMessageInspector : IClientMessageInspector, IACBrLog
+	internal class DFeInspectorBehavior : IEndpointBehavior
 	{
-		#region Methods
+		#region Fields
 
-		public object BeforeSendRequest(ref Message request, IClientChannel channel)
+		private EventHandler<DFeMessageEventArgs> beforeSendRequest;
+		private EventHandler<DFeMessageEventArgs> afterReceiveReply;
+
+		#endregion Fields
+
+		#region Constructors
+
+		public DFeInspectorBehavior(EventHandler<DFeMessageEventArgs> beforeSendDFeRequest, EventHandler<DFeMessageEventArgs> afterReceiveDFeReply)
 		{
-			this.Log().Debug(request);
-			return null;
+			beforeSendRequest = beforeSendDFeRequest;
+			afterReceiveReply = afterReceiveDFeReply;
 		}
 
-		public void AfterReceiveReply(ref Message reply, object correlationState)
+		#endregion Constructors
+
+		#region Methods
+
+		public void Validate(ServiceEndpoint endpoint)
 		{
-			this.Log().Debug(reply);
+		}
+
+		public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
+		{
+		}
+
+		public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
+		{
+		}
+
+		public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
+		{
+			var messageInspector = new DFeMessageInspector
+			{
+				BeforeSendDFeRequest = beforeSendRequest,
+				AfterReceiveDFeReply = afterReceiveReply
+			};
+#if NETSTANDARD2_0
+			clientRuntime.ClientMessageInspectors.Add(messageInspector);
+#else
+			clientRuntime.MessageInspectors.Add(messageInspector);
+#endif
 		}
 
 		#endregion Methods
