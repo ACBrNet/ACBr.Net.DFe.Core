@@ -7,7 +7,7 @@
 	<RootNamespace>ACBr.Net.DFe.Core</RootNamespace>
 	<SignAssembly>true</SignAssembly>
 	<AssemblyOriginatorKeyFile>acbr.net.snk</AssemblyOriginatorKeyFile>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

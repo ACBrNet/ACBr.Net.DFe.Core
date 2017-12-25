@@ -33,6 +33,7 @@ using ACBr.Net.Core.Logging;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
+using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Service
 {
@@ -42,8 +43,11 @@ namespace ACBr.Net.DFe.Core.Service
 	/// <typeparam name="T"></typeparam>
 	/// <seealso cref="System.ServiceModel.ClientBase{T}" />
 	/// <seealso cref="ACBr.Net.Core.Logging.IACBrLog" />
-	public abstract class DFeServiceClientBase<T> : ClientBase<T>, IACBrLog where T : class
+
+	public abstract class DFeServiceClientBase<T> : ClientBase<T>, IACBrLog, IDisposable where T : class
 	{
+		#region Constructors
+
 		/// <summary>
 		/// Inicializa uma nova instancia da classe <see cref="DFeServiceClientBase{T}"/>.
 		/// </summary>
@@ -65,20 +69,22 @@ namespace ACBr.Net.DFe.Core.Service
 			}
 
 			var endpointInspector = new DFeInspectorBehavior((sender, args) => BeforeSendDFeRequest(args.Message),
-															 (sender, args) => AfterReceiveDFeReply(args.Message));
+				(sender, args) => AfterReceiveDFeReply(args.Message));
 #if NETSTANDARD2_0
 			Endpoint.EndpointBehaviors.Add(endpointInspector);
 #else
 			Endpoint.Behaviors.Add(endpointInspector);
 #endif
 
-			if (!timeOut.HasValue)
-				return;
-
+			if (!timeOut.HasValue) return;
 			Endpoint.Binding.OpenTimeout = timeOut.Value;
 			Endpoint.Binding.ReceiveTimeout = timeOut.Value;
 			Endpoint.Binding.SendTimeout = timeOut.Value;
 		}
+
+		#endregion Constructors
+
+		#region Methods
 
 		protected virtual void BeforeSendDFeRequest(string message)
 		{
@@ -87,5 +93,23 @@ namespace ACBr.Net.DFe.Core.Service
 		protected virtual void AfterReceiveDFeReply(string message)
 		{
 		}
+
+		#endregion Methods
+
+		#region IDisposable
+
+		public void Dispose()
+		{
+			if (State == CommunicationState.Faulted)
+			{
+				((ICommunicationObject)this).Abort();
+			}
+
+			if (State.IsIn(CommunicationState.Closed, CommunicationState.Closing)) return;
+
+			((ICommunicationObject)this).Close();
+		}
+
+		#endregion IDisposable
 	}
 }

@@ -63,6 +63,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeMessageInspector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceClientBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeSoap12ServiceClientBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XmlSchemaValidation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XmlSha1Signing.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />

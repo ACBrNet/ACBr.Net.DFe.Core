@@ -31,6 +31,7 @@
 
 using System;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
 using System.ServiceModel.Channels;
 
 namespace ACBr.Net.DFe.Core.Service
@@ -52,7 +53,7 @@ namespace ACBr.Net.DFe.Core.Service
 		{
 			var custom = new CustomBinding(Endpoint.Binding);
 			var version = custom.Elements.Find<TextMessageEncodingBindingElement>();
-			version.MessageVersion = MessageVersion.Soap12WSAddressing10;
+			version.MessageVersion = MessageVersion.CreateVersion(EnvelopeVersion.Soap12, AddressingVersion.None);
 
 			Endpoint.Binding = custom;
 		}
