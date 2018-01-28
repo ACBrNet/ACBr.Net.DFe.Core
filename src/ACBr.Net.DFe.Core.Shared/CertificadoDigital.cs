@@ -59,10 +59,11 @@ namespace ACBr.Net.DFe.Core
         public static X509Certificate2 SelecionarCertificado(string cerSerie = "")
         {
             var store = new X509Store("MY", StoreLocation.CurrentUser);
-            store.Open(OpenFlags.MaxAllowed | OpenFlags.ReadOnly);
 
             try
             {
+                store.Open(OpenFlags.MaxAllowed | OpenFlags.ReadOnly);
+
                 var certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now, true)
                     .Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
 
@@ -71,9 +72,9 @@ namespace ACBr.Net.DFe.Core
                 if (cerSerie.IsEmpty())
                 {
 #if NETSTANDARD2_0
-                    throw new ACBrDFeException("Numero de seri obrigatorio.");
+                    throw new ACBrDFeException("Numero de serie obrigatorio.");
 #else
-					certificadosSelecionados = X509Certificate2UI.SelectFromCollection(certificates, "Certificados Digitais",
+                    certificadosSelecionados = X509Certificate2UI.SelectFromCollection(certificates, "Certificados Digitais",
                         "Selecione o Certificado Digital para uso no aplicativo", X509SelectionFlag.SingleSelection);
 #endif
                 }
@@ -85,10 +86,6 @@ namespace ACBr.Net.DFe.Core
 
                 var certificado = certificadosSelecionados.Count < 1 ? null : certificadosSelecionados[0];
                 return certificado;
-            }
-            catch (Exception ex)
-            {
-                throw new ACBrDFeException("Erro ao selecionar o certificado", ex);
             }
             finally
             {

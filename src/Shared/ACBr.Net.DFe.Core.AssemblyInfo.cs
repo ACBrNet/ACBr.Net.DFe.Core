@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("ACBr.Net.DFe.Core")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ACBr.Net")]
-[assembly: AssemblyCopyright("Copyright © Grupo ACBr.Net 2014 - 2017")]
+[assembly: AssemblyCopyright("Copyright © Grupo ACBr.Net 2014 - 2018")]
 [assembly: AssemblyTrademark("Grupo ACBr.Net https://acbrnet.github.io")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

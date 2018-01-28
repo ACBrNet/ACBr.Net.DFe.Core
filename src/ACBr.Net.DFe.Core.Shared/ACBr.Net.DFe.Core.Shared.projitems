@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeRootAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\Ocorrencia.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CertificadoDigital.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RSAPKCS1SHA256SignatureDescription.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collection\DFeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeArquivosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCertificadosConfigBase.cs" />
@@ -63,41 +64,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeMessageInspector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceClientBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeSoap12ServiceClientBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SignDigest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XmlSchemaValidation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)XmlSha1Signing.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />
-    <Content Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />
-    <Content Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csproj.FileListAbsolute.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.dll" />
-    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\ACBr.Net.DFe.Core.pdb" />
-    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\DesignTimeResolveAssemblyReferences.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\COM Interop\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.csprojResolveAssemblyReference.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.dll" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.dll.tmp" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.pdb" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\ACBr.Net.DFe.Core.pdb.tmp" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\CoreCompileInputs.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csproj.CopyComplete" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csproj.CoreCompileInputs.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.csprojResolveAssemblyReference.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.dll" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.dll.tmp" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.pdb" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\ACBr.Net.DFe.Core.pdb.tmp" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\CoreCompileInputs.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\DesignTimeResolveAssemblyReferences.cache" />
-    <None Include="$(MSBuildThisFileDirectory)obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)obj\COM Interop\TempPE\" />
-    <Folder Include="$(MSBuildThisFileDirectory)obj\Debug\TempPE\" />
-    <Folder Include="$(MSBuildThisFileDirectory)obj\Release\TempPE\" />
+    <Compile Include="$(MSBuildThisFileDirectory)XmlSigning.cs" />
   </ItemGroup>
 </Project>
