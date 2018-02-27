@@ -1,14 +1,14 @@
 // ***********************************************************************
-// Assembly         : ACBr.Net.NFe
+// Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 07-26-2014
+// Created          : 06-11-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 06-16-2017
+// Last Modified On : 06-11-2017
 // ***********************************************************************
-// <copyright file="DFeCollection.cs" company="ACBr.Net">
+// <copyright file="DFeParentCollection.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
-//	     		    Copyright (c) 2016 Grupo ACBr.Net
+//	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
 //	 Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the "Software"),
@@ -31,35 +31,43 @@
 
 using System;
 using System.Collections.Generic;
+using ACBr.Net.DFe.Core.Attributes;
 
 namespace ACBr.Net.DFe.Core.Collection
 {
-    /// <summary>
-    /// Classe DFeCollection.
-    /// </summary>
-    /// <typeparam name="TTipo"></typeparam>
-    [Serializable]
-    public class DFeCollection<TTipo> : List<TTipo>
+    public class DFeParentCollection<TTipo, TParent> : DFeCollection<TTipo>
+        where TParent : class
+        where TTipo : DFeParentItem<TTipo, TParent>
     {
-        #region Constructors
+        #region Fields
+
+        protected TParent parent;
+
+        #endregion Fields
+
+        #region Propriedades
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeCollection{T}"/> class.
+        /// Gets the parent.
         /// </summary>
-        public DFeCollection()
+        /// <value>The parent.</value>
+        [DFeIgnore]
+        internal TParent Parent
         {
+            get => parent;
+            set
+            {
+                parent = value;
+                foreach (var item in this)
+                {
+                    if (item.Parent == value) continue;
+
+                    item.Parent = value;
+                }
+            }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DFeCollection{T}"/> class.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        public DFeCollection(IEnumerable<TTipo> source)
-        {
-            AddRange(source);
-        }
-
-        #endregion Constructors
+        #endregion Propriedades
 
         #region Methods
 
@@ -67,17 +75,19 @@ namespace ACBr.Net.DFe.Core.Collection
         /// Adds an object to the end of the <see cref="DFeCollection{T}"/>.
         /// </summary>
         /// <returns>T.</returns>
-        public virtual TTipo AddNew()
+        public override TTipo AddNew()
         {
             var item = (TTipo)Activator.CreateInstance(typeof(TTipo), true);
+            item.Parent = Parent;
             base.Add(item);
             return item;
         }
 
         /// <summary>Adds an object to the end of the <see cref="DFeCollection{T}"/>.</summary>
         /// <param name="item">The object to be added to the end of the <see cref="DFeCollection{T}"/>. The value can be null for reference types.</param>
-        public new virtual void Add(TTipo item)
+        public override void Add(TTipo item)
         {
+            item.Parent = Parent;
             base.Add(item);
         }
 
@@ -86,8 +96,9 @@ namespace ACBr.Net.DFe.Core.Collection
         /// <param name="item">The object to insert. The value can be null for reference types.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="index" /> is less than 0.-or-<paramref name="index" /> is greater than <see cref="DFeCollection{T}.Count"/>.</exception>
-        public new virtual void Insert(int index, TTipo item)
+        public override void Insert(int index, TTipo item)
         {
+            item.Parent = Parent;
             base.Insert(index, item);
         }
 
@@ -98,22 +109,16 @@ namespace ACBr.Net.DFe.Core.Collection
         /// <paramref name="collection" /> is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="index" /> is less than 0.-or-<paramref name="index" /> is greater than <see cref="DFeCollection{T}.Count"/>.</exception>
-        public new virtual void InsertRange(int index, IEnumerable<TTipo> collection)
+        public override void InsertRange(int index, IEnumerable<TTipo> collection)
         {
+            foreach (var item in collection)
+            {
+                item.Parent = Parent;
+            }
+
             base.InsertRange(index, collection);
         }
 
         #endregion Methods
-
-        #region Operators
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="T:TTipo[]"/> to <see cref="DFeCollection{TTipo}"/>.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DFeCollection<TTipo>(TTipo[] source) => new DFeCollection<TTipo>(source);
-
-        #endregion Operators
     }
 }

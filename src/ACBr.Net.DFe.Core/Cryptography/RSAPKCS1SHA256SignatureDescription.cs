@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
-namespace Security.Cryptography
+namespace ACBr.Net.DFe.Core.Cryptography
 {
     /// <summary>
     ///     <para>
@@ -71,40 +71,68 @@ namespace Security.Cryptography
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SHA", Justification = "This casing is to match the use of SHA throughout the framework")]
     public sealed class RSAPKCS1SHA256SignatureDescription : SignatureDescription
     {
+        #region Fields
+
+        private const int PROV_RSA_AES = 24;
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <inheritdoc />
         /// <summary>
         ///     Construct an RSAPKCS1SHA256SignatureDescription object. The default settings for this object
         ///     are:
         ///     <list type="bullet">
-        ///         <item>Digest algorithm - <see cref="SHA256Managed" /></item>
-        ///         <item>Key algorithm - <see cref="RSACryptoServiceProvider" /></item>
-        ///         <item>Formatter algorithm - <see cref="RSAPKCS1SignatureFormatter" /></item>
-        ///         <item>Deformatter algorithm - <see cref="RSAPKCS1SignatureDeformatter" /></item>
+        ///         <item>Digest algorithm - <see cref="T:System.Security.Cryptography.SHA256Managed" /></item>
+        ///         <item>Key algorithm - <see cref="T:System.Security.Cryptography.RSACryptoServiceProvider" /></item>
+        ///         <item>Formatter algorithm - <see cref="T:System.Security.Cryptography.RSAPKCS1SignatureFormatter" /></item>
+        ///         <item>Deformatter algorithm - <see cref="T:System.Security.Cryptography.RSAPKCS1SignatureDeformatter" /></item>
         ///     </list>
         /// </summary>
         public RSAPKCS1SHA256SignatureDescription()
         {
-            KeyAlgorithm = "System.Security.Cryptography.RSA";
-            DigestAlgorithm = "System.Security.Cryptography.SHA256Cng";
-            FormatterAlgorithm = "System.Security.Cryptography.RSAPKCS1SignatureFormatter";
-            DeformatterAlgorithm = "System.Security.Cryptography.RSAPKCS1SignatureDeformatter";
+            KeyAlgorithm = typeof(RSACryptoServiceProvider).FullName;
+            DigestAlgorithm = typeof(SHA256Cng).FullName;
+            FormatterAlgorithm = typeof(RSAPKCS1SignatureFormatter).FullName;
+            DeformatterAlgorithm = typeof(RSAPKCS1SignatureDeformatter).FullName;
         }
 
+        #endregion Constructors
+
+        /// <inheritdoc />
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
         {
             if (key == null) throw new ArgumentNullException("key");
+            key = GetSha2CompatibleKey(key);
 
             var deformatter = new RSAPKCS1SignatureDeformatter(key);
             deformatter.SetHashAlgorithm("SHA256");
             return deformatter;
         }
 
+        /// <inheritdoc />
         public override AsymmetricSignatureFormatter CreateFormatter(AsymmetricAlgorithm key)
         {
             if (key == null) throw new ArgumentNullException("key");
+            key = GetSha2CompatibleKey(key);
 
             var formatter = new RSAPKCS1SignatureFormatter(key);
             formatter.SetHashAlgorithm("SHA256");
             return formatter;
+        }
+
+        // Some certificates are generated without SHA2 support, this method recreates the CSP for them.
+        // See https://stackoverflow.com/a/11223454/280778
+        // WIF handles this case internally if no sha256RSA support is installed globally.
+        private static AsymmetricAlgorithm GetSha2CompatibleKey(AsymmetricAlgorithm key)
+        {
+            if (!(key is RSACryptoServiceProvider csp) || csp.CspKeyContainerInfo.ProviderType == PROV_RSA_AES)
+                return key;
+
+            var newKey = new RSACryptoServiceProvider(new CspParameters(PROV_RSA_AES));
+            newKey.ImportParameters(csp.ExportParameters(true));
+            return newKey;
         }
     }
 }

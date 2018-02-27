@@ -37,24 +37,14 @@ using System.Security.Cryptography.Xml;
 using System.Xml;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
-using Security.Cryptography;
 
 namespace ACBr.Net.DFe.Core
 {
     /// <summary>
     /// Classe com os metodos para assinatura e validação de assinatura de xml usando Hash Sha1.
     /// </summary>
-    public static class XmlSigning
+    public static partial class XmlSigning
     {
-        #region Constructors
-
-        static XmlSigning()
-        {
-            CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA256SignatureDescription), "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
-        }
-
-        #endregion Constructors
-
         #region Methods
 
         /// <summary>
