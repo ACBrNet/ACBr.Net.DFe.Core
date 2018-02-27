@@ -53,7 +53,7 @@ namespace ACBr.Net.DFe.Core.Collection
         /// </summary>
         /// <value>The parent.</value>
         [DFeIgnore]
-        internal TParent Parent
+        public TParent Parent
         {
             get => parent;
             set
