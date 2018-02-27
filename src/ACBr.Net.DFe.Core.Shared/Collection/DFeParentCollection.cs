@@ -35,6 +35,7 @@ using ACBr.Net.DFe.Core.Attributes;
 
 namespace ACBr.Net.DFe.Core.Collection
 {
+    /// <inheritdoc />
     public class DFeParentCollection<TTipo, TParent> : DFeCollection<TTipo>
         where TParent : class
         where TTipo : DFeParentItem<TTipo, TParent>

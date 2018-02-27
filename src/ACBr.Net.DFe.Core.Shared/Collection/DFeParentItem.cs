@@ -45,7 +45,7 @@ namespace ACBr.Net.DFe.Core.Collection
     {
         #region Fields
 
-        private TParent parent;
+        protected TParent parent;
 
         #endregion Fields
 
@@ -58,7 +58,7 @@ namespace ACBr.Net.DFe.Core.Collection
         public TParent Parent
         {
             get => parent;
-            internal set
+            set
             {
                 if (value == parent) return;
 
