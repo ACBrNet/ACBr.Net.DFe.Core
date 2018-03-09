@@ -34,156 +34,155 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-	/// <summary>
-	/// Class NFECFGCertificados. This class cannot be inherited.
-	/// </summary>
-	public abstract class DFeCertificadosConfigBase
-	{
-		#region Fields
+    /// <summary>
+    /// Class NFECFGCertificados. This class cannot be inherited.
+    /// </summary>
+    public abstract class DFeCertificadosConfigBase
+    {
+        #region Fields
 
-		private DateTime dataVenc;
-		private string subjectName;
-		private string cnpj;
+        private DateTime dataVenc;
+        private string subjectName;
+        private string cnpj;
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeCertificadosConfigBase"/> class.
-		/// </summary>
-		protected DFeCertificadosConfigBase()
-		{
-			dataVenc = DateTime.MinValue;
-			Certificado = string.Empty;
-			subjectName = string.Empty;
-			cnpj = string.Empty;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeCertificadosConfigBase"/> class.
+        /// </summary>
+        protected DFeCertificadosConfigBase()
+        {
+            dataVenc = DateTime.MinValue;
+            Certificado = string.Empty;
+            subjectName = string.Empty;
+            cnpj = string.Empty;
+        }
 
-		#endregion Constructor
+        #endregion Constructor
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// Define/retorna o certificado ou Numero de Serie.
-		/// </summary>
-		/// <value>O Certificado/Numero de Serie.</value>
-		[Browsable(true)]
-		public string Certificado { get; set; }
+        /// <summary>
+        /// Define/retorna o certificado ou Numero de Serie.
+        /// </summary>
+        /// <value>O Certificado/Numero de Serie.</value>
+        [Browsable(true)]
+        public string Certificado { get; set; }
 
-		/// <summary>
-		/// Define/retorna o certificado em bytes.
-		/// </summary>
-		/// <value>O Certificado.</value>
-		[Browsable(true)]
-		public byte[] CertificadoBytes { get; set; }
+        /// <summary>
+        /// Define/retorna o certificado em bytes.
+        /// </summary>
+        /// <value>O Certificado.</value>
+        [Browsable(true)]
+        public byte[] CertificadoBytes { get; set; }
 
-		/// <summary>
-		/// Define/retorna a senha do certificado.
-		/// </summary>
-		/// <value>A senha.</value>
-		[Browsable(true)]
-		public string Senha { get; set; }
+        /// <summary>
+        /// Define/retorna a senha do certificado.
+        /// </summary>
+        /// <value>A senha.</value>
+        [Browsable(true)]
+        public string Senha { get; set; }
 
-		/// <summary>
-		/// Retorna a data de vencimento do certificado.
-		/// </summary>
-		/// <value>A data de vencimento.</value>
-		public DateTime DataVenc
-		{
-			get
-			{
-				if (dataVenc == DateTime.MinValue && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
-					GetCertificado();
+        /// <summary>
+        /// Retorna a data de vencimento do certificado.
+        /// </summary>
+        /// <value>A data de vencimento.</value>
+        public DateTime DataVenc
+        {
+            get
+            {
+                if (dataVenc == DateTime.MinValue && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
+                    GetCertificado();
 
-				return dataVenc;
-			}
-		}
+                return dataVenc;
+            }
+        }
 
-		/// <summary>
-		/// Define/retorna o nome do responsável pelo certificado.
-		/// </summary>
-		/// <value>The name of the subject.</value>
-		public string Nome
-		{
-			get
-			{
-				if (subjectName.IsEmpty() && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
-					GetCertificado();
+        /// <summary>
+        /// Define/retorna o nome do responsável pelo certificado.
+        /// </summary>
+        /// <value>The name of the subject.</value>
+        public string Nome
+        {
+            get
+            {
+                if (subjectName.IsEmpty() && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
+                    GetCertificado();
 
-				return subjectName;
-			}
-		}
+                return subjectName;
+            }
+        }
 
-		/// <summary>
-		/// Gets or sets the CNPJ.
-		/// </summary>
-		/// <value>The CNPJ.</value>
-		public string CNPJ
-		{
-			get
-			{
-				if (cnpj.IsEmpty() && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
-					GetCertificado();
+        /// <summary>
+        /// Gets or sets the CNPJ.
+        /// </summary>
+        /// <value>The CNPJ.</value>
+        public string CNPJ
+        {
+            get
+            {
+                if (cnpj.IsEmpty() && !Certificado.IsEmpty() && !CertificadoBytes.IsNullOrEmpty())
+                    GetCertificado();
 
-				return cnpj;
-			}
-		}
+                return cnpj;
+            }
+        }
 
-		#endregion Properties
+        #endregion Properties
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// Seleciona um certificado digital instalado na maquina retornando o numero de serie do mesmo.
-		/// </summary>
-		/// <returns>Numero de Serie.</returns>
-		public string SelecionarCertificado()
-		{
-			var cert = CertificadoDigital.SelecionarCertificado(string.Empty);
-			return cert.GetSerialNumberString();
-		}
+        /// <summary>
+        /// Seleciona um certificado digital instalado na maquina retornando o numero de serie do mesmo.
+        /// </summary>
+        /// <returns>Numero de Serie.</returns>
+        public string SelecionarCertificado()
+        {
+            var cert = CertificadoDigital.SelecionarCertificado(string.Empty);
+            return cert?.GetSerialNumberString() ?? string.Empty;
+        }
 
-		/// <summary>
-		/// retorna o certificado digital de acordo com os dados informados.
-		/// </summary>
-		/// <returns>X509Certificate2.</returns>
-		public X509Certificate2 ObterCertificado()
-		{
-			if (CertificadoBytes?.Length > 0)
-			{
-				return CertificadoDigital.SelecionarCertificado(CertificadoBytes, Senha);
-			}
+        /// <summary>
+        /// retorna o certificado digital de acordo com os dados informados.
+        /// </summary>
+        /// <returns>X509Certificate2.</returns>
+        public X509Certificate2 ObterCertificado()
+        {
+            if (CertificadoBytes?.Length > 0)
+            {
+                return CertificadoDigital.SelecionarCertificado(CertificadoBytes, Senha);
+            }
 
-			if (File.Exists(Certificado))
-			{
-				return CertificadoDigital.SelecionarCertificado(Certificado, Senha);
-			}
+            if (File.Exists(Certificado))
+            {
+                return CertificadoDigital.SelecionarCertificado(Certificado, Senha);
+            }
 
-			var ret = CertificadoDigital.SelecionarCertificado(Certificado);
-			if (!Senha.IsEmpty())
-			{
-				ret.SetPin(Senha);
-			}
+            var ret = CertificadoDigital.SelecionarCertificado(Certificado);
+            if (!Senha.IsEmpty())
+            {
+                ret.SetPin(Senha);
+            }
 
-			return ret;
-		}
+            return ret;
+        }
 
-		/// <summary>
-		/// Gets the certificado.
-		/// </summary>
-		protected void GetCertificado()
-		{
-			var cert = ObterCertificado();
-			dataVenc = cert.GetExpirationDateString().ToData();
-			subjectName = cert.SubjectName.Name;
-			cnpj = cert.GetCNPJ();
-		}
+        /// <summary>
+        /// Gets the certificado.
+        /// </summary>
+        protected void GetCertificado()
+        {
+            var cert = ObterCertificado();
+            dataVenc = cert.GetExpirationDateString().ToData();
+            subjectName = cert.SubjectName.Name;
+            cnpj = cert.GetCNPJ();
+        }
 
-		#endregion Methods
-	}
+        #endregion Methods
+    }
 }

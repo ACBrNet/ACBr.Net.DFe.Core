@@ -58,7 +58,11 @@ namespace ACBr.Net.DFe.Core
         /// </exception>
         public static X509Certificate2 SelecionarCertificado(string cerSerie = "")
         {
+#if NETSTANDARD2_0
+            var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+#else
             var store = new X509Store("MY", StoreLocation.CurrentUser);
+#endif
 
             try
             {

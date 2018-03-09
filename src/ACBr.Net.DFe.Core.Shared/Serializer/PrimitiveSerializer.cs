@@ -101,13 +101,11 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (tag is DFeAttributeAttribute) return new XAttribute(tag.Name, elementValue);
 
                 var cData = ((DFeElementAttribute)tag).UseCData;
-                if (elementValue.IsCData())
-                {
-                    elementValue = elementValue.RemoveCData();
-                    cData = true;
-                }
+                if (!elementValue.IsCData()) return cData ? new XElement(tag.Name, new XCData(elementValue)) :
+                                                            new XElement(tag.Name, elementValue);
 
-                return cData ? new XElement(tag.Name, new XCData(elementValue)) : new XElement(tag.Name, elementValue);
+                elementValue = elementValue.RemoveCData();
+                return new XElement(tag.Name, new XCData(elementValue));
             }
             catch (Exception ex)
             {
@@ -131,8 +129,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
                 case TipoCampo.Dat:
                 case TipoCampo.DatCFe:
-                    DateTime data;
-                    if (DateTime.TryParse(valor.ToString(), out data))
+                    if (valor is DateTime data)
                     {
                         conteudoProcessado = data.ToString(tipo == TipoCampo.DatCFe ? "yyyyMMdd" : "yyyy-MM-dd");
                     }
@@ -144,8 +141,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
                 case TipoCampo.Hor:
                 case TipoCampo.HorCFe:
-                    DateTime hora;
-                    if (DateTime.TryParse(valor.ToString(), out hora))
+                    if (valor is DateTime hora)
                     {
                         conteudoProcessado = hora.ToString(tipo == TipoCampo.HorCFe ? "HHmmss" : "HH:mm:ss");
                     }
@@ -156,8 +152,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     break;
 
                 case TipoCampo.DatHor:
-                    DateTime dthora;
-                    if (DateTime.TryParse(valor.ToString(), out dthora))
+                    if (valor is DateTime dthora)
                     {
                         conteudoProcessado = dthora.ToString("s");
                     }
@@ -168,14 +163,19 @@ namespace ACBr.Net.DFe.Core.Serializer
                     break;
 
                 case TipoCampo.DatHorTz:
-                    DateTime dthoratz;
-                    if (DateTime.TryParse(valor.ToString(), out dthoratz))
+                    switch (valor)
                     {
-                        conteudoProcessado = dthoratz.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
-                    }
-                    else
-                    {
-                        estaVazio = true;
+                        case DateTimeOffset offset:
+                            conteudoProcessado = offset.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+                            break;
+
+                        case DateTime doffset:
+                            conteudoProcessado = doffset.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+                            break;
+
+                        default:
+                            estaVazio = true;
+                            break;
                     }
                     break;
 
@@ -184,8 +184,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 case TipoCampo.De4:
                 case TipoCampo.De6:
                 case TipoCampo.De10:
-                    decimal vDecimal;
-                    if (decimal.TryParse(valor.ToString(), out vDecimal))
+                    if (valor is decimal vDecimal)
                     {
                         if (ocorrencia == Ocorrencia.MaiorQueZero && vDecimal == 0)
                         {
@@ -225,8 +224,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     break;
 
                 case TipoCampo.Int:
-                    int vInt;
-                    if (int.TryParse(valor.ToString(), out vInt))
+                    if (valor is int vInt)
                     {
                         if (ocorrencia == Ocorrencia.MaiorQueZero && vInt == 0)
                         {
@@ -314,8 +312,11 @@ namespace ACBr.Net.DFe.Core.Serializer
                     break;
 
                 case TipoCampo.DatHor:
-                case TipoCampo.DatHorTz:
                     ret = valor.ToData();
+                    break;
+
+                case TipoCampo.DatHorTz:
+                    ret = valor.ToDataOffset();
                     break;
 
                 case TipoCampo.Dat:
