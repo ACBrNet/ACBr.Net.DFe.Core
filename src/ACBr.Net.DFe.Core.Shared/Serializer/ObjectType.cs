@@ -140,6 +140,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                    || type == typeof(decimal)
                    || type == typeof(bool)
                    || type == typeof(DateTime)
+                   || type == typeof(DateTimeOffset)
                    || type.IsEnum
                    || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && IsPrimitive(type.GetGenericArguments()[0]);
         }

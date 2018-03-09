@@ -29,6 +29,9 @@ namespace ACBr.Net.DFe.Core.Tests
         [DFeElement(TipoCampo.HorCFe, "dateTime1", Id = "DT1", Min = 0, Max = 19, Ocorrencia = Ocorrencia.NaoObrigatoria)]
         public DateTime TestDate { get; set; }
 
+        [DFeElement(TipoCampo.DatHorTz, "dateTimeTz1", Id = "DTz1", Min = 0, Max = 19, Ocorrencia = Ocorrencia.NaoObrigatoria)]
+        public DateTimeOffset TestDateTz { get; set; }
+
         [DFeElement(TipoCampo.De2, "decimal1", Id = "DC1", Min = 1, Max = 9, Ocorrencia = Ocorrencia.NaoObrigatoria)]
         public decimal TestDecimal { get; set; }
 
