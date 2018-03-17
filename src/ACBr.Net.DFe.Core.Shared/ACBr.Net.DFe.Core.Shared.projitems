@@ -22,6 +22,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collection\DFeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collection\DFeParentCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collection\DFeParentItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ChaveDFe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeArquivosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCertificadosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCodUF.cs" />
@@ -39,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeUnidMed.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeUnidTransp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeWebserviceConfigBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\TagOrdenacaoPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\CanonicalizationMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\DFeSignature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\DigestMethod.cs" />
@@ -49,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Document\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\X509Data.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\DFeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XDocumentExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDFeElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.cs" />

@@ -34,62 +34,64 @@ using System.Text;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	/// <summary>
-	/// Class SerializerOptions. This class cannot be inherited.
-	/// </summary>
-	public class SerializerOptions
-	{
-		#region Constructors
+    /// <summary>
+    /// Class SerializerOptions. This class cannot be inherited.
+    /// </summary>
+    public class SerializerOptions
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeSerializer" /> class.
-		/// </summary>
-		internal SerializerOptions()
-		{
-			ErrosAlertas = new List<string>();
-			FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
-			RemoverAcentos = false;
-			FormatarXml = true;
-			Encoder = Encoding.UTF8;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeSerializer" /> class.
+        /// </summary>
+        internal SerializerOptions()
+        {
+            ErrosAlertas = new List<string>();
+            FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
+            RemoverAcentos = false;
+            FormatarXml = true;
+            Encoder = Encoding.UTF8;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Propriedades
+        #region Propriedades
 
-		public bool RemoverAcentos { get; set; }
+        public bool RemoverAcentos { get; set; }
 
-		public bool FormatarXml { get; set; }
+        public bool RemoverEspacos { get; set; }
 
-		public bool OmitirDeclaracao { get; set; }
+        public bool FormatarXml { get; set; }
 
-		public Encoding Encoder { get; set; }
+        public bool OmitirDeclaracao { get; set; }
 
-		public List<string> ErrosAlertas { get; }
+        public Encoding Encoder { get; set; }
 
-		public string FormatoAlerta { get; set; }
+        public List<string> ErrosAlertas { get; }
 
-		#endregion Propriedades
+        public string FormatoAlerta { get; set; }
 
-		#region Methods
+        #endregion Propriedades
 
-		internal void AddAlerta(string id, string tag, string descricao, string alerta)
-		{
-			// O Formato da mensagem de erro pode ser alterado pelo usuario alterando-se a property FormatoAlerta: onde;
-			// %TAG%       : Representa a TAG; ex: <nLacre>
-			// %ID%        : Representa a ID da TAG; ex X34
-			// %MSG%       : Representa a mensagem de alerta
-			// %DESCRICAO% : Representa a Descrição da TAG
+        #region Methods
 
-			var s = FormatoAlerta.Clone() as string;
-			if (s == null)
-				return;
+        internal void AddAlerta(string id, string tag, string descricao, string alerta)
+        {
+            // O Formato da mensagem de erro pode ser alterado pelo usuario alterando-se a property FormatoAlerta: onde;
+            // %TAG%       : Representa a TAG; ex: <nLacre>
+            // %ID%        : Representa a ID da TAG; ex X34
+            // %MSG%       : Representa a mensagem de alerta
+            // %DESCRICAO% : Representa a Descrição da TAG
 
-			s = s.Replace("%ID%", id).Replace("%TAG%", $"<{tag}>").Replace("%DESCRICAO%", descricao).Replace("%MSG%", alerta);
+            var s = FormatoAlerta.Clone() as string;
+            if (s == null)
+                return;
 
-			ErrosAlertas.Add(s);
-		}
+            s = s.Replace("%ID%", id).Replace("%TAG%", $"<{tag}>").Replace("%DESCRICAO%", descricao).Replace("%MSG%", alerta);
 
-		#endregion Methods
-	}
+            ErrosAlertas.Add(s);
+        }
+
+        #endregion Methods
+    }
 }

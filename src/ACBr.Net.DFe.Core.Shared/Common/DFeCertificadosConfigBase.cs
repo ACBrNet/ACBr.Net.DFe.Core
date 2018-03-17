@@ -34,13 +34,16 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using ACBr.Net.Core;
+using ACBr.Net.Core.Exceptions;
 
 namespace ACBr.Net.DFe.Core.Common
 {
     /// <summary>
     /// Class NFECFGCertificados. This class cannot be inherited.
     /// </summary>
-    public abstract class DFeCertificadosConfigBase
+    public abstract class DFeCertificadosConfigBase<TParent>
+    where TParent : ACBrComponent
     {
         #region Fields
 
@@ -53,10 +56,14 @@ namespace ACBr.Net.DFe.Core.Common
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeCertificadosConfigBase"/> class.
+        /// Inicializa uma nova instancia da classe  <see cref="DFeCertificadosConfigBase{TParent}"/>.
         /// </summary>
-        protected DFeCertificadosConfigBase()
+        protected DFeCertificadosConfigBase(TParent parent)
         {
+            Guard.Against<ArgumentNullException>(parent == null, nameof(parent));
+
+            Parent = parent;
+
             dataVenc = DateTime.MinValue;
             Certificado = string.Empty;
             subjectName = string.Empty;
@@ -66,6 +73,12 @@ namespace ACBr.Net.DFe.Core.Common
         #endregion Constructor
 
         #region Properties
+
+        /// <summary>
+        /// Componente DFe parente desta configuração.
+        /// </summary>
+        [Browsable(false)]
+        public TParent Parent { get; protected set; }
 
         /// <summary>
         /// Define/retorna o certificado ou Numero de Serie.

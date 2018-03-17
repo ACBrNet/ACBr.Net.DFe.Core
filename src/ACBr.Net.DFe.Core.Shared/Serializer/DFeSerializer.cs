@@ -42,272 +42,273 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-	public class DFeSerializer
-	{
-		#region Constantes
+    public class DFeSerializer
+    {
+        #region Constantes
 
-		/// <summary>
-		/// The er r_ ms g_ maior
-		/// </summary>
-		internal const string ErrMsgMaior = "Tamanho maior que o máximo permitido";
+        /// <summary>
+        /// The er r_ ms g_ maior
+        /// </summary>
+        internal const string ErrMsgMaior = "Tamanho maior que o máximo permitido";
 
-		/// <summary>
-		/// The er r_ ms g_ menor
-		/// </summary>
-		internal const string ErrMsgMenor = "Tamanho menor que o mínimo permitido";
+        /// <summary>
+        /// The er r_ ms g_ menor
+        /// </summary>
+        internal const string ErrMsgMenor = "Tamanho menor que o mínimo permitido";
 
-		/// <summary>
-		/// The er r_ ms g_ vazio
-		/// </summary>
-		internal const string ErrMsgVazio = "Nenhum valor informado";
+        /// <summary>
+        /// The er r_ ms g_ vazio
+        /// </summary>
+        internal const string ErrMsgVazio = "Nenhum valor informado";
 
-		/// <summary>
-		/// The er r_ ms g_ invalido
-		/// </summary>
-		internal const string ErrMsgInvalido = "Conteúdo inválido";
+        /// <summary>
+        /// The er r_ ms g_ invalido
+        /// </summary>
+        internal const string ErrMsgInvalido = "Conteúdo inválido";
 
-		/// <summary>
-		/// The er r_ ms g_ maxim o_ decimais
-		/// </summary>
-		internal const string ErrMsgMaximoDecimais = "Numero máximo de casas decimais permitidas";
+        /// <summary>
+        /// The er r_ ms g_ maxim o_ decimais
+        /// </summary>
+        internal const string ErrMsgMaximoDecimais = "Numero máximo de casas decimais permitidas";
 
-		/// <summary>
-		/// The er r_ ms g_ maio r_ maximo
-		/// </summary>
-		internal const string ErrMsgMaiorMaximo = "Número de ocorrências maior que o máximo permitido - Máximo ";
+        /// <summary>
+        /// The er r_ ms g_ maio r_ maximo
+        /// </summary>
+        internal const string ErrMsgMaiorMaximo = "Número de ocorrências maior que o máximo permitido - Máximo ";
 
-		/// <summary>
-		/// The er r_ ms g_ fina l_ meno r_ inicial
-		/// </summary>
-		internal const string ErrMsgFinalMenorInicial = "O numero final não pode ser menor que o inicial";
+        /// <summary>
+        /// The er r_ ms g_ fina l_ meno r_ inicial
+        /// </summary>
+        internal const string ErrMsgFinalMenorInicial = "O numero final não pode ser menor que o inicial";
 
-		/// <summary>
-		/// The er r_ ms g_ arquiv o_ na o_ encontrado
-		/// </summary>
-		internal const string ErrMsgArquivoNaoEncontrado = "Arquivo não encontrado";
+        /// <summary>
+        /// The er r_ ms g_ arquiv o_ na o_ encontrado
+        /// </summary>
+        internal const string ErrMsgArquivoNaoEncontrado = "Arquivo não encontrado";
 
-		/// <summary>
-		/// The er r_ ms g_ soment e_ um
-		/// </summary>
-		internal const string ErrMsgSomenteUm = "Somente um campo deve ser preenchido";
+        /// <summary>
+        /// The er r_ ms g_ soment e_ um
+        /// </summary>
+        internal const string ErrMsgSomenteUm = "Somente um campo deve ser preenchido";
 
-		/// <summary>
-		/// The er r_ ms g_ meno r_ minimo
-		/// </summary>
-		internal const string ErrMsgMenorMinimo = "Número de ocorrências menor que o mínimo permitido - Mínimo ";
+        /// <summary>
+        /// The er r_ ms g_ meno r_ minimo
+        /// </summary>
+        internal const string ErrMsgMenorMinimo = "Número de ocorrências menor que o mínimo permitido - Mínimo ";
 
-		/// <summary>
-		/// The ds c_ CNPJ
-		/// </summary>
-		internal const string DscCnpj = "CNPJ(MF)";
+        /// <summary>
+        /// The ds c_ CNPJ
+        /// </summary>
+        internal const string DscCnpj = "CNPJ(MF)";
 
-		/// <summary>
-		/// The ds c_ CPF
-		/// </summary>
-		internal const string DscCpf = "CPF";
+        /// <summary>
+        /// The ds c_ CPF
+        /// </summary>
+        internal const string DscCpf = "CPF";
 
-		#endregion Constantes
+        #endregion Constantes
 
-		#region Fields
+        #region Fields
 
-		private readonly Type tipoDFe;
+        private readonly Type tipoDFe;
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Constructors
+        #region Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeSerializer{T}"/> class.
-		/// </summary>
-		internal DFeSerializer(Type tipo)
-		{
-			Guard.Against<ArgumentException>(tipo.IsGenericType, "Não é possivel serializar uma classe generica !");
-			Guard.Against<ArgumentException>(!tipo.HasAttribute<DFeRootAttribute>(), "Não é uma classe DFe !");
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeSerializer{T}"/> class.
+        /// </summary>
+        internal DFeSerializer(Type tipo)
+        {
+            Guard.Against<ArgumentException>(tipo.IsGenericType, "Não é possivel serializar uma classe generica !");
+            Guard.Against<ArgumentException>(!tipo.HasAttribute<DFeRootAttribute>(), "Não é uma classe DFe !");
 
-			tipoDFe = tipo;
-			Options = new SerializerOptions();
-		}
+            tipoDFe = tipo;
+            Options = new SerializerOptions();
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Propriedades
+        #region Propriedades
 
-		/// <summary>
-		/// Gets the options.
-		/// </summary>
-		/// <value>The options.</value>
-		public SerializerOptions Options { get; }
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
+        /// <value>The options.</value>
+        public SerializerOptions Options { get; }
 
-		#endregion Propriedades
+        #endregion Propriedades
 
-		#region Methods
+        #region Methods
 
-		#region Create
+        #region Create
 
-		/// <summary>
-		/// Creates the serializer.
-		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <returns>ACBr.Net.DFe.Core.Serializer.DFeSerializer.</returns>
-		public static DFeSerializer CreateSerializer(Type tipo)
-		{
-			return new DFeSerializer(tipo);
-		}
+        /// <summary>
+        /// Creates the serializer.
+        /// </summary>
+        /// <param name="tipo">The tipo.</param>
+        /// <returns>ACBr.Net.DFe.Core.Serializer.DFeSerializer.</returns>
+        public static DFeSerializer CreateSerializer(Type tipo)
+        {
+            return new DFeSerializer(tipo);
+        }
 
-		/// <summary>
-		/// Creates the serializer.
-		/// </summary>
-		/// <typeparam name="TCreate"></typeparam>
-		/// <returns>DFeSerializer.</returns>
-		public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
-		{
-			return new DFeSerializer<TCreate>();
-		}
+        /// <summary>
+        /// Creates the serializer.
+        /// </summary>
+        /// <typeparam name="TCreate"></typeparam>
+        /// <returns>DFeSerializer.</returns>
+        public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
+        {
+            return new DFeSerializer<TCreate>();
+        }
 
-		#endregion Create
+        #endregion Create
 
-		#region Serialize
+        #region Serialize
 
-		/// <summary>
-		/// Serializes the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="path">The xml.</param>
-		public bool Serialize(object item, string path)
-		{
-			Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
+        /// <summary>
+        /// Serializes the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="path">The xml.</param>
+        public bool Serialize(object item, string path)
+        {
+            Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
 
-			Options.ErrosAlertas.Clear();
+            Options.ErrosAlertas.Clear();
 
-			if (item.IsNull())
-			{
-				Options.ErrosAlertas.Add("O item é nulo !");
-				return false;
-			}
+            if (item.IsNull())
+            {
+                Options.ErrosAlertas.Add("O item é nulo !");
+                return false;
+            }
 
-			var xmldoc = Serialize(item);
-			var ret = !Options.ErrosAlertas.Any();
-			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
-			File.WriteAllText(path, xml, Options.Encoder);
+            var xmldoc = Serialize(item);
+            var ret = !Options.ErrosAlertas.Any();
+            var xml = xmldoc.AsString(Options.FormatarXml, !Options.OmitirDeclaracao, Options.Encoder);
+            File.WriteAllText(path, xml, Options.Encoder);
 
-			return ret;
-		}
+            return ret;
+        }
 
-		/// <summary>
-		/// Serializes the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="stream">The stream.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		public bool Serialize(object item, Stream stream)
-		{
-			Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
+        /// <summary>
+        /// Serializes the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="stream">The stream.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public bool Serialize(object item, Stream stream)
+        {
+            Guard.Against<ArgumentException>(item.GetType() != tipoDFe, "Tipo diferente do informado");
 
-			Options.ErrosAlertas.Clear();
-			if (item.IsNull())
-			{
-				Options.ErrosAlertas.Add("O item é nulo !");
-				return false;
-			}
+            Options.ErrosAlertas.Clear();
+            if (item.IsNull())
+            {
+                Options.ErrosAlertas.Add("O item é nulo !");
+                return false;
+            }
 
-			var xmldoc = Serialize(item);
-			var ret = !Options.ErrosAlertas.Any();
-			var xml = xmldoc.AsString(Options.FormatarXml, true, Options.Encoder);
+            var xmldoc = Serialize(item);
+            var ret = !Options.ErrosAlertas.Any();
+            var xml = xmldoc.AsString(Options.FormatarXml, !Options.OmitirDeclaracao, Options.Encoder);
 
-			using (var ms = new MemoryStream())
-			using (var sw = new StreamWriter(ms, Options.Encoder))
-			{
-				sw.WriteLine(xml);
-				sw.Flush();
-				ms.WriteTo(stream);
-			}
+            using (var ms = new MemoryStream())
+            using (var sw = new StreamWriter(ms, Options.Encoder))
+            {
+                sw.WriteLine(xml);
+                sw.Flush();
+                ms.WriteTo(stream);
+            }
 
-			stream.Position = 0;
-			return ret;
-		}
+            stream.Position = 0;
+            return ret;
+        }
 
-		private XDocument Serialize(object item)
-		{
-			var xmldoc = Options.OmitirDeclaracao ? new XDocument() : new XDocument(new XDeclaration("1.0", "UTF-8", null));
+        private XDocument Serialize(object item)
+        {
+            var xmldoc = Options.OmitirDeclaracao ? new XDocument() : new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
-			var rooTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+            var rooTag = tipoDFe.GetAttribute<DFeRootAttribute>();
 
-			var rootName = rooTag.Name;
+            var rootName = rooTag.Name;
 
-			if (rootName.IsEmpty())
-			{
-				var root = tipoDFe.GetRootName(item);
-				rootName = root.IsEmpty() ? tipoDFe.Name : root;
-			}
+            if (rootName.IsEmpty())
+            {
+                var root = tipoDFe.GetRootName(item);
+                rootName = root.IsEmpty() ? tipoDFe.Name : root;
+            }
 
-			var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, rooTag.Namespace, Options);
-			xmldoc.Add(rootElement);
-			xmldoc.RemoveEmptyNs();
+            var rootElement = ObjectSerializer.Serialize(item, tipoDFe, rootName, rooTag.Namespace, Options);
+            xmldoc.Add(rootElement);
+            xmldoc.RemoveEmptyNs();
 
-			return xmldoc;
-		}
+            return xmldoc;
+        }
 
-		#endregion Serialize
+        #endregion Serialize
 
-		#region Deserialize
+        #region Deserialize
 
-		/// <summary>
-		/// Deserializes the specified xml.
-		/// </summary>
-		/// <param name="xml">The xml.</param>
-		/// <returns>System.Object.</returns>
-		public object Deserialize(string xml)
-		{
-			var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) : xml;
-			var xmlDoc = XDocument.Parse(content);
-			return Deserialize(xmlDoc);
-		}
+        /// <summary>
+        /// Deserializes the specified xml.
+        /// </summary>
+        /// <param name="xml">The xml.</param>
+        /// <returns>System.Object.</returns>
+        public object Deserialize(string xml)
+        {
+            var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) : xml;
+            var xmlDoc = XDocument.Parse(content);
+            return Deserialize(xmlDoc);
+        }
 
-		/// <summary>
-		/// Deserializes the specified stream.
-		/// </summary>
-		/// <param name="stream">The stream.</param>
-		/// <returns>System.Object.</returns>
-		public object Deserialize(Stream stream)
-		{
-			using (var reader = new StreamReader(stream, Options.Encoder))
-			{
-				var xmlDoc = XDocument.Parse(reader.ReadToEnd());
-				return Deserialize(xmlDoc);
-			}
-		}
+        /// <summary>
+        /// Deserializes the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>System.Object.</returns>
+        public object Deserialize(Stream stream)
+        {
+            using (var reader = new StreamReader(stream, Options.Encoder))
+            {
+                stream.Position = 0;
+                var xmlDoc = XDocument.Parse(reader.ReadToEnd());
+                return Deserialize(xmlDoc);
+            }
+        }
 
-		private object Deserialize(XDocument xmlDoc)
-		{
-			Options.ErrosAlertas.Clear();
+        private object Deserialize(XDocument xmlDoc)
+        {
+            Options.ErrosAlertas.Clear();
 
-			var rootTag = tipoDFe.GetAttribute<DFeRootAttribute>();
+            var rootTag = tipoDFe.GetAttribute<DFeRootAttribute>();
 
-			var rootNames = new List<string>();
-			if (!rootTag.Name.IsEmpty())
-			{
-				rootNames.Add(rootTag.Name);
-				rootNames.Add(tipoDFe.Name);
-			}
-			else
-			{
-				rootNames.AddRange(tipoDFe.GetRootNames());
-				rootNames.Add(tipoDFe.Name);
-			}
+            var rootNames = new List<string>();
+            if (!rootTag.Name.IsEmpty())
+            {
+                rootNames.Add(rootTag.Name);
+                rootNames.Add(tipoDFe.Name);
+            }
+            else
+            {
+                rootNames.AddRange(tipoDFe.GetRootNames());
+                rootNames.Add(tipoDFe.Name);
+            }
 
-			var xmlNode = (from node in xmlDoc.Descendants()
-						   where node.Name.LocalName.IsIn(rootNames)
-						   select node).FirstOrDefault();
+            var xmlNode = (from node in xmlDoc.Descendants()
+                           where node.Name.LocalName.IsIn(rootNames)
+                           select node).FirstOrDefault();
 
-			Guard.Against<ACBrDFeException>(xmlNode == null, "Nenhum objeto root encontrado !");
+            Guard.Against<ACBrDFeException>(xmlNode == null, "Nenhum objeto root encontrado !");
 
-			var returnValue = ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
+            var returnValue = ObjectSerializer.Deserialize(tipoDFe, xmlNode, Options);
 
-			return returnValue;
-		}
+            return returnValue;
+        }
 
-		#endregion Deserialize
+        #endregion Deserialize
 
-		#endregion Methods
-	}
+        #endregion Methods
+    }
 }

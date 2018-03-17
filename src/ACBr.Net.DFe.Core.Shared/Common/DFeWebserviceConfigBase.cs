@@ -29,108 +29,126 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.ComponentModel;
+using ACBr.Net.Core;
+using ACBr.Net.Core.Exceptions;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-	public abstract class DFeWebserviceConfigBase
-	{
-		#region Constructor
+    public abstract class DFeWebserviceConfigBase<TParent>
+    where TParent : ACBrComponent
+    {
+        #region Constructor
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeWebserviceConfigBase"/> class.
-		/// </summary>
-		protected DFeWebserviceConfigBase()
-		{
-			Ambiente = DFeTipoAmbiente.Homologacao;
-			Visualizar = false;
-			AjustaAguardaConsultaRet = false;
-			AguardarConsultaRet = 1;
-			Tentativas = 3;
-			ProxyHost = string.Empty;
-			ProxyPass = string.Empty;
-			ProxyPort = string.Empty;
-			ProxyUser = string.Empty;
-		}
+        /// <summary>
+        /// Inicializa uma nova instancia da classe <see cref="DFeWebserviceConfigBase{TParent}"/>.
+        /// </summary>
+        protected DFeWebserviceConfigBase(TParent parent)
+        {
+            Guard.Against<ArgumentNullException>(parent == null, nameof(parent));
+            Parent = parent;
 
-		#endregion Constructor
+            Ambiente = DFeTipoAmbiente.Homologacao;
+            AjustaAguardaConsultaRet = false;
+            AguardarConsultaRet = 1;
+            Tentativas = 3;
+            IntervaloTentativas = 1000;
+            ProxyHost = string.Empty;
+            ProxyPass = string.Empty;
+            ProxyPort = string.Empty;
+            ProxyUser = string.Empty;
+        }
 
-		#region Properties
+        #endregion Constructor
 
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="DFeWebserviceConfigBase"/> is visualizar.
-		/// </summary>
-		/// <value><c>true</c> if visualizar; otherwise, <c>false</c>.</value>
-		[Browsable(true)]
-		[DefaultValue(false)]
-		public bool Visualizar { get; set; }
+        #region Properties
 
-		/// <summary>
-		/// Gets or sets the ambiente.
-		/// </summary>
-		/// <value>The ambiente.</value>
-		[Browsable(true)]
-		[DefaultValue(DFeTipoAmbiente.Homologacao)]
-		public DFeTipoAmbiente Ambiente { get; set; }
+        /// <summary>
+        /// Componente DFe parente desta configuração.
+        /// </summary>
+        [Browsable(false)]
+        public TParent Parent { get; protected set; }
 
-		/// <summary>
-		/// Gets the ambiente codigo.
-		/// </summary>
-		/// <value>The ambiente codigo.</value>
-		[Browsable(true)]
-		public int AmbienteCodigo => (int)Ambiente;
+        /// <summary>
+        /// Define/retorna se deve ou não salvar os arquivos soap.
+        /// </summary>
+        [Browsable(false)]
+        public bool Salvar { get; set; }
 
-		/// <summary>
-		/// Gets or sets the proxy host.
-		/// </summary>
-		/// <value>The proxy host.</value>
-		[Browsable(true)]
-		public string ProxyHost { get; set; }
+        /// <summary>
+        /// Gets or sets the ambiente.
+        /// </summary>
+        /// <value>The ambiente.</value>
+        [Browsable(true)]
+        [DefaultValue(DFeTipoAmbiente.Homologacao)]
+        public DFeTipoAmbiente Ambiente { get; set; }
 
-		/// <summary>
-		/// Gets or sets the proxy port.
-		/// </summary>
-		/// <value>The proxy port.</value>
-		[Browsable(true)]
-		public string ProxyPort { get; set; }
+        /// <summary>
+        /// Gets the ambiente codigo.
+        /// </summary>
+        /// <value>The ambiente codigo.</value>
+        [Browsable(true)]
+        public int AmbienteCodigo => (int)Ambiente;
 
-		/// <summary>
-		/// Gets or sets the proxy user.
-		/// </summary>
-		/// <value>The proxy user.</value>
-		[Browsable(true)]
-		public string ProxyUser { get; set; }
+        /// <summary>
+        /// Gets or sets the proxy host.
+        /// </summary>
+        /// <value>The proxy host.</value>
+        [Browsable(true)]
+        public string ProxyHost { get; set; }
 
-		/// <summary>
-		/// Gets or sets the proxy pass.
-		/// </summary>
-		/// <value>The proxy pass.</value>
-		[Browsable(true)]
-		public string ProxyPass { get; set; }
+        /// <summary>
+        /// Gets or sets the proxy port.
+        /// </summary>
+        /// <value>The proxy port.</value>
+        [Browsable(true)]
+        public string ProxyPort { get; set; }
 
-		/// <summary>
-		/// Gets or sets the aguardar consulta ret.
-		/// </summary>
-		/// <value>The aguardar consulta ret.</value>
-		[Browsable(true)]
-		public uint AguardarConsultaRet { get; set; }
+        /// <summary>
+        /// Gets or sets the proxy user.
+        /// </summary>
+        /// <value>The proxy user.</value>
+        [Browsable(true)]
+        public string ProxyUser { get; set; }
 
-		/// <summary>
-		/// Gets or sets the tentativas.
-		/// </summary>
-		/// <value>The tentativas.</value>
-		[Browsable(true)]
-		[DefaultValue(3)]
-		public int Tentativas { get; set; }
+        /// <summary>
+        /// Gets or sets the proxy pass.
+        /// </summary>
+        /// <value>The proxy pass.</value>
+        [Browsable(true)]
+        public string ProxyPass { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether [ajusta aguarda consulta ret].
-		/// </summary>
-		/// <value><c>true</c> if [ajusta aguarda consulta ret]; otherwise, <c>false</c>.</value>
-		[Browsable(true)]
-		[DefaultValue(false)]
-		public bool AjustaAguardaConsultaRet { get; set; }
+        /// <summary>
+        /// Gets or sets the aguardar consulta ret.
+        /// </summary>
+        /// <value>The aguardar consulta ret.</value>
+        [Browsable(true)]
+        public uint AguardarConsultaRet { get; set; }
 
-		#endregion Properties
-	}
+        /// <summary>
+        /// Gets or sets the tentativas.
+        /// </summary>
+        /// <value>The tentativas.</value>
+        [Browsable(true)]
+        [DefaultValue(3)]
+        public int Tentativas { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        [Browsable(true)]
+        [DefaultValue(1000)]
+        public int IntervaloTentativas { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [ajusta aguarda consulta ret].
+        /// </summary>
+        /// <value><c>true</c> if [ajusta aguarda consulta ret]; otherwise, <c>false</c>.</value>
+        [Browsable(true)]
+        [DefaultValue(false)]
+        public bool AjustaAguardaConsultaRet { get; set; }
+
+        #endregion Properties
+    }
 }

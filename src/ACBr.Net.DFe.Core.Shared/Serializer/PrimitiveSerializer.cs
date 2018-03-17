@@ -97,6 +97,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (estaVazio) return xmlTag;
 
                 var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
+                elementValue = options.RemoverEspacos ? elementValue.Trim() : elementValue;
 
                 if (tag is DFeAttributeAttribute) return new XAttribute(tag.Name, elementValue);
 

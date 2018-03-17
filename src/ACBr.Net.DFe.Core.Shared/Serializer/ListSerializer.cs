@@ -31,7 +31,6 @@
 
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,11 +55,8 @@ namespace ACBr.Net.DFe.Core.Serializer
         public static XObject[] Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
         {
             var tag = prop.GetAttribute<DFeCollectionAttribute>();
-            var list = (ICollection)prop.GetValue(parentObject, null);
-            var itemType = GetItemType(prop.PropertyType) ?? GetItemType(list.GetType());
-            var objectType = ObjectType.From(itemType);
+            var list = (ICollection)prop.GetValue(parentObject, null) ?? new ArrayList();
 
-            if (list == null) list = new ArrayList();
             if (list.Count < tag.MinSize || list.Count > tag.MaxSize && tag.MaxSize > 0)
             {
                 var msg = list.Count > tag.Max ? DFeSerializer.ErrMsgMaiorMaximo : DFeSerializer.ErrMsgMenorMinimo;
@@ -68,6 +64,9 @@ namespace ACBr.Net.DFe.Core.Serializer
             }
 
             if (list.Count == 0 && tag.Min == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
+
+            var itemType = GetItemType(prop.PropertyType) ?? GetItemType(list.GetType());
+            var objectType = ObjectType.From(itemType);
 
             if (objectType == ObjectType.PrimitiveType) return SerializePrimitive(prop, parentObject, list, tag, options);
             if (!prop.HasAttribute<DFeItemAttribute>()) return SerializeObjects(list, tag, options);
@@ -82,7 +81,9 @@ namespace ACBr.Net.DFe.Core.Serializer
             foreach (var value in values)
             {
                 var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType());
-                var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag?.Name, options);
+                Guard.Against<ACBrDFeException>(itemTag == null, $"Item {value.GetType().Name} não presente na lista de itens.");
+
+                var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, itemTag.NameSpace, options);
                 arrayElement.AddChild(childElement);
             }
 
@@ -91,12 +92,12 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         public static XObject[] SerializeObjects(ICollection values, DFeCollectionAttribute tag, SerializerOptions options)
         {
-            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
+            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.Namespace, options)).Cast<XObject>().ToArray();
         }
 
         public static XObject[] SerializeObjects(ICollection values, DFeItemAttribute tag, SerializerOptions options)
         {
-            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, options)).Cast<XObject>().ToArray();
+            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.NameSpace, options)).Cast<XObject>().ToArray();
         }
 
         public static XObject[] SerializePrimitive(PropertyInfo prop, object parentObject, ICollection values, DFeCollectionAttribute tag, SerializerOptions options)

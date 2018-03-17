@@ -33,34 +33,36 @@ using System;
 
 namespace ACBr.Net.DFe.Core.Attributes
 {
-	/// <summary>
-	/// Class DFeItemAttribute.
-	/// </summary>
-	/// <seealso cref="System.Attribute" />
-	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-	public class DFeItemAttribute : Attribute
-	{
-		#region Constructors
+    /// <summary>
+    /// Class DFeItemAttribute.
+    /// </summary>
+    /// <seealso cref="System.Attribute" />
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class DFeItemAttribute : Attribute
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DFeItemAttribute" /> class.
-		/// </summary>
-		/// <param name="tipo">The tipo.</param>
-		/// <param name="name">The name.</param>
-		public DFeItemAttribute(Type tipo, string name)
-		{
-			Tipo = tipo;
-			Name = name;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeItemAttribute" /> class.
+        /// </summary>
+        /// <param name="tipo">The tipo.</param>
+        /// <param name="name">The name.</param>
+        public DFeItemAttribute(Type tipo, string name)
+        {
+            Tipo = tipo;
+            Name = name;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Propriedades
+        #region Propriedades
 
-		public Type Tipo { get; set; }
+        public Type Tipo { get; set; }
 
-		public string Name { get; set; }
+        public string Name { get; set; }
 
-		#endregion Propriedades
-	}
+        public string NameSpace { get; set; }
+
+        #endregion Propriedades
+    }
 }

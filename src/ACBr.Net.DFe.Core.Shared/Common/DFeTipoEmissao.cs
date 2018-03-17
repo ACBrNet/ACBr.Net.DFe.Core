@@ -33,33 +33,33 @@ using ACBr.Net.DFe.Core.Attributes;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-	public enum DFeTipoEmissao
-	{
-		[DFeEnum("1")]
-		Normal,
+    public enum DFeTipoEmissao
+    {
+        [DFeEnum("1")]
+        Normal,
 
-		[DFeEnum("2")]
-		Contingencia,
+        [DFeEnum("2")]
+        Contingencia,
 
-		[DFeEnum("3")]
-		SCAN,
+        [DFeEnum("3")]
+        SCAN,
 
-		[DFeEnum("4")]
-		DPEC,
+        [DFeEnum("4")]
+        DPEC,
 
-		[DFeEnum("5")]
-		FSDA,
+        [DFeEnum("5")]
+        FSDA,
 
-		[DFeEnum("6")]
-		SVCAN,
+        [DFeEnum("6")]
+        SVCAN,
 
-		[DFeEnum("7")]
-		SVCRS,
+        [DFeEnum("7")]
+        SVCRS,
 
-		[DFeEnum("8")]
-		SVCSP,
+        [DFeEnum("8")]
+        SVCSP,
 
-		[DFeEnum("9")]
-		OffLine
-	}
+        [DFeEnum("9")]
+        OffLine
+    }
 }

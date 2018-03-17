@@ -34,26 +34,26 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
-	internal static class XDocumentExtensions
-	{
-		internal static Type GetElementType(this XElement element, Type parentType, int genericArgumentIndex)
-		{
-			Type type = null;
-			var typeELement = element.Attribute("Type");
-			if (typeELement != null)
-			{
-				type = Type.GetType(typeELement.Value);
-			}
+    internal static class XDocumentExtensions
+    {
+        internal static Type GetElementType(this XElement element, Type parentType, int genericArgumentIndex)
+        {
+            Type type = null;
+            var typeELement = element.Attribute("Type");
+            if (typeELement != null)
+            {
+                type = Type.GetType(typeELement.Value);
+            }
 
-			if (type != null) return type;
+            if (type != null) return type;
 
-			var arguments = parentType.GetGenericArguments();
-			if (arguments.Length > genericArgumentIndex)
-			{
-				type = arguments[genericArgumentIndex];
-			}
+            var arguments = parentType.GetGenericArguments();
+            if (arguments.Length > genericArgumentIndex)
+            {
+                type = arguments[genericArgumentIndex];
+            }
 
-			return type;
-		}
-	}
+            return type;
+        }
+    }
 }

@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 05-07-2016
+// Created          : 03-10-2018
 //
 // Last Modified By : RFTD
-// Last Modified On : 05-07-2016
+// Last Modified On : 03-10-2018
 // ***********************************************************************
-// <copyright file="DFeSignature.cs" company="ACBr.Net">
+// <copyright file="EnumExtensions.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,51 +29,26 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System.Linq;
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Common;
-using ACBr.Net.DFe.Core.Serializer;
+using ExtraConstraints;
 
-namespace ACBr.Net.DFe.Core.Document
+namespace ACBr.Net.DFe.Core.Extensions
 {
-    [DFeRoot("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
-    public class DFeSignature : DFeDocument<DFeSignature>
+    public static class EnumExtensions
     {
-        #region Constructors
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeSignature"/> class.
+        /// Retorna o valor do Enum definido pelo DFeEnumAttribute.
         /// </summary>
-        public DFeSignature()
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>System.String.</returns>
+        public static string GetValue<[EnumConstraint]T>(this T value) where T : struct
         {
-            SignedInfo = new SignedInfo();
-            KeyInfo = new KeyInfo();
+            var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
+            var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
+            var enumValue = enumAttribute?.Value;
+            return enumValue ?? value.ToString();
         }
-
-        #endregion Constructors
-
-        #region Propriedades
-
-        /// <summary>
-        /// XS02 - Grupo da Informação da assinatura
-        /// </summary>
-        /// <value>The signed information.</value>
-        [DFeElement("SignedInfo", Id = "XS02")]
-        public SignedInfo SignedInfo { get; set; }
-
-        /// <summary>
-        /// XS18 - Grupo do Signature Value
-        /// </summary>
-        /// <value>The signature value.</value>
-        [DFeElement(TipoCampo.Str, "SignatureValue", Id = "XS18", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
-        public string SignatureValue { get; set; }
-
-        /// <summary>
-        /// XS19 - Grupo do KeyInfo
-        /// </summary>
-        /// <value>The key information.</value>
-        [DFeElement("KeyInfo", Id = "XS19")]
-        public KeyInfo KeyInfo { get; set; }
-
-        #endregion Propriedades
     }
 }

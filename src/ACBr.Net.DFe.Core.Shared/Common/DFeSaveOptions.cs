@@ -33,12 +33,13 @@ using System;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-	[Flags]
-	public enum DFeSaveOptions
-	{
-		None,
-		RemoveAccents,
-		DisableFormatting,
-		OmitDeclaration
-	}
+    [Flags]
+    public enum DFeSaveOptions
+    {
+        None = 0,
+        RemoveAccents = 1 << 0,
+        RemoveSpaces = 1 << 1,
+        DisableFormatting = 1 << 2,
+        OmitDeclaration = 1 << 3
+    }
 }
