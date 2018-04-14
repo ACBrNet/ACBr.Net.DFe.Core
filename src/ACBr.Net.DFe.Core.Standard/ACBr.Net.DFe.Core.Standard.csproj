@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ACBr.Net.Core" Version="1.2.1-beta4" />
-    <PackageReference Include="ExtraConstraints.Fody" Version="1.12.2" />
+    <PackageReference Include="ACBr.Net.Core" Version="1.2.1-rc1" />
+    <PackageReference Include="ExtraConstraints.Fody" Version="1.13.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.4.1" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.1" />
   </ItemGroup>

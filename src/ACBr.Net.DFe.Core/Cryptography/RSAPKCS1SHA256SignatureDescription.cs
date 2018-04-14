@@ -103,7 +103,7 @@ namespace ACBr.Net.DFe.Core.Cryptography
         /// <inheritdoc />
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
         {
-            if (key == null) throw new ArgumentNullException("key");
+            if (key == null) throw new ArgumentNullException(nameof(key));
             key = GetSha2CompatibleKey(key);
 
             var deformatter = new RSAPKCS1SignatureDeformatter(key);
@@ -114,7 +114,7 @@ namespace ACBr.Net.DFe.Core.Cryptography
         /// <inheritdoc />
         public override AsymmetricSignatureFormatter CreateFormatter(AsymmetricAlgorithm key)
         {
-            if (key == null) throw new ArgumentNullException("key");
+            if (key == null) throw new ArgumentNullException(nameof(key));
             key = GetSha2CompatibleKey(key);
 
             var formatter = new RSAPKCS1SignatureFormatter(key);
