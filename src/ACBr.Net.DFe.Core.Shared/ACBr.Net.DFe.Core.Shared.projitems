@@ -9,7 +9,9 @@
     <Import_RootNamespace>ACBr.Net.DFe.Core.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ACBrDFeCommunicationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ACBrDFeException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ACBrDFeValidationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeAttributeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeCollectionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeElementAttribute.cs" />

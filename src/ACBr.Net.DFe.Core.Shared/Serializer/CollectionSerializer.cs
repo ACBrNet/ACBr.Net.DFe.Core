@@ -83,7 +83,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 var itemTag = itemTags.SingleOrDefault(x => x.Tipo == value.GetType());
                 Guard.Against<ACBrDFeException>(itemTag == null, $"Item {value.GetType().Name} não presente na lista de itens.");
 
-                var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, itemTag.NameSpace, options);
+                var childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, itemTag.Namespace, options);
                 arrayElement.AddChild(childElement);
             }
 
@@ -97,7 +97,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         public static XObject[] SerializeObjects(ICollection values, DFeItemAttribute tag, SerializerOptions options)
         {
-            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.NameSpace, options)).Cast<XObject>().ToArray();
+            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.Namespace, options)).Cast<XObject>().ToArray();
         }
 
         public static XObject[] SerializePrimitive(PropertyInfo prop, object parentObject, ICollection values, DFeCollectionAttribute tag, SerializerOptions options)

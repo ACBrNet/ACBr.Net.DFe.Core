@@ -23,7 +23,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 return CollectionSerializer.SerializeObjects(list, itemAttribute, options);
             }
 
-            return new XObject[] { ObjectSerializer.Serialize(value, value.GetType(), itemAttribute.Name, itemAttribute.NameSpace, options) };
+            return new XObject[] { ObjectSerializer.Serialize(value, value.GetType(), itemAttribute.Name, itemAttribute.Namespace, options) };
         }
 
         public static object Deserialize(PropertyInfo prop, XElement parentElement, object item, SerializerOptions options)

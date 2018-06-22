@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 03-21-2014
+// Created          : 06-22-2018
 //
 // Last Modified By : RFTD
 // Last Modified On : 06-22-2018
 // ***********************************************************************
-// <copyright file="ACBrDFeException.cs" company="ACBr.Net">
+// <copyright file="ACBrDFeCommunicationException.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -35,55 +35,52 @@ using ACBr.Net.Core;
 
 namespace ACBr.Net.DFe.Core
 {
-    /// <summary>
-    /// Classe ACBrDFeException.
-    /// </summary>
-    // ReSharper disable once InconsistentNaming
-    public class ACBrDFeException : ACBrException
+    [Serializable]
+    public class ACBrDFeCommunicationException : ACBrException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ACBrDFeException" /> class with a specified error message.
+        /// Initializes a new instance of the <see cref="T:ACBr.Net.DFe.Core.ACBrDFeCommunicationException" /> class with a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public ACBrDFeException(string message)
+        public ACBrDFeCommunicationException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ACBrDFeException"/> class.
+        /// Initializes a new instance of the <see cref="T:ACBr.Net.DFe.Core.ACBrDFeCommunicationException" /> class.
         /// </summary>
-        public ACBrDFeException()
+        public ACBrDFeCommunicationException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ACBrDFeException" /> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+        /// Initializes a new instance of the <see cref="T:ACBr.Net.DFe.Core.ACBrDFeCommunicationException" /> class with a specified error message and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        public ACBrDFeException(string message, Exception innerException)
+        public ACBrDFeCommunicationException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ACBrDFeException"/> class.
+        /// Initializes a new instance of the <see cref="T:ACBr.Net.DFe.Core.ACBrDFeCommunicationException" /> class.
         /// </summary>
         /// <param name="innerException">The inner exception.</param>
         /// <param name="message">The message.</param>
         /// <param name="args">The arguments.</param>
-        public ACBrDFeException(Exception innerException, string message, params object[] args)
+        public ACBrDFeCommunicationException(Exception innerException, string message, params object[] args)
             : base(string.Format(message, args), innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ACBrDFeException" /> class with serialized data.
+        /// Initializes a new instance of the <see cref="T:ACBr.Net.DFe.Core.ACBrDFeValidationException" /> class with serialized data.
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-        protected ACBrDFeException(SerializationInfo info, StreamingContext context)
+        protected ACBrDFeCommunicationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
