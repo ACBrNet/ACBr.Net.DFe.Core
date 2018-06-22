@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 05-11-2016
 // ***********************************************************************
-// <copyright file="ListSerializer.cs" company="ACBr.Net">
+// <copyright file="CollectionSerializer.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -41,7 +41,7 @@ using ACBr.Net.Core.Exceptions;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-    internal static class ListSerializer
+    internal static class CollectionSerializer
     {
         #region Serialize
 
@@ -59,11 +59,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             if (list.Count < tag.MinSize || list.Count > tag.MaxSize && tag.MaxSize > 0)
             {
-                var msg = list.Count > tag.Max ? DFeSerializer.ErrMsgMaiorMaximo : DFeSerializer.ErrMsgMenorMinimo;
+                var msg = list.Count > tag.MaxSize ? DFeSerializer.ErrMsgMaiorMaximo : DFeSerializer.ErrMsgMenorMinimo;
                 options.AddAlerta(tag.Id, tag.Name, tag.Descricao, msg);
             }
 
-            if (list.Count == 0 && tag.Min == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
+            if (list.Count == 0 && tag.MinSize == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
 
             var itemType = GetItemType(prop.PropertyType) ?? GetItemType(list.GetType());
             var objectType = ObjectType.From(itemType);
@@ -186,6 +186,10 @@ namespace ACBr.Net.DFe.Core.Serializer
             return list;
         }
 
+        #endregion Deserialize
+
+        #region Methods
+
         private static Type GetListType(Type type)
         {
             var listItemType = typeof(ArrayList).IsAssignableFrom(type) || type.IsArray ? typeof(ArrayList) :
@@ -202,6 +206,6 @@ namespace ACBr.Net.DFe.Core.Serializer
             return listItemType;
         }
 
-        #endregion Deserialize
+        #endregion Methods
     }
 }

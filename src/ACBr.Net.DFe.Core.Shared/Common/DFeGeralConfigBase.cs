@@ -40,9 +40,33 @@ namespace ACBr.Net.DFe.Core.Common
     /// <summary>
     ///
     /// </summary>
-    public abstract class DFeGeralConfigBase<TParent, [EnumConstraint]TVersaoDFe>
+    public abstract class DFeGeralConfigBase<TParent, [EnumConstraint]TVersaoDFe> : DFeGeralConfigBase<TParent>
     where TParent : ACBrComponent
     where TVersaoDFe : struct
+    {
+        #region Constructor
+
+        /// <summary>
+        /// Inicializa uma nova instancia da classe <see cref="DFeGeralConfigBase{TParent, TVersaoDFe}"/>.
+        /// </summary>
+        protected DFeGeralConfigBase(TParent parent) : base(parent)
+        {
+        }
+
+        #endregion Constructor
+
+        #region Properties
+
+        /// <summary>
+        /// Define/retorna a versão do documento DFe.
+        /// </summary>
+        [Browsable(true)]
+        public TVersaoDFe VersaoDFe { get; set; }
+
+        #endregion Properties
+    }
+
+    public abstract class DFeGeralConfigBase<TParent> where TParent : ACBrComponent
     {
         #region Constructor
 
@@ -61,6 +85,7 @@ namespace ACBr.Net.DFe.Core.Common
             RetirarAcentos = true;
             RetirarEspacos = true;
             IdentarXml = false;
+            ValidarDigest = false;
         }
 
         #endregion Constructor
@@ -72,12 +97,6 @@ namespace ACBr.Net.DFe.Core.Common
         /// </summary>
         [Browsable(false)]
         public TParent Parent { get; protected set; }
-
-        /// <summary>
-        /// Define/retorna a versão do documento DFe.
-        /// </summary>
-        [Browsable(true)]
-        public TVersaoDFe VersaoDFe { get; set; }
 
         /// <summary>
         /// Define/retorna o tipo de emissão.

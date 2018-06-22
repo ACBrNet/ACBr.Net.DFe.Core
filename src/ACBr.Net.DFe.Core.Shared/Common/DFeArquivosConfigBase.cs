@@ -42,9 +42,46 @@ using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-    public abstract class DFeArquivosConfigBase<TParent, [EnumConstraint]TSchemas>
+    public abstract class DFeArquivosConfigBase<TParent, [EnumConstraint]TSchemas> : DFeArquivosConfigBase<TParent>
         where TParent : ACBrComponent
         where TSchemas : struct
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Inicializa uma nova instancia da classe <see cref="DFeArquivosConfigBase{TParent, TSchemas}"/>.
+        /// </summary>
+        protected DFeArquivosConfigBase(TParent parent) : base(parent)
+        {
+            SchemasCache = new Dictionary<TSchemas, string>();
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Retorna um dicionario que contem o cache dos paths de cada schema lido.
+        /// </summary>
+        [Browsable(false)]
+        public Dictionary<TSchemas, string> SchemasCache { get; }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Metodo que retorna o caminho para o tipo de schema solicitado.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public abstract string GetSchema(TSchemas schema);
+
+        #endregion Methods
+    }
+
+    public abstract class DFeArquivosConfigBase<TParent>
+        where TParent : ACBrComponent
     {
         #region Fields
 
@@ -77,7 +114,6 @@ namespace ACBr.Net.DFe.Core.Common
             SepararPorDia = false;
 
             OrdenacaoPath = new List<TagOrdenacaoPath>();
-            SchemasCache = new Dictionary<TSchemas, string>();
         }
 
         #endregion Constructors
@@ -202,12 +238,6 @@ namespace ACBr.Net.DFe.Core.Common
         [Browsable(false)]
         public List<TagOrdenacaoPath> OrdenacaoPath { get; }
 
-        /// <summary>
-        /// Retorna um dicionario que contem o cache dos paths de cada schema lido.
-        /// </summary>
-        [Browsable(false)]
-        public Dictionary<TSchemas, string> SchemasCache { get; }
-
         #endregion Properties
 
         #region Methods
@@ -216,13 +246,6 @@ namespace ACBr.Net.DFe.Core.Common
         /// Metodo chamado quando muda o caminho do arquivo de serviços.
         /// </summary>
         protected abstract void ArquivoServicoChange();
-
-        /// <summary>
-        /// Metodo que retorna o caminho para o tipo de schema solicitado.
-        /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
-        public abstract string GetSchema(TSchemas schema);
 
         /// <summary>
         /// Gera um path de salvamento.

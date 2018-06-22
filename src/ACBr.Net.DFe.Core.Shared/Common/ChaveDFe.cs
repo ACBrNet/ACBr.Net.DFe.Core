@@ -38,6 +38,9 @@ using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Common
 {
+    /// <summary>
+    ///
+    /// </summary>
     public static class ChaveDFe
     {
         /// <summary>

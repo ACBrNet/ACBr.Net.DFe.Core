@@ -35,7 +35,7 @@ using ACBr.Net.DFe.Core.Serializer;
 namespace ACBr.Net.DFe.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class DFeCollectionAttribute : DFeElementAttribute
+    public sealed class DFeCollectionAttribute : DFeElementAttribute
     {
         #region Constructors
 
@@ -63,8 +63,14 @@ namespace ACBr.Net.DFe.Core.Attributes
 
         #region Properties
 
+        /// <summary>
+        ///
+        /// </summary>
         public int MinSize { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public int MaxSize { get; set; }
 
         #endregion Properties

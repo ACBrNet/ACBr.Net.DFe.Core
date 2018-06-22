@@ -33,139 +33,123 @@ using ACBr.Net.Core.Exceptions;
 using ACBr.Net.DFe.Core.Attributes;
 using System;
 using System.Collections;
-using System.Linq;
 using System.Reflection;
 using ACBr.Net.Core.Extensions;
-
-#if !NETSTANDARD2_0
-
 using ExtraConstraints;
-
-#endif
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
-	internal static class DFeExtensions
-	{
-		public static IDFeElement GetTag(this PropertyInfo prop)
-		{
-			return prop.HasAttribute<DFeElementAttribute>()
-					? (IDFeElement)prop.GetAttribute<DFeElementAttribute>()
-					: prop.GetAttribute<DFeAttributeAttribute>();
-		}
+    internal static class DFeExtensions
+    {
+        public static IDFeElement GetTag(this PropertyInfo prop)
+        {
+            return prop.HasAttribute<DFeElementAttribute>()
+                    ? (IDFeElement)prop.GetAttribute<DFeElementAttribute>()
+                    : prop.GetAttribute<DFeAttributeAttribute>();
+        }
 
-#if NETSTANDARD2_0
-		public static TDelegate ToDelegate<TDelegate>(this MethodInfo method) where TDelegate : class
-#else
+        public static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method) where TDelegate : class
+        {
+            return Delegate.CreateDelegate(typeof(TDelegate), method) as TDelegate;
+        }
 
-			public static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method) where TDelegate : class
-#endif
-		{
-			return Delegate.CreateDelegate(typeof(TDelegate), method) as TDelegate;
-		}
+        public static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
+        {
+            return Delegate.CreateDelegate(typeof(TDelegate), item, method) as TDelegate;
+        }
 
-#if NETSTANDARD2_0
-		public static TDelegate ToDelegate<TDelegate>(this MethodInfo method, object item) where TDelegate : class
-#else
+        public static Func<string> GetSerializer(this PropertyInfo prop, object item)
+        {
+            Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");
 
-		public static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
-#endif
-		{
-			return Delegate.CreateDelegate(typeof(TDelegate), item, method) as TDelegate;
-		}
+            var method = item.GetType().GetMethod($"Serialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            return method.ToDelegate<Func<string>>(item);
+        }
 
-		public static Func<string> GetSerializer(this PropertyInfo prop, object item)
-		{
-			Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");
+        public static string GetRootName(this Type prop, object item)
+        {
+            var method = item.GetType().GetMethod("GetRootName", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (method == null || method.ReturnType != typeof(string)) return string.Empty;
 
-			var method = item.GetType().GetMethod($"Serialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			return method.ToDelegate<Func<string>>(item);
-		}
+            var func = method.ToDelegate<Func<string>>(item);
+            return func();
+        }
 
-		public static string GetRootName(this Type prop, object item)
-		{
-			var method = item.GetType().GetMethod("GetRootName", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			if (method == null || method.ReturnType != typeof(string)) return string.Empty;
+        public static string[] GetRootNames(this Type prop)
+        {
+            var method = prop.GetMethod("GetRootNames", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            if (method == null || method.ReturnType != typeof(string[])) return new string[0];
 
-			var func = method.ToDelegate<Func<string>>(item);
-			return func();
-		}
+            var func = method.ToDelegate<Func<string[]>>();
+            return func();
+        }
 
-		public static string[] GetRootNames(this Type prop)
-		{
-			var method = prop.GetMethod("GetRootNames", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-			if (method == null || method.ReturnType != typeof(string[])) return new string[0];
+        public static Func<string, object> GetDeserializer(this PropertyInfo prop, object item)
+        {
+            Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");
+            var method = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            return method.ToDelegate<Func<string, object>>(item);
+        }
 
-			var func = method.ToDelegate<Func<string[]>>();
-			return func();
-		}
+        public static object GetValueOrIndex(this PropertyInfo prop, object parent, int index)
+        {
+            var value = prop.GetValue(parent, null);
+            if (index > -1)
+            {
+                value = ((IList)value)[index];
+            }
 
-		public static Func<string, object> GetDeserializer(this PropertyInfo prop, object item)
-		{
-			Guard.Against<ArgumentException>(prop.DeclaringType != item.GetType(), "O item informado não declara esta propriedade");
-			var method = item.GetType().GetMethod($"Deserialize{prop.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			return method.ToDelegate<Func<string, object>>(item);
-		}
+            return value;
+        }
 
-		public static object GetValueOrIndex(this PropertyInfo prop, object parent, int index)
-		{
-			var value = prop.GetValue(parent, null);
-			if (index > -1)
-			{
-				value = ((IList)value)[index];
-			}
+        public static Func<object> GetCreate(this Type tipo)
+        {
+            var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            return method.ToDelegate<Func<object>>();
+        }
 
-			return value;
-		}
+        public static bool HasCreate(this Type tipo)
+        {
+            var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            return method != null;
+        }
 
-		public static Func<object> GetCreate(this Type tipo)
-		{
-			var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-			return method.ToDelegate<Func<object>>();
-		}
+        /// <summary>
+        /// Checks if a property should not be serialized.
+        /// </summary>
+        /// <param name="property">The property to check.</param>
+        public static bool ShouldIgnoreProperty(this PropertyInfo property)
+        {
+            return property.HasAttribute<DFeIgnoreAttribute>() ||
+                   !property.CanRead || !property.CanWrite;
+        }
 
-		public static bool HasCreate(this Type tipo)
-		{
-			var method = tipo.GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-			return method != null;
-		}
+        /// <summary>
+        /// Checks if a property should not be serialized.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="item">The item.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        public static bool ShouldSerializeProperty(this PropertyInfo property, object item)
+        {
+            var shouldSerialize = item.GetType().GetMethod($"ShouldSerialize{property.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (shouldSerialize != null && shouldSerialize.ReturnType == typeof(bool))
+                return (bool)shouldSerialize.Invoke(item, null);
 
-		/// <summary>
-		/// Checks if a property should not be serialized.
-		/// </summary>
-		/// <param name="property">The property to check.</param>
-		public static bool ShouldIgnoreProperty(this PropertyInfo property)
-		{
-			return property.HasAttribute<DFeIgnoreAttribute>() ||
-				   !property.CanRead || !property.CanWrite;
-		}
+            return true;
+        }
 
-		/// <summary>
-		/// Checks if a property should not be serialized.
-		/// </summary>
-		/// <param name="property">The property.</param>
-		/// <param name="item">The item.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		public static bool ShouldSerializeProperty(this PropertyInfo property, object item)
-		{
-			var shouldSerialize = item.GetType().GetMethod($"ShouldSerialize{property.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			if (shouldSerialize != null && shouldSerialize.ReturnType == typeof(bool))
-				return (bool)shouldSerialize.Invoke(item, null);
+        public static string RemoveCData(this string value)
+        {
+            if (value.IsEmpty()) return value;
+            return value.IsCData() ? value.GetStrBetween(9, value.Length - 4) : value;
+        }
 
-			return true;
-		}
+        public static bool IsCData(this string value)
+        {
+            if (value.IsEmpty()) return false;
 
-		public static string RemoveCData(this string value)
-		{
-			if (value.IsEmpty()) return value;
-			return value.IsCData() ? value.GetStrBetween(9, value.Length - 4) : value;
-		}
-
-		public static bool IsCData(this string value)
-		{
-			if (value.IsEmpty()) return false;
-
-			return value.StartsWith("<![CDATA[") && value.EndsWith("]]>");
-		}
-	}
+            return value.StartsWith("<![CDATA[") && value.EndsWith("]]>");
+        }
+    }
 }

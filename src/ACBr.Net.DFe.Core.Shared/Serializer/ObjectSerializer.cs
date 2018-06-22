@@ -121,7 +121,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
                 if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
                 {
-                    return ListSerializer.Serialize(prop, parentObject, options);
+                    return CollectionSerializer.Serialize(prop, parentObject, options);
                 }
 
                 var value = prop.GetValue(parentObject, null);
@@ -231,7 +231,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (objectType.IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
                 {
                     var listElement = parentElement.ElementsAnyNs(tag.Name);
-                    var list = (ArrayList)ListSerializer.Deserialize(typeof(ArrayList), listElement.ToArray(), prop, item, options);
+                    var list = (ArrayList)CollectionSerializer.Deserialize(typeof(ArrayList), listElement.ToArray(), prop, item, options);
                     var type = prop.PropertyType.IsArray ? prop.PropertyType.GetElementType() : prop.PropertyType.GetGenericArguments()[0];
                     return objectType == ObjectType.ArrayType ? list.ToArray(type) : list.Cast(type);
                 }
@@ -239,7 +239,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (objectType == ObjectType.ListType)
                 {
                     var listElement = parentElement.ElementsAnyNs(tag.Name);
-                    return ListSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, item, options);
+                    return CollectionSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, item, options);
                 }
 
                 if (objectType.IsIn(ObjectType.InterfaceType, ObjectType.AbstractType))

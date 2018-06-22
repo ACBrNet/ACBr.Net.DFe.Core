@@ -58,7 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.Extendend.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\InterfaceSerializer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Serializer\ListSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\CollectionSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\ObjectSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\ObjectType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\PrimitiveSerializer.cs" />

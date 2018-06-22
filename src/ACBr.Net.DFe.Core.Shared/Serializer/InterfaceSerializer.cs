@@ -20,7 +20,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
             {
                 var list = (ICollection)prop.GetValue(parentObject, null);
-                return ListSerializer.SerializeObjects(list, itemAttribute, options);
+                return CollectionSerializer.SerializeObjects(list, itemAttribute, options);
             }
 
             return new XObject[] { ObjectSerializer.Serialize(value, value.GetType(), itemAttribute.Name, itemAttribute.NameSpace, options) };
@@ -38,15 +38,15 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (objectType.IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
                 {
                     var listElement = parentElement.ElementsAnyNs(att.Name);
-                    var list = (ArrayList)ListSerializer.Deserialize(typeof(ArrayList), listElement, options);
-                    var type = ListSerializer.GetItemType(att.Tipo);
+                    var list = (ArrayList)CollectionSerializer.Deserialize(typeof(ArrayList), listElement, options);
+                    var type = CollectionSerializer.GetItemType(att.Tipo);
                     return objectType == ObjectType.ArrayType ? list.ToArray(type) : list.Cast(type);
                 }
 
                 if (objectType == ObjectType.ListType)
                 {
                     var listElement = parentElement.ElementsAnyNs(att.Name);
-                    return ListSerializer.Deserialize(att.Tipo, listElement, options);
+                    return CollectionSerializer.Deserialize(att.Tipo, listElement, options);
                 }
 
                 return ObjectSerializer.Deserialize(att.Tipo, node, options);

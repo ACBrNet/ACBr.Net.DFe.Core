@@ -39,7 +39,7 @@ namespace ACBr.Net.DFe.Core.Common
 {
     [TypeConverter(typeof(ACBrExpandableObjectConverter))]
     public abstract class DFeConfigBase<TParent, TGeralConfig, [EnumConstraint]TVersaoDFe, TWebserviceConfig,
-        TCertificadosConfig, TArquivosConfig, [EnumConstraint]TSchemas>
+        TCertificadosConfig, TArquivosConfig, [EnumConstraint]TSchemas> : DFeConfigBase<TParent, TGeralConfig, TWebserviceConfig, TCertificadosConfig, TArquivosConfig>
         where TParent : ACBrComponent
         where TGeralConfig : DFeGeralConfigBase<TParent, TVersaoDFe>
         where TVersaoDFe : struct
@@ -47,6 +47,28 @@ namespace ACBr.Net.DFe.Core.Common
         where TCertificadosConfig : DFeCertificadosConfigBase<TParent>
         where TArquivosConfig : DFeArquivosConfigBase<TParent, TSchemas>
         where TSchemas : struct
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Inicializa uma nova instancia da classe <see cref="DFeConfigBase{TParent, TGeralConfig, TWebserviceConfig, TCertificadosConfig, TArquivosConfig, TVersaoDFe, TSchemas}"/>.
+        /// </summary>
+        /// <param name="parent"></param>
+        protected DFeConfigBase(TParent parent) : base(parent)
+        {
+        }
+
+        #endregion Constructors
+    }
+
+    [TypeConverter(typeof(ACBrExpandableObjectConverter))]
+    public abstract class DFeConfigBase<TParent, TGeralConfig, TWebserviceConfig,
+        TCertificadosConfig, TArquivosConfig>
+        where TParent : ACBrComponent
+        where TGeralConfig : DFeGeralConfigBase<TParent>
+        where TWebserviceConfig : DFeWebserviceConfigBase<TParent>
+        where TCertificadosConfig : DFeCertificadosConfigBase<TParent>
+        where TArquivosConfig : DFeArquivosConfigBase<TParent>
     {
         #region Constructors
 

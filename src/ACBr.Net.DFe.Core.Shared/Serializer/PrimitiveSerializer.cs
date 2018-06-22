@@ -51,6 +51,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <param name="item">The item.</param>
         /// <param name="prop">The property.</param>
         /// <param name="options">Indicates how the output is formatted or serialized.</param>
+        /// <param name="idx"></param>
         /// <returns>The XElement representation of the primitive.</returns>
         public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
         {

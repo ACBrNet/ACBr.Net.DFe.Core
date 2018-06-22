@@ -76,7 +76,7 @@ namespace ACBr.Net.DFe.Core
                 if (cerSerie.IsEmpty())
                 {
 #if NETSTANDARD2_0
-                    throw new ACBrDFeException("Numero de serie obrigatorio.");
+                    throw new ACBrDFeException("Número de série obrigatório.");
 #else
                     certificadosSelecionados = X509Certificate2UI.SelectFromCollection(certificates, "Certificados Digitais",
                         "Selecione o Certificado Digital para uso no aplicativo", X509SelectionFlag.SingleSelection);
