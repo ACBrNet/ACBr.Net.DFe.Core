@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 03-10-2018
+// Created          : 06-30-2018
 //
 // Last Modified By : RFTD
-// Last Modified On : 03-10-2018
+// Last Modified On : 06-30-2018
 // ***********************************************************************
-// <copyright file="EnumExtensions.cs" company="ACBr.Net">
+// <copyright file="DFeConsultaCadastroResposta.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,26 +29,16 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Linq;
-using ACBr.Net.DFe.Core.Attributes;
-using ExtraConstraints;
-
-namespace ACBr.Net.DFe.Core.Extensions
+namespace ACBr.Net.DFe.Core.Service
 {
-    public static class EnumExtensions
+    public class DFeConsultaCadastroResposta : DFeResposta<DFeConsultaCadastroResult>
     {
-        /// <summary>
-        /// Retorna o valor do Enum definido pelo DFeEnumAttribute.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        public static string GetDFeValue<[EnumConstraint]T>(this T value) where T : struct
+        #region Constructor
+
+        public DFeConsultaCadastroResposta(string xmlEnvio, string xmlRetorno, string envelopeSoap, string respostaWs) : base(xmlEnvio, xmlRetorno, envelopeSoap, respostaWs)
         {
-            var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
-            var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-            var enumValue = enumAttribute?.Value;
-            return enumValue ?? value.ToString();
         }
+
+        #endregion Constructor
     }
 }

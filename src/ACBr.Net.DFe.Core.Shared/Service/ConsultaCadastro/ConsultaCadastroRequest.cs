@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 03-10-2018
+// Created          : 11-10-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 03-10-2018
+// Last Modified On : 11-10-2016
 // ***********************************************************************
-// <copyright file="EnumExtensions.cs" company="ACBr.Net">
+// <copyright file="ConsultaCadastroRequest.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,26 +29,36 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Linq;
-using ACBr.Net.DFe.Core.Attributes;
-using ExtraConstraints;
+using System.ServiceModel;
+using System.Xml;
 
-namespace ACBr.Net.DFe.Core.Extensions
+namespace ACBr.Net.DFe.Core.Service
 {
-    public static class EnumExtensions
+    [MessageContract(WrapperName = "consultaCadastroRequest", IsWrapped = false)]
+    public sealed class ConsultaCadastroRequest
     {
-        /// <summary>
-        /// Retorna o valor do Enum definido pelo DFeEnumAttribute.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        public static string GetDFeValue<[EnumConstraint]T>(this T value) where T : struct
+        #region Constructors
+
+        public ConsultaCadastroRequest()
         {
-            var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
-            var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-            var enumValue = enumAttribute?.Value;
-            return enumValue ?? value.ToString();
         }
+
+        public ConsultaCadastroRequest(DFeWsCabecalho cabecalho, XmlNode mensagem)
+        {
+            Cabecalho = cabecalho;
+            Mensagem = mensagem;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        [MessageHeader(Name = "nfeCabecMsg", Namespace = "http://www.portalfiscal.inf.br/nfe/wsdl/CadConsultaCadastro")]
+        public DFeWsCabecalho Cabecalho;
+
+        [MessageBodyMember(Name = "nfeDadosMsg", Namespace = "http://www.portalfiscal.inf.br/nfe/wsdl/CadConsultaCadastro", Order = 0)]
+        public XmlNode Mensagem;
+
+        #endregion Properties
     }
 }

@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 03-10-2018
+// Created          : 06-30-2018
 //
 // Last Modified By : RFTD
-// Last Modified On : 03-10-2018
+// Last Modified On : 06-30-2018
 // ***********************************************************************
-// <copyright file="EnumExtensions.cs" company="ACBr.Net">
+// <copyright file="DFeIndCred.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,26 +29,34 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Linq;
+using System.ComponentModel;
 using ACBr.Net.DFe.Core.Attributes;
-using ExtraConstraints;
 
-namespace ACBr.Net.DFe.Core.Extensions
+namespace ACBr.Net.DFe.Core.Service
 {
-    public static class EnumExtensions
+    /// <summary>
+    /// Indicador de credenciamento.
+    /// </summary>
+    public enum DFeIndCred
     {
-        /// <summary>
-        /// Retorna o valor do Enum definido pelo DFeEnumAttribute.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        public static string GetDFeValue<[EnumConstraint]T>(this T value) where T : struct
-        {
-            var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
-            var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-            var enumValue = enumAttribute?.Value;
-            return enumValue ?? value.ToString();
-        }
+        [DFeEnum("0")]
+        [Description("0 - Não credenciado para emissão")]
+        NaoCredenciado = 0,
+
+        [DFeEnum("1")]
+        [Description("1 - Credenciado")]
+        Credenciado = 1,
+
+        [DFeEnum("2")]
+        [Description("2 - Credenciado com obrigatoriedade para todas operações")]
+        CredenciadoObrigatoriedade = 2,
+
+        [DFeEnum("3")]
+        [Description("3 - Credenciado com obrigatoriedade parcial")]
+        CredenciadoObrigatoriedadeParcial = 3,
+
+        [DFeEnum("4")]
+        [Description("4 – a SEFAZ não fornece a informação")]
+        SefazNaoForneceInformacao = 4
     }
 }

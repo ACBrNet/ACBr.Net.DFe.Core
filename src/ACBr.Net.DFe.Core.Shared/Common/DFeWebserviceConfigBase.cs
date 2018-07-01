@@ -33,6 +33,8 @@ using System;
 using System.ComponentModel;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
+using ACBr.Net.Core.Extensions;
+using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Common
 {
@@ -54,10 +56,6 @@ namespace ACBr.Net.DFe.Core.Common
             AguardarConsultaRet = 1;
             Tentativas = 3;
             IntervaloTentativas = 1000;
-            ProxyHost = string.Empty;
-            ProxyPass = string.Empty;
-            ProxyPort = string.Empty;
-            ProxyUser = string.Empty;
         }
 
         #endregion Constructor
@@ -85,46 +83,11 @@ namespace ACBr.Net.DFe.Core.Common
         public DFeTipoAmbiente Ambiente { get; set; }
 
         /// <summary>
-        /// Gets the ambiente codigo.
+        /// Retorna o código do ambiente.
         /// </summary>
         /// <value>The ambiente codigo.</value>
         [Browsable(true)]
-        public int AmbienteCodigo => (int)Ambiente;
-
-        /// <summary>
-        /// Gets or sets the proxy host.
-        /// </summary>
-        /// <value>The proxy host.</value>
-        [Browsable(true)]
-        public string ProxyHost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the proxy port.
-        /// </summary>
-        /// <value>The proxy port.</value>
-        [Browsable(true)]
-        public string ProxyPort { get; set; }
-
-        /// <summary>
-        /// Gets or sets the proxy user.
-        /// </summary>
-        /// <value>The proxy user.</value>
-        [Browsable(true)]
-        public string ProxyUser { get; set; }
-
-        /// <summary>
-        /// Gets or sets the proxy pass.
-        /// </summary>
-        /// <value>The proxy pass.</value>
-        [Browsable(true)]
-        public string ProxyPass { get; set; }
-
-        /// <summary>
-        /// Gets or sets the aguardar consulta ret.
-        /// </summary>
-        /// <value>The aguardar consulta ret.</value>
-        [Browsable(true)]
-        public uint AguardarConsultaRet { get; set; }
+        public int AmbienteCodigo => Ambiente.GetDFeValue().ToInt32();
 
         /// <summary>
         /// Gets or sets the tentativas.
@@ -148,6 +111,27 @@ namespace ACBr.Net.DFe.Core.Common
         [Browsable(true)]
         [DefaultValue(false)]
         public bool AjustaAguardaConsultaRet { get; set; }
+
+        /// <summary>
+        /// Gets or sets the aguardar consulta ret.
+        /// </summary>
+        /// <value>The aguardar consulta ret.</value>
+        [Browsable(true)]
+        public uint AguardarConsultaRet { get; set; }
+
+        [Browsable(false)]
+        [DefaultValue(false)]
+        public TimeSpan? TimeOut
+        {
+            get
+            {
+                TimeSpan? timeOut = null;
+                if (AjustaAguardaConsultaRet)
+                    timeOut = TimeSpan.FromSeconds((int)AguardarConsultaRet);
+
+                return timeOut;
+            }
+        }
 
         #endregion Properties
     }

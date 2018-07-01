@@ -60,13 +60,13 @@ namespace ACBr.Net.DFe.Core.Common
         {
             var chave = new StringBuilder();
 
-            chave.Append(ufEmitente.GetValue())
+            chave.Append(ufEmitente.GetDFeValue())
                 .Append(dataEmissao.ToString("yyMM"))
                 .Append(cnpjEmitente)
                 .Append(modelo.ToString("D2"))
                 .Append(serie.ToString("D3"))
                 .Append(numero.ToString("D9"))
-                .Append(tipoEmissao.GetValue())
+                .Append(tipoEmissao.GetDFeValue())
                 .Append(cNf.ToString("D8"));
 
             var calcDigito = new CalcDigito

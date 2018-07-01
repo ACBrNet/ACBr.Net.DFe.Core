@@ -1,12 +1,12 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 03-10-2018
+// Created          : 06-30-2018
 //
 // Last Modified By : RFTD
-// Last Modified On : 03-10-2018
+// Last Modified On : 06-30-2018
 // ***********************************************************************
-// <copyright file="EnumExtensions.cs" company="ACBr.Net">
+// <copyright file="DFeWsCabecalho.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,26 +29,18 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Linq;
-using ACBr.Net.DFe.Core.Attributes;
-using ExtraConstraints;
+using System;
+using System.Xml.Serialization;
 
-namespace ACBr.Net.DFe.Core.Extensions
+namespace ACBr.Net.DFe.Core.Service
 {
-    public static class EnumExtensions
+    [Serializable]
+    public sealed class DFeWsCabecalho
     {
-        /// <summary>
-        /// Retorna o valor do Enum definido pelo DFeEnumAttribute.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        public static string GetDFeValue<[EnumConstraint]T>(this T value) where T : struct
-        {
-            var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
-            var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-            var enumValue = enumAttribute?.Value;
-            return enumValue ?? value.ToString();
-        }
+        [XmlElement(ElementName = "cUF", Order = 0)]
+        public int CUf { get; set; }
+
+        [XmlElement(ElementName = "versaoDados", Order = 1)]
+        public string VersaoDados { get; set; }
     }
 }

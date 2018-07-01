@@ -36,53 +36,53 @@ using System.ServiceModel.Dispatcher;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-	internal class DFeInspectorBehavior : IEndpointBehavior
-	{
-		#region Fields
+    internal class DFeInspectorBehavior : IEndpointBehavior
+    {
+        #region Fields
 
-		private EventHandler<DFeMessageEventArgs> beforeSendRequest;
-		private EventHandler<DFeMessageEventArgs> afterReceiveReply;
+        private readonly EventHandler<DFeMessageEventArgs> beforeSendRequest;
+        private readonly EventHandler<DFeMessageEventArgs> afterReceiveReply;
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Constructors
+        #region Constructors
 
-		public DFeInspectorBehavior(EventHandler<DFeMessageEventArgs> beforeSendDFeRequest, EventHandler<DFeMessageEventArgs> afterReceiveDFeReply)
-		{
-			beforeSendRequest = beforeSendDFeRequest;
-			afterReceiveReply = afterReceiveDFeReply;
-		}
+        public DFeInspectorBehavior(EventHandler<DFeMessageEventArgs> beforeSendDFeRequest, EventHandler<DFeMessageEventArgs> afterReceiveDFeReply)
+        {
+            beforeSendRequest = beforeSendDFeRequest;
+            afterReceiveReply = afterReceiveDFeReply;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Methods
+        #region Methods
 
-		public void Validate(ServiceEndpoint endpoint)
-		{
-		}
+        public void Validate(ServiceEndpoint endpoint)
+        {
+        }
 
-		public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
-		{
-		}
+        public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
+        {
+        }
 
-		public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
-		{
-		}
+        public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
+        {
+        }
 
-		public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
-		{
-			var messageInspector = new DFeMessageInspector
-			{
-				BeforeSendDFeRequest = beforeSendRequest,
-				AfterReceiveDFeReply = afterReceiveReply
-			};
+        public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
+        {
+            var messageInspector = new DFeMessageInspector
+            {
+                BeforeSendDFeRequest = beforeSendRequest,
+                AfterReceiveDFeReply = afterReceiveReply
+            };
 #if NETSTANDARD2_0
-			clientRuntime.ClientMessageInspectors.Add(messageInspector);
+            clientRuntime.ClientMessageInspectors.Add(messageInspector);
 #else
 			clientRuntime.MessageInspectors.Add(messageInspector);
 #endif
-		}
+        }
 
-		#endregion Methods
-	}
+        #endregion Methods
+    }
 }

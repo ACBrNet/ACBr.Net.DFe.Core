@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
-// Assembly         : ACBr.Net.DFe.Core
+// Assembly         : ACBr.Net.CTe
 // Author           : RFTD
-// Created          : 03-10-2018
+// Created          : 06-30-2018
 //
 // Last Modified By : RFTD
-// Last Modified On : 03-10-2018
+// Last Modified On : 06-30-2018
 // ***********************************************************************
-// <copyright file="EnumExtensions.cs" company="ACBr.Net">
+// <copyright file="DFeConsultaCadastroResult.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,26 +29,39 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Linq;
+using System.ComponentModel;
 using ACBr.Net.DFe.Core.Attributes;
-using ExtraConstraints;
+using ACBr.Net.DFe.Core.Common;
+using ACBr.Net.DFe.Core.Serializer;
 
-namespace ACBr.Net.DFe.Core.Extensions
+namespace ACBr.Net.DFe.Core.Service
 {
-    public static class EnumExtensions
+    [DFeRoot("retConsCad", Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public sealed class DFeConsultaCadastroResult : DFeDocument<DFeConsultaCadastroResult>, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Retorna o valor do Enum definido pelo DFeEnumAttribute.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        public static string GetDFeValue<[EnumConstraint]T>(this T value) where T : struct
+        #region Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Events
+
+        #region Constructors
+
+        public DFeConsultaCadastroResult()
         {
-            var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
-            var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
-            var enumValue = enumAttribute?.Value;
-            return enumValue ?? value.ToString();
+            InfCons = new DFeInfCons();
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        [DFeAttribute(TipoCampo.Str, "versao", Min = 4, Max = 7, Ocorrencia = Ocorrencia.Obrigatoria)]
+        public string Versão { get; set; }
+
+        [DFeElement("infCons", Ocorrencia = Ocorrencia.Obrigatoria)]
+        public DFeInfCons InfCons { get; set; }
+
+        #endregion Properties
     }
 }
