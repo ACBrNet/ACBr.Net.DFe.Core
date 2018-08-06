@@ -31,7 +31,6 @@
 
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
-using ACBr.Net.Core.Logging;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
 using System;
@@ -187,8 +186,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             var xmldoc = Serialize(item);
             var ret = !Options.ErrosAlertas.Any();
-            var xml = xmldoc.AsString(Options.FormatarXml, !Options.OmitirDeclaracao, Options.Encoder);
-            File.WriteAllText(path, xml, Options.Encoder);
+            var xml = xmldoc.AsString(Options.FormatarXml, !Options.OmitirDeclaracao, Options.Encoding);
+            File.WriteAllText(path, xml, Options.Encoding);
 
             return ret;
         }
@@ -212,10 +211,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             var xmldoc = Serialize(item);
             var ret = !Options.ErrosAlertas.Any();
-            var xml = xmldoc.AsString(Options.FormatarXml, !Options.OmitirDeclaracao, Options.Encoder);
+            var xml = xmldoc.AsString(Options.FormatarXml, !Options.OmitirDeclaracao, Options.Encoding);
 
             using (var ms = new MemoryStream())
-            using (var sw = new StreamWriter(ms, Options.Encoder))
+            using (var sw = new StreamWriter(ms, Options.Encoding))
             {
                 sw.WriteLine(xml);
                 sw.Flush();
@@ -258,7 +257,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <returns>System.Object.</returns>
         public object Deserialize(string xml)
         {
-            var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoder) : xml;
+            var content = File.Exists(xml) ? File.ReadAllText(xml, Options.Encoding) : xml;
             var xmlDoc = XDocument.Parse(content);
             return Deserialize(xmlDoc);
         }
@@ -270,7 +269,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <returns>System.Object.</returns>
         public object Deserialize(Stream stream)
         {
-            using (var reader = new StreamReader(stream, Options.Encoder))
+            using (var reader = new StreamReader(stream, Options.Encoding))
             {
                 stream.Position = 0;
                 var xmlDoc = XDocument.Parse(reader.ReadToEnd());

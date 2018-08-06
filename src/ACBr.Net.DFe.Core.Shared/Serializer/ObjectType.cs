@@ -30,7 +30,6 @@
 // ***********************************************************************
 
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Extensions;
 using System;
 using System.Collections;
 using ACBr.Net.Core.Exceptions;

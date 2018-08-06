@@ -29,8 +29,10 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Linq;
 using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Common;
 using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Extensions
@@ -49,6 +51,26 @@ namespace ACBr.Net.DFe.Core.Extensions
             var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();
             var enumValue = enumAttribute?.Value;
             return enumValue ?? value.ToString();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="uf"></param>
+        /// <returns></returns>
+        public static DFeCodUF ToCodeUf(this DFeSiglaUF uf)
+        {
+            return (DFeCodUF)Enum.Parse(typeof(DFeCodUF), uf.ToString());
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="uf"></param>
+        /// <returns></returns>
+        public static DFeSiglaUF ToSiglaUF(this DFeCodUF uf)
+        {
+            return (DFeSiglaUF)Enum.Parse(typeof(DFeSiglaUF), uf.ToString());
         }
     }
 }

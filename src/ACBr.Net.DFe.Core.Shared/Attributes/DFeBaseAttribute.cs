@@ -4,9 +4,9 @@
 // Created          : 05-04-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 05-04-2016
+// Last Modified On : 08-06-2018
 // ***********************************************************************
-// <copyright file="IDFeElement.cs" company="ACBr.Net">
+// <copyright file="DFeBaseAttribute.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,56 +29,51 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Serializer;
 
 namespace ACBr.Net.DFe.Core
 {
-	/// <summary>
-	/// Interface IDFeElement
-	/// </summary>
-	internal interface IDFeElement
-	{
-		/// <summary>
-		/// Gets or sets the descricao.
-		/// </summary>
-		/// <value>The descricao.</value>
-		string Descricao { get; set; }
+    /// <summary>
+    /// Interface IDFeElement
+    /// </summary>
+    public abstract class DFeBaseAttribute : Attribute
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Gets or sets the identifier.
-		/// </summary>
-		/// <value>The identifier.</value>
-		string Id { get; set; }
+        protected DFeBaseAttribute()
+        {
+            Tipo = TipoCampo.Str;
+            Id = "";
+            Name = string.Empty;
+            Min = 0;
+            Max = 0;
+            Ocorrencia = 0;
+            Ordem = 0;
+            Descricao = string.Empty;
+        }
 
-		/// <summary>
-		/// Gets or sets the maximum.
-		/// </summary>
-		/// <value>The maximum.</value>
-		int Max { get; set; }
+        #endregion Constructors
 
-		/// <summary>
-		/// Gets or sets the minimum.
-		/// </summary>
-		/// <value>The minimum.</value>
-		int Min { get; set; }
+        #region Properties
 
-		/// <summary>
-		/// Gets or sets the name.
-		/// </summary>
-		/// <value>The name.</value>
-		string Name { get; set; }
+        public string Descricao { get; set; }
 
-		/// <summary>
-		/// Gets or sets the ocorrencias.
-		/// </summary>
-		/// <value>The ocorrencias.</value>
-		Ocorrencia Ocorrencia { get; set; }
+        public string Id { get; set; }
 
-		/// <summary>
-		/// Gets or sets the tipo.
-		/// </summary>
-		/// <value>The tipo.</value>
-		TipoCampo Tipo { get; set; }
-	}
+        public int Max { get; set; }
+
+        public int Min { get; set; }
+
+        public int Ordem { get; set; }
+
+        public string Name { get; set; }
+
+        public Ocorrencia Ocorrencia { get; set; }
+
+        public TipoCampo Tipo { get; set; }
+
+        #endregion Properties
+    }
 }

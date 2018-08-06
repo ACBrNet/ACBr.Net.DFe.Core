@@ -50,7 +50,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
             RemoverAcentos = false;
             FormatarXml = true;
-            Encoder = Encoding.UTF8;
+            Encoding = Encoding.UTF8;
         }
 
         #endregion Constructors
@@ -65,7 +65,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         public bool OmitirDeclaracao { get; set; }
 
-        public Encoding Encoder { get; set; }
+        public Encoding Encoding { get; set; }
 
         public List<string> ErrosAlertas { get; }
 

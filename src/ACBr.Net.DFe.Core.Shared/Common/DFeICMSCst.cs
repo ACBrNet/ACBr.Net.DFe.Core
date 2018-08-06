@@ -33,63 +33,51 @@ using ACBr.Net.DFe.Core.Attributes;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-	public enum DFeICMSCst
-	{
-		[DFeEnum("00")]
-		Cst00,
+    public enum DFeICMSCst
+    {
+        [DFeEnum("00")]
+        Cst00,
 
-		[DFeEnum("10")]
-		Cst10,
+        [DFeEnum("10")]
+        Cst10,
 
-		[DFeEnum("20")]
-		Cst20,
+        [DFeEnum("20")]
+        Cst20,
 
-		[DFeEnum("30")]
-		Cst30,
+        [DFeEnum("30")]
+        Cst30,
 
-		[DFeEnum("40")]
-		Cst40,
+        [DFeEnum("40")]
+        Cst40,
 
-		[DFeEnum("41")]
-		Cst41,
+        [DFeEnum("41")]
+        Cst41,
 
-		[DFeEnum("45")]
-		Cst45,
+        [DFeEnum("45")]
+        Cst45,
 
-		[DFeEnum("50")]
-		Cst50,
+        [DFeEnum("50")]
+        Cst50,
 
-		[DFeEnum("51")]
-		Cst51,
+        [DFeEnum("51")]
+        Cst51,
 
-		[DFeEnum("60")]
-		Cst60,
+        [DFeEnum("60")]
+        Cst60,
 
-		[DFeEnum("70")]
-		Cst70,
+        [DFeEnum("70")]
+        Cst70,
 
-		[DFeEnum("80")]
-		Cst80,
+        [DFeEnum("80")]
+        Cst80,
 
-		[DFeEnum("81")]
-		Cst81,
+        [DFeEnum("81")]
+        Cst81,
 
-		[DFeEnum("90")]
-		Cst90,
+        [DFeEnum("90")]
+        Cst90,
 
-		[DFeEnum("10")]
-		CstPart10,
-
-		[DFeEnum("90")]
-		CstPart90,
-
-		[DFeEnum("41")]
-		CstRep41,
-
-		[DFeEnum("90")]
-		CstICMSOutraUF,
-
-		[DFeEnum("SN")]
-		CstICMSSN
-	}
+        [DFeEnum("SN")]
+        CstICMSSN
+    }
 }

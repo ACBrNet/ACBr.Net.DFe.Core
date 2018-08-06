@@ -63,16 +63,8 @@ namespace ACBr.Net.DFe.Core.Attributes
 
         #region Properties
 
-        /// <summary>
-        /// Gets or sets the Namespace.
-        /// </summary>
-        /// <value>The Namespace.</value>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the name space.
-        /// </summary>
-        /// <value>The name space.</value>
         public string Namespace { get; set; }
 
         #endregion Properties

@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeIgnoreAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeItemAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeRootAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeSignInfoElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\Ocorrencia.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CertificadoDigital.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collection\DFeCollection.cs" />
@@ -29,7 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeArquivosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCertificadosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCodUF.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeDocument.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\DFeDocument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeGeralConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeICMSCst.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeModeloNF.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\TagOrdenacaoPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\CanonicalizationMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\DFeSignature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Document\DFeSignDocument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\DigestMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\KeyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\Reference.cs" />
@@ -56,7 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\DFeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\XDocumentExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IDFeElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeBaseAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\DFeSerializer.Extendend.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Serializer\InterfaceSerializer.cs" />

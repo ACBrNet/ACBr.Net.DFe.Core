@@ -38,9 +38,9 @@ namespace ACBr.Net.DFe.Core.Attributes
     /// Classe DFeElementAttribute.
     /// </summary>
     /// <seealso cref="System.Attribute" />
-    /// <seealso cref="IDFeElement" />
+    /// <seealso cref="DFeBaseAttribute" />
     [AttributeUsage(AttributeTargets.Property)]
-    public class DFeElementAttribute : Attribute, IDFeElement
+    public class DFeElementAttribute : DFeBaseAttribute
     {
         #region Constructors
 
@@ -49,13 +49,6 @@ namespace ACBr.Net.DFe.Core.Attributes
         /// </summary>
         public DFeElementAttribute()
         {
-            Tipo = TipoCampo.Str;
-            Id = "";
-            Name = string.Empty;
-            Min = 0;
-            Max = 0;
-            Ocorrencia = 0;
-            Descricao = string.Empty;
         }
 
         /// <summary>
@@ -83,52 +76,10 @@ namespace ACBr.Net.DFe.Core.Attributes
         #region Propriedades
 
         /// <summary>
-        /// Gets or sets the tipo.
-        /// </summary>
-        /// <value>The tipo.</value>
-        public TipoCampo Tipo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>The identifier.</value>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Name.
-        /// </summary>
-        /// <value>The Name.</value>
-        public string Name { get; set; }
-
-        /// <summary>
         /// Gets or sets the name space.
         /// </summary>
         /// <value>The name space.</value>
         public string Namespace { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum.
-        /// </summary>
-        /// <value>The minimum.</value>
-        public int Min { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum.
-        /// </summary>
-        /// <value>The maximum.</value>
-        public int Max { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ocorrencias.
-        /// </summary>
-        /// <value>The ocorrencias.</value>
-        public Ocorrencia Ocorrencia { get; set; }
-
-        /// <summary>
-        /// Gets or sets the descricao.
-        /// </summary>
-        /// <value>The descricao.</value>
-        public string Descricao { get; set; }
 
         /// <summary>
         ///

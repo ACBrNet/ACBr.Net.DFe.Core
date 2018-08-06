@@ -42,7 +42,7 @@ using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-    public sealed class DFeConsultaCadastroServiceClient<TDFeConfig, TParent, TGeralConfig, [EnumConstraint] TVersaoDFe,
+    public abstract class DFeConsultaCadastroServiceClient<TDFeConfig, TParent, TGeralConfig, [EnumConstraint] TVersaoDFe,
          TWebserviceConfig, TCertificadosConfig, TArquivosConfig, [EnumConstraint] TSchemas> :
         DFeServiceClient<TDFeConfig, TParent, TGeralConfig, TVersaoDFe, TWebserviceConfig,
             TCertificadosConfig, TArquivosConfig, TSchemas, IDFeCadConsultaCadastro>
@@ -58,7 +58,7 @@ namespace ACBr.Net.DFe.Core.Service
     {
         #region Constructors
 
-        public DFeConsultaCadastroServiceClient(TDFeConfig config, string url, X509Certificate2 certificado = null) :
+        protected DFeConsultaCadastroServiceClient(TDFeConfig config, string url, X509Certificate2 certificado = null) :
             base(config, url, certificado)
         {
         }
@@ -67,6 +67,14 @@ namespace ACBr.Net.DFe.Core.Service
 
         #region Properties
 
+        /// <summary>
+        /// Consulta o cadastro do contribuinte.
+        /// </summary>
+        /// <param name="uf"></param>
+        /// <param name="ufConsulta"></param>
+        /// <param name="cpfCNPJ"></param>
+        /// <param name="IE"></param>
+        /// <returns></returns>
         public DFeConsultaCadastroResposta ConsultaCadastro(DFeSiglaUF uf, DFeCodUF ufConsulta, string cpfCNPJ, string IE)
         {
             Guard.Against<ArgumentNullException>(!Enum.IsDefined(typeof(DFeCodUF), uf), nameof(uf));

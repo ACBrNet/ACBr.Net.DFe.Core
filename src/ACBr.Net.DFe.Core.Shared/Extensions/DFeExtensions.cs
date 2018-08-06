@@ -41,10 +41,10 @@ namespace ACBr.Net.DFe.Core.Extensions
 {
     internal static class DFeExtensions
     {
-        public static IDFeElement GetTag(this PropertyInfo prop)
+        public static DFeBaseAttribute GetTag(this PropertyInfo prop)
         {
             return prop.HasAttribute<DFeElementAttribute>()
-                    ? (IDFeElement)prop.GetAttribute<DFeElementAttribute>()
+                    ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>()
                     : prop.GetAttribute<DFeAttributeAttribute>();
         }
 

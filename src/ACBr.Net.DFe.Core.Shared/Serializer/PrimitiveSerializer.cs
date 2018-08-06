@@ -53,7 +53,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <param name="options">Indicates how the output is formatted or serialized.</param>
         /// <param name="idx"></param>
         /// <returns>The XElement representation of the primitive.</returns>
-        public static XObject Serialize(IDFeElement tag, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
+        public static XObject Serialize(DFeBaseAttribute tag, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
         {
             try
             {
@@ -292,7 +292,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <param name="prop">The property.</param>
         /// <param name="options">The options.</param>
         /// <returns>The deserialized fundamental primitive from the XElement.</returns>
-        public static object Deserialize(IDFeElement tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
+        public static object Deserialize(DFeBaseAttribute tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
         {
             if (parentElement == null) return null;
 

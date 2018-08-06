@@ -34,9 +34,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
+using System.Text;
 using System.Xml;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
+using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Common;
+using ACBr.Net.DFe.Core.Document;
+using KeyInfo = System.Security.Cryptography.Xml.KeyInfo;
+using Reference = System.Security.Cryptography.Xml.Reference;
 
 namespace ACBr.Net.DFe.Core
 {
@@ -66,7 +72,7 @@ namespace ACBr.Net.DFe.Core
             {
                 var xmlDoc = new XmlDocument { PreserveWhitespace = true };
                 xmlDoc.LoadXml(xml);
-                AssinarDocumento(xmlDoc, docElement, infoElement, pCertificado, comments);
+                AssinarDocumento(xmlDoc, docElement, infoElement, "Id", pCertificado, comments);
                 return xmlDoc.AsString();
             }
             catch (Exception ex)
@@ -103,7 +109,7 @@ namespace ACBr.Net.DFe.Core
                 {
                     var xmlDoc = new XmlDocument { PreserveWhitespace = true };
                     xmlDoc.LoadXml(element.OuterXml);
-                    AssinarDocumento(xmlDoc, docElement, infoElement, certificado, comments);
+                    AssinarDocumento(xmlDoc, docElement, infoElement, "Id", certificado, comments);
 
                     // ReSharper disable once AssignNullToNotNullAttribute
                     var signedElement = doc.ImportNode(xmlDoc.DocumentElement, true);
@@ -118,7 +124,66 @@ namespace ACBr.Net.DFe.Core
             }
         }
 
-        private static void AssinarDocumento(XmlDocument doc, string docElement, string infoElement,
+        /// <summary>
+        /// Assina o xml.
+        /// </summary>
+        /// <param name="doc">O Xml.</param>
+        /// <param name="docElement">O elemento principal do xml a ser assinado.</param>
+        /// <param name="infoElement">O elemento a ser assinado.</param>
+        /// <param name="signAtribute">O atributo identificador do elemento a ser assinado.</param>
+        /// <param name="certificado">O certificado.</param>
+        /// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
+        /// <param name="digest">Algoritmo usando para gerar o hash por padrão SHA1.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+        /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+        public static void AssinarDocumento(XmlDocument doc, string docElement, string infoElement, string signAtribute,
+            X509Certificate2 certificado, bool comments = false, SignDigest digest = SignDigest.SHA1)
+        {
+            Guard.Against<ArgumentNullException>(doc == null, "XmlDOcument não pode ser nulo.");
+            Guard.Against<ArgumentException>(docElement.IsEmpty(), "docElement não pode ser nulo ou vazio.");
+
+            var xmlDigitalSignature = GerarAssinatura(doc, infoElement, signAtribute, certificado, comments, digest);
+            var xmlElement = doc.GetElementsByTagName(docElement).Cast<XmlElement>().FirstOrDefault();
+
+            Guard.Against<ACBrDFeException>(xmlElement == null, "Elemento principal não encontrado.");
+
+            var element = doc.ImportNode(xmlDigitalSignature, true);
+            xmlElement.AppendChild(element);
+        }
+
+        /// <summary>
+        /// Gera a assinatura do xml e retorna uma instancia da classe <see cref="DFeSignature"/>.
+        /// </summary>
+        /// <typeparam name="TDocument">The type of the t document.</typeparam>
+        /// <param name="document">The document.</param>
+        /// <param name="certificado">The certificado.</param>
+        /// <param name="comments">if set to <c>true</c> [comments].</param>
+        /// <param name="digest">The digest.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>DFeSignature.</returns>
+        public static DFeSignature AssinarDocumento<TDocument>(DFeDocument<TDocument> document,
+            X509Certificate2 certificado, bool comments, SignDigest digest,
+            DFeSaveOptions options, out string signedXml) where TDocument : class
+        {
+            Guard.Against<ArgumentException>(!typeof(TDocument).HasAttribute<DFeSignInfoElement>(), "Atributo [DFeSignInfoElement] não encontrado.");
+
+            var xml = document.GetXml(options, Encoding.UTF8);
+            var xmlDoc = new XmlDocument { PreserveWhitespace = true };
+            xmlDoc.LoadXml(xml);
+
+            var signatureInfo = typeof(TDocument).GetAttribute<DFeSignInfoElement>();
+            var xmlSignature = GerarAssinatura(xmlDoc, signatureInfo.SignElement, signatureInfo.SignAtribute, certificado, comments, digest);
+
+            // ReSharper disable once AssignNullToNotNullAttribute
+            var signedElement = xmlDoc.ImportNode(xmlSignature, true);
+            xmlDoc.AppendChild(signedElement);
+
+            signedXml = xmlDoc.AsString();
+            return DFeSignature.Load(xmlSignature.OuterXml);
+        }
+
+        private static XmlElement GerarAssinatura(XmlDocument doc, string infoElement, string signAtribute,
             X509Certificate2 certificado, bool comments = false, SignDigest digest = SignDigest.SHA1)
         {
             Guard.Against<ArgumentException>(!infoElement.IsEmpty() && doc.GetElementsByTagName(infoElement).Count != 1, "Referencia invalida ou não é unica.");
@@ -138,7 +203,8 @@ namespace ACBr.Net.DFe.Core
                 }
             };
 
-            var uri = infoElement.IsEmpty() ? "" : $"#{doc.GetElementsByTagName(infoElement)[0].Attributes?["Id"]?.InnerText}";
+            var uri = infoElement.IsEmpty() || signAtribute.IsEmpty() ? "" :
+                $"#{doc.GetElementsByTagName(infoElement)[0].Attributes?[signAtribute]?.InnerText}";
 
             // Cria referencia
             var reference = new Reference
@@ -158,14 +224,7 @@ namespace ACBr.Net.DFe.Core
             signedDocument.ComputeSignature();
 
             // Pega representação da assinatura
-            var xmlDigitalSignature = signedDocument.GetXml();
-
-            // Adiciona ao doc XML
-            var xmlElement = doc.GetElementsByTagName(docElement).Cast<XmlElement>().FirstOrDefault();
-            Guard.Against<ACBrDFeException>(xmlElement == null, "Nome do docElemnt incorreto");
-
-            var element = doc.ImportNode(xmlDigitalSignature, true);
-            xmlElement.AppendChild(element);
+            return signedDocument.GetXml();
         }
 
         private static string GetSignatureMethod(SignDigest digest)
@@ -213,8 +272,7 @@ namespace ACBr.Net.DFe.Core
             Guard.Against<ACBrDFeException>(element == null, "Root Node não encontrado.");
 
             var signElement = element.LastChild as XmlElement;
-
-            Guard.Against<ACBrDFeException>(signElement?.Name != "Signature", "Signature node não encontrado.");
+            Guard.Against<ACBrDFeException>(signElement?.LocalName != "Signature", "Signature node não encontrado.");
 
             signedXml.LoadXml(signElement);
 

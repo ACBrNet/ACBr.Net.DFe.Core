@@ -1,12 +1,12 @@
-Ôªø// ***********************************************************************
+// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 05-07-2016
+// Created          : 07-08-2018
 //
 // Last Modified By : RFTD
-// Last Modified On : 05-07-2016
+// Last Modified On : 07-08-2018
 // ***********************************************************************
-// <copyright file="DFeSignature.cs" company="ACBr.Net">
+// <copyright file="DFeSignInfoElement.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,50 +29,50 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Serializer;
+using System;
 
-namespace ACBr.Net.DFe.Core.Document
+namespace ACBr.Net.DFe.Core.Attributes
 {
-    [DFeRoot("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
-    public class DFeSignature : DFeDocument<DFeSignature>
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class DFeSignInfoElement : Attribute
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeSignature"/> class.
+        /// Inicializa uma nova int‚ncia da classe <see cref="DFeSignInfoElement"/>.
         /// </summary>
-        public DFeSignature()
+        public DFeSignInfoElement()
         {
-            SignedInfo = new SignedInfo();
-            KeyInfo = new KeyInfo();
+            SignElement = string.Empty;
+            SignAtribute = "Id";
+        }
+
+        /// <summary>
+        /// Inicializa uma nova int‚ncia da classe <see cref="DFeSignInfoElement"/>.
+        /// </summary>
+        /// <param name="signElement">O elemento a ser assinado.</param>
+        public DFeSignInfoElement(string signElement)
+        {
+            SignElement = signElement;
+            SignAtribute = "Id";
         }
 
         #endregion Constructors
 
-        #region Propriedades
+        #region Properties
 
         /// <summary>
-        /// XS02 - Grupo da Informa√ß√£o da assinatura
+        /// Define/retorna o elemento a ser assinado.
         /// </summary>
-        /// <value>The signed information.</value>
-        [DFeElement("SignedInfo", Id = "XS02")]
-        public SignedInfo SignedInfo { get; set; }
+        /// <value>The sign element.</value>
+        public string SignElement { get; set; }
 
         /// <summary>
-        /// XS18 - Grupo do Signature Value
+        /// Define/retorna o atributo identificador do elemento a ser assinado.
         /// </summary>
-        /// <value>The signature value.</value>
-        [DFeElement(TipoCampo.Str, "SignatureValue", Id = "XS18", Min = 0, Max = 999, Ocorrencia = Ocorrencia.Obrigatoria)]
-        public string SignatureValue { get; set; }
+        /// <value>The sign atribute.</value>
+        public string SignAtribute { get; set; }
 
-        /// <summary>
-        /// XS19 - Grupo do KeyInfo
-        /// </summary>
-        /// <value>The key information.</value>
-        [DFeElement("KeyInfo", Id = "XS19")]
-        public KeyInfo KeyInfo { get; set; }
-
-        #endregion Propriedades
+        #endregion Properties
     }
 }

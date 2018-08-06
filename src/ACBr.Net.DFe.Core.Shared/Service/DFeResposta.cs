@@ -31,7 +31,7 @@
 
 using System.Text;
 using ACBr.Net.Core.Generics;
-using ACBr.Net.DFe.Core.Common;
+using ACBr.Net.DFe.Core.Document;
 
 namespace ACBr.Net.DFe.Core.Service
 {

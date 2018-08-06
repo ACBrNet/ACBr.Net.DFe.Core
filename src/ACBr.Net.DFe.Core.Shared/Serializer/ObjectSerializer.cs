@@ -4,7 +4,7 @@
 // Created          : 05-04-2016
 //
 // Last Modified By : RFTD
-// Last Modified On : 05-11-2016
+// Last Modified On : 07-08-2018
 // ***********************************************************************
 // <copyright file="ObjectSerializer.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -42,14 +42,14 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-    internal class ObjectSerializer : IACBrLog
+    internal class ObjectSerializer
     {
         #region Fields
 
         /// <summary>
         /// The logger
         /// </summary>
-        internal static IACBrLogger Logger = LoggerProvider.LoggerFor<DFeSerializer>();
+        internal static IACBrLogger logger = LoggerProvider.LoggerFor<DFeSerializer>();
 
         #endregion Fields
 
@@ -60,16 +60,6 @@ namespace ACBr.Net.DFe.Core.Serializer
             return Serialize(value, tipo, name, string.Empty, options);
         }
 
-        /// <summary>
-        /// Serializes the specified object to a XElement using options.
-        /// </summary>
-        /// <param name="value">The object to serialize.</param>
-        /// <param name="tipo">The tipo.</param>
-        /// <param name="name">The name of the object to serialize.</param>
-        /// <param name="nameSpace"></param>
-        /// <param name="options">Indicates how the output is formatted or serialized.</param>
-        /// <returns>The XElement representation of the object.</returns>
-        /// <exception cref="ACBrDFeException"></exception>
         public static XElement Serialize(object value, Type tipo, string name, string nameSpace, SerializerOptions options)
         {
             try
@@ -77,7 +67,10 @@ namespace ACBr.Net.DFe.Core.Serializer
                 XNamespace aw = nameSpace ?? string.Empty;
                 var objectElement = new XElement(aw + name);
 
-                var properties = tipo.GetProperties();
+                var properties = tipo.GetProperties()
+                    .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
+                    .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? int.MaxValue).ToArray();
+
                 foreach (var prop in properties)
                 {
                     if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
@@ -99,18 +92,11 @@ namespace ACBr.Net.DFe.Core.Serializer
             catch (Exception e)
             {
                 var msg = $"Erro ao serializar o objeto:{Environment.NewLine}{value}";
-                Logger.Error(msg, e);
+                logger.Error(msg, e);
                 throw new ACBrDFeException(msg, e);
             }
         }
 
-        /// <summary>
-        /// Serializes the specified property into a XElement using options.
-        /// </summary>
-        /// <param name="prop">The property to serialize.</param>
-        /// <param name="parentObject">The object that owns the property.</param>
-        /// <param name="options">Indicates how the output is formatted or serialized.</param>
-        /// <returns>The XElement representation of the property. May be null if it has no value, cannot be read or written or should be ignored.</returns>
         public static IEnumerable<XObject> Serialize(PropertyInfo prop, object parentObject, SerializerOptions options)
         {
             try
@@ -167,7 +153,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             catch (Exception e)
             {
                 var msg = $"Erro ao serializar a propriedade:{Environment.NewLine}{prop.DeclaringType?.Name ?? prop.PropertyType.Name} - {prop.Name}";
-                Logger.Error(msg, e);
+                logger.Error(msg, e);
                 throw new ACBrDFeException(msg, e);
             }
         }
@@ -176,13 +162,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         #region Deserialize
 
-        /// <summary>
-        /// Deserializes the XElement to the specified .NET type using options.
-        /// </summary>
-        /// <param name="type">The type of the deserialized .NET object.</param>
-        /// <param name="element">The XElement to deserialize.</param>
-        /// <param name="options">Indicates how the output is deserialized.</param>
-        /// <returns>The deserialized object from the XElement.</returns>
         public static object Deserialize(Type type, XElement element, SerializerOptions options)
         {
             try
@@ -205,25 +184,16 @@ namespace ACBr.Net.DFe.Core.Serializer
             catch (Exception e)
             {
                 var msg = $"Erro ao deserializar o objeto:{Environment.NewLine}{type.Name} - {element.Name}";
-                Logger.Error(msg, e);
+                logger.Error(msg, e);
                 throw new ACBrDFeException(msg, e);
             }
         }
 
-        /// <summary>
-        /// Deserializes the XElement to the object of a specified type using options.
-        /// </summary>
-        /// <param name="prop">The property.</param>
-        /// <param name="parentElement">The parent XElement used to deserialize the object.</param>
-        /// <param name="item">The item.</param>
-        /// <param name="options">Indicates how the output is deserialized.</param>
-        /// <returns>The deserialized object from the XElement.</returns>
-        /// <exception cref="System.NotSupportedException">Tipo Dictionary não suportado ainda !</exception>
         public static object Deserialize(PropertyInfo prop, XElement parentElement, object item, SerializerOptions options)
         {
             try
             {
-                var tag = prop.HasAttribute<DFeElementAttribute>() ? (IDFeElement)prop.GetAttribute<DFeElementAttribute>() : prop.GetAttribute<DFeAttributeAttribute>();
+                var tag = prop.HasAttribute<DFeElementAttribute>() ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>() : prop.GetAttribute<DFeAttributeAttribute>();
 
                 var objectType = ObjectType.From(prop.PropertyType);
                 if (objectType == ObjectType.DictionaryType) throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
@@ -289,7 +259,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             catch (Exception e)
             {
                 var msg = $"Erro ao deserializar a propriedade:{Environment.NewLine}{prop.DeclaringType?.Name ?? prop.PropertyType.Name} - {prop.Name}";
-                Logger.Error(msg, e);
+                logger.Error(msg, e);
                 throw new ACBrDFeException(msg, e);
             }
         }

@@ -29,12 +29,14 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Generics;
-using ACBr.Net.DFe.Core.Serializer;
 using System.IO;
 using System.Text;
+using ACBr.Net.Core.Generics;
+using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Common;
+using ACBr.Net.DFe.Core.Serializer;
 
-namespace ACBr.Net.DFe.Core.Common
+namespace ACBr.Net.DFe.Core.Document
 {
     /// <summary>
     /// Class DFeDocument.
@@ -43,6 +45,15 @@ namespace ACBr.Net.DFe.Core.Common
     /// <seealso cref="ACBr.Net.Core.Generics.GenericClone{TDocument}" />
     public abstract class DFeDocument<TDocument> : GenericClone<TDocument> where TDocument : class
     {
+        #region Properties
+
+        [DFeIgnore]
+        public string Xml { get; protected set; }
+
+        #endregion Properties
+
+        #region Methods
+
         /// <summary>
         /// Carrega o documento.
         /// </summary>
@@ -51,13 +62,16 @@ namespace ACBr.Net.DFe.Core.Common
         /// <returns>TDocument.</returns>
         public static TDocument Load(string document, Encoding encoding = null)
         {
-            var serializer = new DFeSerializer(typeof(TDocument));
+            var serializer = new DFeSerializer<TDocument>();
             if (encoding != null)
             {
-                serializer.Options.Encoder = encoding;
+                serializer.Options.Encoding = encoding;
             }
 
-            return (TDocument)serializer.Deserialize(document);
+            var content = File.Exists(document) ? File.ReadAllText(document, serializer.Options.Encoding) : document;
+            var ret = serializer.Deserialize(document);
+            (ret as DFeDocument<TDocument>).Xml = content;
+            return ret;
         }
 
         /// <summary>
@@ -68,13 +82,21 @@ namespace ACBr.Net.DFe.Core.Common
         /// <returns>TDocument.</returns>
         public static TDocument Load(Stream document, Encoding encoding = null)
         {
-            var serializer = new DFeSerializer(typeof(TDocument));
+            var serializer = new DFeSerializer<TDocument>();
             if (encoding != null)
             {
-                serializer.Options.Encoder = encoding;
+                serializer.Options.Encoding = encoding;
             }
 
-            return (TDocument)serializer.Deserialize(document);
+            using (var reader = new StreamReader(document, serializer.Options.Encoding))
+            {
+                document.Position = 0;
+
+                var content = reader.ReadToEnd();
+                var ret = serializer.Deserialize(content);
+                (ret as DFeDocument<TDocument>).Xml = content;
+                return ret;
+            }
         }
 
         /// <summary>
@@ -83,7 +105,7 @@ namespace ACBr.Net.DFe.Core.Common
         /// <param name="options">The options.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>System.String.</returns>
-        public string GetXml(DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
+        public virtual string GetXml(DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
         {
             using (var stream = new MemoryStream())
             {
@@ -102,9 +124,9 @@ namespace ACBr.Net.DFe.Core.Common
         /// <param name="options">The options.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>TDocument.</returns>
-        public void Save(string path, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
+        public virtual void Save(string path, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
         {
-            var serializer = new DFeSerializer(typeof(TDocument));
+            var serializer = new DFeSerializer<TDocument>();
 
             if (!options.HasFlag(DFeSaveOptions.None))
             {
@@ -116,10 +138,11 @@ namespace ACBr.Net.DFe.Core.Common
 
             if (encoding != null)
             {
-                serializer.Options.Encoder = encoding;
+                serializer.Options.Encoding = encoding;
             }
 
             serializer.Serialize(this, path);
+            Xml = File.ReadAllText(path, serializer.Options.Encoding);
         }
 
         /// <summary>
@@ -129,9 +152,9 @@ namespace ACBr.Net.DFe.Core.Common
         /// <param name="options">The options.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>TDocument.</returns>
-        public void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
+        public virtual void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
         {
-            var serializer = new DFeSerializer(typeof(TDocument));
+            var serializer = new DFeSerializer<TDocument>();
 
             if (!options.HasFlag(DFeSaveOptions.None))
             {
@@ -143,10 +166,22 @@ namespace ACBr.Net.DFe.Core.Common
 
             if (encoding != null)
             {
-                serializer.Options.Encoder = encoding;
+                serializer.Options.Encoding = encoding;
             }
 
             serializer.Serialize(this, stream);
+
+            using (var ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                stream.Position = 0;
+                using (var reader = new StreamReader(ms, serializer.Options.Encoding))
+                {
+                    Xml = reader.ReadToEnd();
+                }
+            }
         }
+
+        #endregion Methods
     }
 }

@@ -30,7 +30,7 @@
     <PackageReference Include="ACBr.Net.Core" Version="1.2.1" />
     <PackageReference Include="ExtraConstraints.Fody" Version="1.13.1" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.5.1" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
   </ItemGroup>
 
   <ItemGroup>
