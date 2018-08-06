@@ -1,5 +1,5 @@
-using System;
 using System.Security.Cryptography.X509Certificates;
+using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Common;
 
@@ -9,7 +9,7 @@ namespace ACBr.Net.DFe.Core.Document
     {
         #region Properties
 
-        [DFeElement(Ordem = int.MaxValue)]
+        [DFeElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#", Ocorrencia = Ocorrencia.NaoObrigatoria, Ordem = int.MaxValue)]
         public DFeSignature Signature { get; set; }
 
         #endregion Properties
@@ -27,6 +27,17 @@ namespace ACBr.Net.DFe.Core.Document
         {
             Signature = XmlSigning.AssinarDocumento(this, certificado, comments, digest, options, out var xml);
             Xml = xml;
+        }
+
+        /// <summary>
+        /// Metodo que define se deve ou não serialziar a assinatura.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual bool ShouldSerializeSignature()
+        {
+            return !Signature.SignatureValue.IsEmpty() &&
+                   !Signature.SignedInfo.Reference.DigestValue.IsEmpty() &&
+                   !Signature.KeyInfo.X509Data.X509Certificate.IsEmpty();
         }
 
         #endregion Methods

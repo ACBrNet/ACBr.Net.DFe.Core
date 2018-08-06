@@ -133,7 +133,7 @@ namespace ACBr.Net.DFe.Core.Extensions
         public static bool ShouldSerializeProperty(this PropertyInfo property, object item)
         {
             var shouldSerialize = item.GetType().GetMethod($"ShouldSerialize{property.Name}", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (shouldSerialize != null && shouldSerialize.ReturnType == typeof(bool))
+            if (shouldSerialize?.ReturnType == typeof(bool))
                 return (bool)shouldSerialize.Invoke(item, null);
 
             return true;

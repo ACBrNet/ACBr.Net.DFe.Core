@@ -69,7 +69,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
                 var properties = tipo.GetProperties()
                     .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
-                    .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? int.MaxValue).ToArray();
+                    .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
 
                 foreach (var prop in properties)
                 {
