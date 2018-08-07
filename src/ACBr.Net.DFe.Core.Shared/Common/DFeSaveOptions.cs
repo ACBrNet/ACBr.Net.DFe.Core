@@ -36,10 +36,10 @@ namespace ACBr.Net.DFe.Core.Common
     [Flags]
     public enum DFeSaveOptions
     {
-        None = 0,
-        RemoveAccents = 1 << 0,
-        RemoveSpaces = 1 << 1,
-        DisableFormatting = 1 << 2,
-        OmitDeclaration = 1 << 3
+        None = 1 << 0,
+        RemoveAccents = 1 << 1,
+        RemoveSpaces = 1 << 2,
+        DisableFormatting = 1 << 3,
+        OmitDeclaration = 1 << 4
     }
 }
