@@ -175,10 +175,6 @@ namespace ACBr.Net.DFe.Core
             var signatureInfo = typeof(TDocument).GetAttribute<DFeSignInfoElement>();
             var xmlSignature = GerarAssinatura(xmlDoc, signatureInfo.SignElement, signatureInfo.SignAtribute, certificado, comments, digest);
 
-            // ReSharper disable once AssignNullToNotNullAttribute
-            var signedElement = xmlDoc.ImportNode(xmlSignature, true);
-            xmlDoc.AppendChild(signedElement);
-
             signedXml = xmlDoc.AsString();
             return DFeSignature.Load(xmlSignature.OuterXml);
         }
