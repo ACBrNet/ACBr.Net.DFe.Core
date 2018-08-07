@@ -39,14 +39,14 @@ namespace ACBr.Net.DFe.Core.Service
     {
         #region Constructors
 
-        protected DFeResposta(string xmlEnvio, string xmlRetorno, string envelopeSoap, string respostaWs)
+        protected DFeResposta(string xmlEnvio, string xmlRetorno, string envelopeSoap, string respostaWs, bool loadRetorno = true)
         {
             XmlEnvio = xmlEnvio;
             XmlRetorno = xmlRetorno;
             EnvelopeSoap = envelopeSoap;
             RetornoWS = respostaWs;
 
-            if (typeof(DFeDocument<T>).IsAssignableFrom(typeof(T)))
+            if (typeof(DFeDocument<T>).IsAssignableFrom(typeof(T)) && loadRetorno)
             {
                 Resultado = DFeDocument<T>.Load(xmlRetorno, Encoding.UTF8);
             }
