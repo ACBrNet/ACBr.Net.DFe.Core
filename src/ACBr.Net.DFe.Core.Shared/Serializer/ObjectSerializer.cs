@@ -55,11 +55,6 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         #region Serialize
 
-        public static XElement Serialize(object value, Type tipo, string name, SerializerOptions options)
-        {
-            return Serialize(value, tipo, name, string.Empty, options);
-        }
-
         public static XElement Serialize(object value, Type tipo, string name, string nameSpace, SerializerOptions options)
         {
             try
@@ -121,7 +116,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 {
                     var attribute = prop.GetAttribute<DFeElementAttribute>();
                     if (attribute.Ocorrencia == Ocorrencia.NaoObrigatoria && value == null) return null;
-                    return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
+                    return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, attribute.Namespace, options) };
                 }
 
                 if (objectType == ObjectType.RootType)
@@ -130,7 +125,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     {
                         var attribute = prop.GetAttribute<DFeElementAttribute>();
                         if (attribute.Ocorrencia == Ocorrencia.NaoObrigatoria && value == null) return null;
-                        return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, options) };
+                        return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, attribute.Namespace, options) };
                     }
 
                     if (value == null) return null;

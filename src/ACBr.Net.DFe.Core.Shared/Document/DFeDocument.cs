@@ -105,7 +105,7 @@ namespace ACBr.Net.DFe.Core.Document
         /// <param name="options">The options.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>System.String.</returns>
-        public virtual string GetXml(DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
+        public virtual string GetXml(DFeSaveOptions options = DFeSaveOptions.DisableFormatting, Encoding encoding = null)
         {
             using (var stream = new MemoryStream())
             {
@@ -124,7 +124,7 @@ namespace ACBr.Net.DFe.Core.Document
         /// <param name="options">The options.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>TDocument.</returns>
-        public virtual void Save(string path, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
+        public virtual void Save(string path, DFeSaveOptions options = DFeSaveOptions.DisableFormatting, Encoding encoding = null)
         {
             var serializer = new DFeSerializer<TDocument>();
 
@@ -152,7 +152,7 @@ namespace ACBr.Net.DFe.Core.Document
         /// <param name="options">The options.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>TDocument.</returns>
-        public virtual void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.None, Encoding encoding = null)
+        public virtual void Save(Stream stream, DFeSaveOptions options = DFeSaveOptions.DisableFormatting, Encoding encoding = null)
         {
             var serializer = new DFeSerializer<TDocument>();
 

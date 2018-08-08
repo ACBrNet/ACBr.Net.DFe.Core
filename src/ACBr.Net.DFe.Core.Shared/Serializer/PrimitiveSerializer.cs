@@ -167,12 +167,12 @@ namespace ACBr.Net.DFe.Core.Serializer
                 case TipoCampo.DatHorTz:
                     switch (valor)
                     {
-                        case DateTimeOffset offset:
-                            conteudoProcessado = offset.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+                        case DateTimeOffset dateTime:
+                            conteudoProcessado = dateTime.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
                             break;
 
-                        case DateTime doffset:
-                            conteudoProcessado = doffset.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+                        case DateTime dateTime:
+                            conteudoProcessado = dateTime.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
                             break;
 
                         default:

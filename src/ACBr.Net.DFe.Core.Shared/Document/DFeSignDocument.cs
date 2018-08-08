@@ -30,6 +30,16 @@ namespace ACBr.Net.DFe.Core.Document
         }
 
         /// <summary>
+        /// Valida a assinatura do documento.
+        /// </summary>
+        /// <param name="gerarXml"></param>
+        /// <returns></returns>
+        protected bool ValidarAssinaturaDocumento(bool gerarXml)
+        {
+            return XmlSigning.ValidarAssinatura(this, gerarXml);
+        }
+
+        /// <summary>
         /// Metodo que define se deve ou não serialziar a assinatura.
         /// </summary>
         /// <returns></returns>

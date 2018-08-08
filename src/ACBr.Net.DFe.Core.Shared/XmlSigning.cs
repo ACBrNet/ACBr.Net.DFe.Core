@@ -38,9 +38,11 @@ using System.Text;
 using System.Xml;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
+using ACBr.Net.Core.Logging;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Document;
+using ACBr.Net.DFe.Core.Extensions;
 using KeyInfo = System.Security.Cryptography.Xml.KeyInfo;
 using Reference = System.Security.Cryptography.Xml.Reference;
 
@@ -162,7 +164,7 @@ namespace ACBr.Net.DFe.Core
         /// <param name="digest">The digest.</param>
         /// <param name="options">The options.</param>
         /// <returns>DFeSignature.</returns>
-        public static DFeSignature AssinarDocumento<TDocument>(DFeDocument<TDocument> document,
+        public static DFeSignature AssinarDocumento<TDocument>(DFeSignDocument<TDocument> document,
             X509Certificate2 certificado, bool comments, SignDigest digest,
             DFeSaveOptions options, out string signedXml) where TDocument : class
         {
@@ -175,8 +177,20 @@ namespace ACBr.Net.DFe.Core
             var signatureInfo = typeof(TDocument).GetAttribute<DFeSignInfoElement>();
             var xmlSignature = GerarAssinatura(xmlDoc, signatureInfo.SignElement, signatureInfo.SignAtribute, certificado, comments, digest);
 
+            // Adiciona a assinatura no documento e retorna o xml assinado no parametro signedXml
+            var element = xmlDoc.ImportNode(xmlSignature, true);
+            xmlDoc.DocumentElement.AppendChild(element);
             signedXml = xmlDoc.AsString();
+
             return DFeSignature.Load(xmlSignature.OuterXml);
+        }
+
+        public static bool ValidarAssinatura<TDocument>(DFeSignDocument<TDocument> document, bool gerarXml) where TDocument : class
+        {
+            var xml = document.Xml.IsEmpty() || gerarXml ? document.GetXml(DFeSaveOptions.DisableFormatting, Encoding.UTF8) : document.Xml;
+            var xmlDoc = new XmlDocument { PreserveWhitespace = true };
+            xmlDoc.LoadXml(xml);
+            return ValidarAssinatura(xmlDoc);
         }
 
         private static XmlElement GerarAssinatura(XmlDocument doc, string infoElement, string signAtribute,
@@ -259,23 +273,31 @@ namespace ACBr.Net.DFe.Core
         /// <param name="doc">o documento xml</param>
         /// <param name="docElement">O elemento principal do xml onde esta a tag Signature.</param>
         /// <returns></returns>
-        public static bool ValidarAssinatura(XmlDocument doc, string docElement)
+        public static bool ValidarAssinatura(XmlDocument doc)
         {
-            var signedXml = new SignedXml(doc);
+            try
+            {
+                var signElement = doc.GetElementsByTagName("Signature");
+                Guard.Against<ACBrDFeException>(signElement.Count < 1, "Verificação falhou: Elemento [Signature] não encontrado no documento.");
+                Guard.Against<ACBrDFeException>(signElement.Count > 1, "Verificação falhou: Mais de um elemento [Signature] encontrado no documento.");
 
-            var element = doc.GetElementsByTagName(docElement).Cast<XmlElement>().FirstOrDefault();
+                var certificateElement = doc.GetElementsByTagName("X509Certificate");
+                Guard.Against<ACBrDFeException>(certificateElement.Count < 1, "Verificação falhou: Elemento [X509Certificate] não encontrado no documento.");
+                Guard.Against<ACBrDFeException>(certificateElement.Count > 1, "Verificação falhou: Mais de um elemento [X509Certificate] encontrado no documento.");
 
-            Guard.Against<ACBrDFeException>(element == null, "Root Node não encontrado.");
+                var signedXml = new SignedXml(doc);
+                signedXml.LoadXml((XmlElement)signElement[0]);
 
-            var signElement = element.LastChild as XmlElement;
-            Guard.Against<ACBrDFeException>(signElement?.LocalName != "Signature", "Signature node não encontrado.");
+                var certificate = new X509Certificate2(Convert.FromBase64String(certificateElement[0].InnerText));
 
-            signedXml.LoadXml(signElement);
-
-            var cspParams = new CspParameters { KeyContainerName = "XML_DSIG_RSA_KEY" };
-            var rsaKey = new RSACryptoServiceProvider(cspParams);
-
-            return signedXml.CheckSignature(rsaKey);
+                return signedXml.CheckSignature(certificate, true);
+            }
+            catch (Exception exception)
+            {
+                var log = LoggerProvider.LoggerFor(typeof(XmlSigning));
+                log.Error("Erro ao validar a assinatura.", exception);
+                return false;
+            }
         }
 
         #endregion Methods
