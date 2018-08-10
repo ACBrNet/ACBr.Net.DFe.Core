@@ -161,6 +161,9 @@ namespace ACBr.Net.DFe.Core.Serializer
                 }
                 else
                 {
+                    if (ObjectType.From(prop.PropertyType).IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
+                        listItemType = GetItemType(prop.PropertyType);
+
                     foreach (var element in elements)
                     {
                         var obj = ObjectSerializer.Deserialize(listItemType, element, options);

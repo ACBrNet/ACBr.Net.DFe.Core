@@ -1,6 +1,5 @@
 ﻿using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Collection;
-using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Document;
 using ACBr.Net.DFe.Core.Serializer;
 using System;
@@ -17,6 +16,8 @@ namespace ACBr.Net.DFe.Core.Tests
         {
             XmlItems = new List<IXmlItem>();
             XmlProd = new DFeCollection<TesteXml4>();
+            XmlProd2 = new DFeCollection<TesteXml4>();
+            XmlProd3 = new TesteXml4[0];
             TesteListEnum = new DFeCollection<TesteEnum>();
             TesteDateTime = new DFeCollection<DateTime>();
             Xml5 = new TesteXml5();
@@ -76,6 +77,9 @@ namespace ACBr.Net.DFe.Core.Tests
 
         [DFeCollection("prod2")]
         public DFeCollection<TesteXml4> XmlProd2 { get; set; }
+
+        [DFeCollection("prodArray")]
+        public TesteXml4[] XmlProd3 { get; set; }
 
         [DFeCollection(TipoCampo.Enum, "TesteListEnum", MinSize = 1, MaxSize = 10, Min = 1, Max = 1, Ocorrencia = Ocorrencia.Obrigatoria)]
         public DFeCollection<TesteEnum> TesteListEnum { get; set; }

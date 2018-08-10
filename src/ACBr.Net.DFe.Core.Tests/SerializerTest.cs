@@ -63,10 +63,20 @@ namespace ACBr.Net.DFe.Core.Tests
 
             xml.TestInterface3 = collection;
 
-            var prod = xml.XmlProd.AddNew();
-            prod.Id = 1;
-            prod.TestDecimal = xml.TestDecimal + 1;
-            prod.TestString = "XmlItem4  1";
+            for (var i = 0; i < 5; i++)
+            {
+                var prod = xml.XmlProd.AddNew();
+                prod.Id = i;
+                prod.TestDecimal = xml.TestDecimal + 1;
+                prod.TestString = "XmlItem4  1";
+
+                var prod2 = xml.XmlProd2.AddNew();
+                prod2.Id = i;
+                prod2.TestDecimal = xml.TestDecimal + 1;
+                prod2.TestString = "XmlItem4  2";
+            }
+
+            xml.XmlProd3 = xml.XmlProd2.ToArray();
 
             xml.TestInterface1 = xml.XmlItems[0];
             xml.TestInterface2 = xml.XmlItems[1];
