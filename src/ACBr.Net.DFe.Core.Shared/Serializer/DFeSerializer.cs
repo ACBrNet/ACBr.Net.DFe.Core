@@ -153,16 +153,6 @@ namespace ACBr.Net.DFe.Core.Serializer
             return new DFeSerializer(tipo);
         }
 
-        /// <summary>
-        /// Creates the serializer.
-        /// </summary>
-        /// <typeparam name="TCreate"></typeparam>
-        /// <returns>DFeSerializer.</returns>
-        public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
-        {
-            return new DFeSerializer<TCreate>();
-        }
-
         #endregion Create
 
         #region Serialize

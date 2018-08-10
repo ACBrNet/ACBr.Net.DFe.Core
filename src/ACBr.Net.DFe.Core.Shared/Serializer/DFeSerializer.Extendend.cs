@@ -53,7 +53,23 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         #endregion Constructors
 
+        #region Create
+
+        /// <summary>
+        /// Creates the serializer.
+        /// </summary>
+        /// <typeparam name="TCreate"></typeparam>
+        /// <returns>DFeSerializer.</returns>
+        public static DFeSerializer<TCreate> CreateSerializer<TCreate>() where TCreate : class
+        {
+            return new DFeSerializer<TCreate>();
+        }
+
+        #endregion Create
+
         #region Methods
+
+        #region Serialize
 
         /// <summary>
         /// Serializes the specified item.
@@ -76,6 +92,10 @@ namespace ACBr.Net.DFe.Core.Serializer
             return base.Serialize(item, stream);
         }
 
+        #endregion Serialize
+
+        #region Deserialize
+
         /// <summary>
         /// Deserializes the specified xml.
         /// </summary>
@@ -95,6 +115,8 @@ namespace ACBr.Net.DFe.Core.Serializer
         {
             return (TClass)base.Deserialize(stream);
         }
+
+        #endregion Deserialize
 
         #endregion Methods
     }

@@ -31,7 +31,6 @@
 
 using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -42,7 +41,6 @@ using ACBr.Net.Core.Logging;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Document;
-using ACBr.Net.DFe.Core.Extensions;
 using KeyInfo = System.Security.Cryptography.Xml.KeyInfo;
 using Reference = System.Security.Cryptography.Xml.Reference;
 
