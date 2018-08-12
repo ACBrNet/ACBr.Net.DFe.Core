@@ -30,6 +30,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeArquivosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCertificadosConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeCodUF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DFeReportClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\FiltroDFeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document\DFeDocument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeGeralConfigBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\DFeICMSCst.cs" />
