@@ -73,7 +73,7 @@ namespace ACBr.Net.DFe.Core.Collection
         #region Methods
 
         /// <summary>
-        /// Adds an object to the end of the <see cref="DFeCollection{T}"/>.
+        /// Adds an object to the end of the <see cref="DFeParentCollection{T, T}"/>.
         /// </summary>
         /// <returns>T.</returns>
         public override TTipo AddNew()
@@ -84,32 +84,32 @@ namespace ACBr.Net.DFe.Core.Collection
             return item;
         }
 
-        /// <summary>Adds an object to the end of the <see cref="DFeCollection{T}"/>.</summary>
-        /// <param name="item">The object to be added to the end of the <see cref="DFeCollection{T}"/>. The value can be null for reference types.</param>
+        /// <summary>Adds an object to the end of the <see cref="DFeParentCollection{T, T}"/>.</summary>
+        /// <param name="item">The object to be added to the end of the <see cref="DFeParentCollection{T, T}"/>. The value can be null for reference types.</param>
         public override void Add(TTipo item)
         {
             item.Parent = Parent;
             base.Add(item);
         }
 
-        /// <summary>Inserts an element into the <see cref="DFeCollection{T}"/> at the specified index.</summary>
+        /// <summary>Inserts an element into the <see cref="DFeParentCollection{T, T}"/> at the specified index.</summary>
         /// <param name="index">The zero-based index at which <paramref name="item" /> should be inserted.</param>
         /// <param name="item">The object to insert. The value can be null for reference types.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
-        /// <paramref name="index" /> is less than 0.-or-<paramref name="index" /> is greater than <see cref="DFeCollection{T}.Count"/>.</exception>
+        /// <paramref name="index" /> is less than 0.-or-<paramref name="index" /> is greater than <see cref="DFeParentCollection{T, T}.Count"/>.</exception>
         public override void Insert(int index, TTipo item)
         {
             item.Parent = Parent;
             base.Insert(index, item);
         }
 
-        /// <summary>Inserts the elements of a collection into the <see cref="DFeCollection{T}"/> at the specified index.</summary>
+        /// <summary>Inserts the elements of a collection into the <see cref="DFeParentCollection{T, T}"/> at the specified index.</summary>
         /// <param name="index">The zero-based index at which the new elements should be inserted.</param>
-        /// <param name="collection">The collection whose elements should be inserted into the <see cref="DFeCollection{T}"/>. The collection itself cannot be null, but it can contain elements that are null, if type <paramref name="T" /> is a reference type.</param>
+        /// <param name="collection">The collection whose elements should be inserted into the <see cref="DFeParentCollection{T, T}"/>. The collection itself cannot be null, but it can contain elements that are null, if type <paramref name="T" /> is a reference type.</param>
         /// <exception cref="T:System.ArgumentNullException">
         /// <paramref name="collection" /> is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
-        /// <paramref name="index" /> is less than 0.-or-<paramref name="index" /> is greater than <see cref="DFeCollection{T}.Count"/>.</exception>
+        /// <paramref name="index" /> is less than 0.-or-<paramref name="index" /> is greater than <see cref="DFeParentCollection{T, T}.Count"/>.</exception>
         public override void InsertRange(int index, IEnumerable<TTipo> collection)
         {
             foreach (var item in collection)

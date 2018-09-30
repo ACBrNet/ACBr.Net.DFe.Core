@@ -34,6 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Common\DFeReportClass.cs">
+      <SubType>ACBr.Net</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.1" />
   </ItemGroup>
 

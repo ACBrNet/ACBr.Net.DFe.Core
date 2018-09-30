@@ -34,7 +34,7 @@ using ACBr.Net.DFe.Core.Serializer;
 
 namespace ACBr.Net.DFe.Core.Document
 {
-    public class Reference
+    public sealed class Reference
     {
         #region Constructors
 

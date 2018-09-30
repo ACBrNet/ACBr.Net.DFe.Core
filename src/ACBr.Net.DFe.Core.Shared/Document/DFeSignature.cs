@@ -35,7 +35,7 @@ using ACBr.Net.DFe.Core.Serializer;
 namespace ACBr.Net.DFe.Core.Document
 {
     [DFeRoot("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
-    public class DFeSignature : DFeDocument<DFeSignature>
+    public sealed class DFeSignature : DFeDocument<DFeSignature>
     {
         #region Constructors
 

@@ -33,29 +33,29 @@ using ACBr.Net.DFe.Core.Attributes;
 
 namespace ACBr.Net.DFe.Core.Document
 {
-	public class KeyInfo
-	{
-		#region Constructors
+    public sealed class KeyInfo
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="KeyInfo"/> class.
-		/// </summary>
-		public KeyInfo()
-		{
-			X509Data = new X509Data();
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyInfo"/> class.
+        /// </summary>
+        public KeyInfo()
+        {
+            X509Data = new X509Data();
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Propriedades
+        #region Propriedades
 
-		/// <summary>
-		/// XS20 - Grupo X509
-		/// </summary>
-		/// <value>The X509 data.</value>
-		[DFeElement("X509Data", Id = "XS20")]
-		public X509Data X509Data { get; set; }
+        /// <summary>
+        /// XS20 - Grupo X509
+        /// </summary>
+        /// <value>The X509 data.</value>
+        [DFeElement("X509Data", Id = "XS20")]
+        public X509Data X509Data { get; set; }
 
-		#endregion Propriedades
-	}
+        #endregion Propriedades
+    }
 }

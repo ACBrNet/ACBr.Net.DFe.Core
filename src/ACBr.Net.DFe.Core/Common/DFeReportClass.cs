@@ -29,75 +29,18 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.ComponentModel;
 using ACBr.Net.Core;
-using ACBr.Net.Core.Logging;
+using System.Drawing;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-    [TypeConverter(typeof(ACBrExpandableObjectConverter))]
-    public abstract partial class DFeReportClass<TParent> : ACBrComponent, IACBrLog
+    public abstract partial class DFeReportClass<TParent>
         where TParent : ACBrComponent
     {
-        #region Fields
-
-        protected TParent parent;
-
-        #endregion Fields
-
         #region Properties
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public TParent Parent
-        {
-            get => parent;
-            set
-            {
-                if (parent == value) return;
-
-                var oldParent = parent;
-                parent = value;
-                ParentChanged(oldParent, value);
-            }
-        }
-
-        public FiltroDFeReport Filtro { get; set; }
-
-        public bool MostrarPreview { get; set; }
-
-        public bool MostrarSetup { get; set; }
-
-        public bool UsarPathPDF { get; set; }
-
-        public string Impressora { get; set; }
-
-        public int NumeroCopias { get; set; }
-
-        public string NomeArquivo { get; set; }
-
-        public string SoftwareHouse { get; set; }
-
-        public string Site { get; set; }
+        public Image Logo { get; set; }
 
         #endregion Properties
-
-        #region Methods
-
-        /// <summary>
-        /// Imprime o documento DFe.
-        /// </summary>
-        public abstract void Imprimir();
-
-        /// <summary>
-        /// Imprime o documento DFe em PDF.
-        /// </summary>
-        public abstract void ImprimirPDF();
-
-        /// <summary>
-        /// Função executada toda vez que é mudado o Parent.
-        /// </summary>
-        protected abstract void ParentChanged(TParent oldParent, TParent newParent);
-
-        #endregion Methods
     }
 }
