@@ -177,10 +177,13 @@ namespace ACBr.Net.DFe.Core.Common
             }
 
             var ret = CertificadoDigital.SelecionarCertificado(Certificado);
+
+#if !NETSTANDARD2_0
             if (!Senha.IsEmpty())
             {
                 ret.SetPin(Senha);
             }
+#endif
 
             return ret;
         }

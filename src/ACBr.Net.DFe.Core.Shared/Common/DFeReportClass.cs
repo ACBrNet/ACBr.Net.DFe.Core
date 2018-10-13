@@ -57,7 +57,7 @@ namespace ACBr.Net.DFe.Core.Common
 
                 var oldParent = parent;
                 parent = value;
-                ParentChanged(oldParent, value);
+                ParentChanged(oldParent, parent);
             }
         }
 
@@ -82,16 +82,6 @@ namespace ACBr.Net.DFe.Core.Common
         #endregion Properties
 
         #region Methods
-
-        /// <summary>
-        /// Imprime o documento DFe.
-        /// </summary>
-        public abstract void Imprimir();
-
-        /// <summary>
-        /// Imprime o documento DFe em PDF.
-        /// </summary>
-        public abstract void ImprimirPDF();
 
         /// <summary>
         /// Função executada toda vez que é mudado o Parent.
