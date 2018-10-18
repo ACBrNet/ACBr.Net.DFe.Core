@@ -194,9 +194,35 @@ namespace ACBr.Net.DFe.Core.Common
         protected void GetCertificado()
         {
             var cert = ObterCertificado();
-            dataVenc = cert.GetExpirationDateString().ToData();
-            subjectName = cert.SubjectName.Name;
-            cnpj = cert.GetCNPJ();
+
+            try
+            {
+                dataVenc = cert.GetExpirationDateString().ToData();
+                subjectName = cert.SubjectName.Name;
+                cnpj = cert.GetCNPJ();
+            }
+            finally
+            {
+#if NETSTANDARD2_0
+                cert?.Reset();
+#else
+                try
+                {
+                    if (cert != null && cert.IsA3())
+                    {
+                        cert.ForceUnload();
+                    }
+                    else
+                    {
+                        cert?.Reset();
+                    }
+                }
+                catch (Exception )
+                {
+                    //
+                }
+#endif
+            }
         }
 
         #endregion Methods
