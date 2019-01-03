@@ -120,7 +120,6 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// </summary>
         internal DFeSerializer(Type tipo)
         {
-            Guard.Against<ArgumentException>(tipo.IsGenericType, "Não é possivel serializar uma classe generica !");
             Guard.Against<ArgumentException>(!tipo.HasAttribute<DFeRootAttribute>(), "Não é uma classe DFe !");
 
             tipoDFe = tipo;

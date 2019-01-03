@@ -51,6 +51,7 @@ namespace ACBr.Net.DFe.Core.Common
         /// </summary>
         protected DFeGeralConfigBase(TParent parent) : base(parent)
         {
+            FormaEmissao = DFeTipoEmissao.Normal;
         }
 
         #endregion Constructor
@@ -62,6 +63,13 @@ namespace ACBr.Net.DFe.Core.Common
         /// </summary>
         [Browsable(true)]
         public TVersaoDFe VersaoDFe { get; set; }
+
+        /// <summary>
+        /// Define/retorna o tipo de emissão.
+        /// </summary>
+        [Browsable(true)]
+        [DefaultValue(DFeTipoEmissao.Normal)]
+        public DFeTipoEmissao FormaEmissao { get; set; }
 
         #endregion Properties
     }
@@ -78,7 +86,6 @@ namespace ACBr.Net.DFe.Core.Common
             Guard.Against<ArgumentNullException>(parent == null, nameof(parent));
 
             Parent = parent;
-            TipoEmissao = DFeTipoEmissao.Normal;
             Salvar = true;
             ExibirErroSchema = true;
             FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
@@ -97,13 +104,6 @@ namespace ACBr.Net.DFe.Core.Common
         /// </summary>
         [Browsable(false)]
         public TParent Parent { get; protected set; }
-
-        /// <summary>
-        /// Define/retorna o tipo de emissão.
-        /// </summary>
-        [Browsable(true)]
-        [DefaultValue(DFeTipoEmissao.Normal)]
-        public DFeTipoEmissao TipoEmissao { get; set; }
 
         /// <summary>
         /// Define/retorna se deve ser salvo os arquivos gerais, ou seja, arquivos de envio e

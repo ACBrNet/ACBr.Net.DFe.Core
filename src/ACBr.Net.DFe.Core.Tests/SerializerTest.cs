@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using ACBr.Net.DFe.Core.Collection;
+using ACBr.Net.DFe.Core.Common;
+using ACBr.Net.DFe.Core.Service;
 using Xunit;
 
 namespace ACBr.Net.DFe.Core.Tests
@@ -86,6 +90,8 @@ namespace ACBr.Net.DFe.Core.Tests
             return xml;
         }
 
+        private const string Services = "<?xml version=\"1.0\" encoding=\"utf-8\"?><DFeServices><Services Tipo=\"CTe\" TipoEmissao=\"1\"><Enderecos Ambiente=\"2\" UF=\"50\"><Enderecos><Endereco Tipo=\"Envio\">Envio</Endereco><Endereco Tipo=\"Consulta\">Consulta</Endereco></Enderecos></Enderecos></Services></DFeServices>";
+
         [Fact]
         public void TestSerializer()
         {
@@ -123,6 +129,34 @@ namespace ACBr.Net.DFe.Core.Tests
             Assert.NotEqual(xml, item);
 
             File.Delete("teste.xml");
+        }
+
+        [Fact]
+        public void TestDFeSericeSerializer()
+        {
+            var services = new DFeService<DFeTipo>();
+            services.Webservices.Add(new DFeWebserviceInfo<DFeTipo>()
+            {
+                Tipo = DFeTipoService.CTe,
+                TipoEmissao = DFeTipoEmissao.Normal,
+                Enderecos = new DFeCollection<DFeServiceAddresses<DFeTipo>>()
+                {
+                    new DFeServiceAddresses<DFeTipo>()
+                    {
+                        Ambiente = DFeTipoAmbiente.Homologacao,
+                        UF = DFeCodUF.MS,
+                        Endereco = new Dictionary<DFeTipo, string>()
+                        {
+                            { DFeTipo.Envio, "Envio" },
+                            { DFeTipo.Consulta, "Consulta" }
+                        }
+                    }
+                }
+            });
+
+            var xml = services.GetXml();
+
+            Assert.NotEqual(string.Empty, xml);
         }
     }
 }

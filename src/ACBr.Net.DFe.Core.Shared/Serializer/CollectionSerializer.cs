@@ -68,10 +68,11 @@ namespace ACBr.Net.DFe.Core.Serializer
             var itemType = GetItemType(prop.PropertyType) ?? GetItemType(list.GetType());
             var objectType = ObjectType.From(itemType);
 
-            if (objectType == ObjectType.PrimitiveType) return SerializePrimitive(prop, parentObject, list, tag, options);
-            if (!prop.HasAttribute<DFeItemAttribute>()) return SerializeObjects(list, tag, options);
+            if (objectType == ObjectType.PrimitiveType)
+                return SerializePrimitive(prop, parentObject, list, tag, options);
 
-            return SerializeChild(list, tag, prop.GetAttributes<DFeItemAttribute>(), options);
+            return !prop.HasAttribute<DFeItemAttribute>() ? SerializeObjects(list, tag, options) :
+                                                            SerializeChild(list, tag, prop.GetAttributes<DFeItemAttribute>(), options);
         }
 
         public static XObject[] SerializeChild(ICollection values, DFeCollectionAttribute tag, DFeItemAttribute[] itemTags, SerializerOptions options)
@@ -135,12 +136,10 @@ namespace ACBr.Net.DFe.Core.Serializer
             var list = (IList)Activator.CreateInstance(type);
             var elementAtt = prop.GetAttribute<DFeCollectionAttribute>();
 
-            IEnumerable<XElement> elements = parent;
-
             if (prop.HasAttribute<DFeItemAttribute>())
             {
                 var itemTags = prop.GetAttributes<DFeItemAttribute>();
-                elements = parent.All(x => x.Name.LocalName == elementAtt.Name) && parent.Length > 1 ? parent : parent.Elements();
+                var elements = parent.All(x => x.Name.LocalName == elementAtt.Name) && parent.Length > 1 ? parent : parent.Elements();
 
                 foreach (var element in elements)
                 {
@@ -153,7 +152,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             {
                 if (objectType == ObjectType.PrimitiveType)
                 {
-                    foreach (var element in elements)
+                    foreach (var element in parent)
                     {
                         var obj = PrimitiveSerializer.Deserialize(elementAtt, element, parentItem, prop, options);
                         list.Add(obj);
@@ -164,7 +163,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     if (ObjectType.From(prop.PropertyType).IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
                         listItemType = GetItemType(prop.PropertyType);
 
-                    foreach (var element in elements)
+                    foreach (var element in parent)
                     {
                         var obj = ObjectSerializer.Deserialize(listItemType, element, options);
                         list.Add(obj);

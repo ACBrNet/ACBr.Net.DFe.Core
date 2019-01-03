@@ -98,19 +98,16 @@ namespace ACBr.Net.DFe.Core.Serializer
             {
                 var objectType = ObjectType.From(prop.PropertyType);
 
-                if (objectType == ObjectType.DictionaryType) throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
+                if (objectType == ObjectType.DictionaryType)
+                    return DictionarySerializer.Serialize(prop, parentObject, options);
 
                 if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
-                {
                     return CollectionSerializer.Serialize(prop, parentObject, options);
-                }
 
                 var value = prop.GetValue(parentObject, null);
 
                 if (objectType.IsIn(ObjectType.InterfaceType, ObjectType.AbstractType))
-                {
                     return value == null ? null : InterfaceSerializer.Serialize(prop, parentObject, options);
-                }
 
                 if (objectType == ObjectType.ClassType)
                 {
@@ -191,7 +188,12 @@ namespace ACBr.Net.DFe.Core.Serializer
                 var tag = prop.HasAttribute<DFeElementAttribute>() ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>() : prop.GetAttribute<DFeAttributeAttribute>();
 
                 var objectType = ObjectType.From(prop.PropertyType);
-                if (objectType == ObjectType.DictionaryType) throw new NotSupportedException("Tipo Dictionary não suportado ainda !");
+                if (objectType == ObjectType.DictionaryType)
+                {
+                    var dicTag = prop.GetAttribute<DFeDictionaryAttribute>();
+                    var dictionaryElement = parentElement.ElementAnyNs(dicTag.Name);
+                    return DictionarySerializer.Deserialize(prop, dictionaryElement, item, options);
+                }
 
                 if (objectType.IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
                 {

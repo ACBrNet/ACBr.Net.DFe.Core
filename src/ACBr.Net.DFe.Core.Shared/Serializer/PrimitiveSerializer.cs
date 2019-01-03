@@ -61,53 +61,22 @@ namespace ACBr.Net.DFe.Core.Serializer
                 var estaVazio = value == null || value.ToString().IsEmpty();
                 var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Ocorrencia, tag.Min, prop, item);
 
-                string alerta;
-                if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio && tag.Min > 0)
-                {
-                    alerta = DFeSerializer.ErrMsgVazio;
-                }
-                else
-                {
-                    alerta = string.Empty;
-                }
+                return ProcessContent(tag, conteudoProcessado, estaVazio, options);
+            }
+            catch (Exception ex)
+            {
+                options.AddAlerta(tag.Id, tag.Name, tag.Descricao, ex.ToString());
+                return null;
+            }
+        }
 
-                if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() &&
-                    conteudoProcessado.Length > 1)
-                {
-                    alerta = DFeSerializer.ErrMsgMenor;
-                }
-
-                if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) && conteudoProcessado.Length > tag.Max)
-                {
-                    alerta = DFeSerializer.ErrMsgMaior;
-                }
-
-                if (!string.IsNullOrEmpty(alerta.Trim()) && DFeSerializer.ErrMsgVazio.Equals(alerta) && !estaVazio)
-                {
-                    alerta += $" [{value}]";
-                }
-
-                options.AddAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
-
-                XObject xmlTag = null;
-                if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
-                {
-                    xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name) : new XAttribute(tag.Name, "");
-                }
-
-                if (estaVazio) return xmlTag;
-
-                var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
-                elementValue = options.RemoverEspacos ? elementValue.Trim() : elementValue;
-
-                if (tag is DFeAttributeAttribute) return new XAttribute(tag.Name, elementValue);
-
-                var cData = ((DFeElementAttribute)tag).UseCData;
-                if (!elementValue.IsCData()) return cData ? new XElement(tag.Name, new XCData(elementValue)) :
-                                                            new XElement(tag.Name, elementValue);
-
-                elementValue = elementValue.RemoveCData();
-                return new XElement(tag.Name, new XCData(elementValue));
+        public static XObject Serialize(DFeBaseAttribute tag, object value, SerializerOptions options)
+        {
+            try
+            {
+                var estaVazio = value == null || value.ToString().IsEmpty();
+                var conteudoProcessado = ProcessValue(ref estaVazio, tag.Tipo, value, tag.Ocorrencia, tag.Min, null, null);
+                return ProcessContent(tag, conteudoProcessado, estaVazio, options);
             }
             catch (Exception ex)
             {
@@ -277,6 +246,67 @@ namespace ACBr.Net.DFe.Core.Serializer
             }
 
             return conteudoProcessado;
+        }
+
+        private static XObject ProcessContent(DFeBaseAttribute tag, string conteudoProcessado, bool estaVazio, SerializerOptions options)
+        {
+            string alerta;
+            if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio && tag.Min > 0)
+            {
+                alerta = DFeSerializer.ErrMsgVazio;
+            }
+            else
+            {
+                alerta = string.Empty;
+            }
+
+            if (conteudoProcessado.IsEmpty() && conteudoProcessado.Length < tag.Min && alerta.IsEmpty() && conteudoProcessado.Length > 1)
+            {
+                alerta = DFeSerializer.ErrMsgMenor;
+            }
+
+            if (!string.IsNullOrEmpty(conteudoProcessado.Trim()) && conteudoProcessado.Length > tag.Max)
+            {
+                alerta = DFeSerializer.ErrMsgMaior;
+            }
+
+            if (!string.IsNullOrEmpty(alerta.Trim()) && DFeSerializer.ErrMsgVazio.Equals(alerta) && !estaVazio)
+            {
+                alerta += $" [{tag.Name}]";
+            }
+
+            options.AddAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
+
+            XObject xmlTag = null;
+            if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
+            {
+                xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name) : new XAttribute(tag.Name, "");
+            }
+
+            if (estaVazio) return xmlTag;
+
+            var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
+            elementValue = options.RemoverEspacos ? elementValue.Trim() : elementValue;
+
+            switch (tag)
+            {
+                case DFeAttributeAttribute _: return new XAttribute(tag.Name, elementValue);
+                case DFeDictionaryKeyAttribute keyAtt when keyAtt.AsAttribute: return new XAttribute(keyAtt.Name, elementValue);
+                case DFeElementAttribute elementAtt:
+                    if (elementValue.IsCData())
+                    {
+                        elementValue = elementValue.RemoveCData();
+                        return new XElement(tag.Name, new XCData(elementValue));
+                    }
+                    else
+                    {
+                        return elementAtt.UseCData ? new XElement(tag.Name, new XCData(elementValue)) :
+                                                 new XElement(tag.Name, elementValue);
+                    }
+
+                default:
+                    return new XElement(tag.Name, elementValue);
+            }
         }
 
         #endregion Serialize
