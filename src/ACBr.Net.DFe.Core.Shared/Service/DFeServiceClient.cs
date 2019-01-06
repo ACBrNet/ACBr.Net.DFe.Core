@@ -38,23 +38,22 @@ using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Common;
-using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Service
 {
     /// <inheritdoc />
     /// <summary>
     /// </summary>
-    public abstract class DFeServiceClient<TDFeConfig, TParent, TGeralConfig, [EnumConstraint]TVersaoDFe, TWebserviceConfig,
-        TCertificadosConfig, TArquivosConfig, [EnumConstraint]TSchemas, TService> : DFeSoap12ServiceClientBase<TService>
+    public abstract class DFeServiceClient<TDFeConfig, TParent, TGeralConfig, TVersaoDFe, TWebserviceConfig,
+        TCertificadosConfig, TArquivosConfig, TSchemas, TService> : DFeSoap12ServiceClientBase<TService>
         where TDFeConfig : DFeConfigBase<TParent, TGeralConfig, TVersaoDFe, TWebserviceConfig, TCertificadosConfig, TArquivosConfig, TSchemas>
         where TParent : ACBrComponent
         where TGeralConfig : DFeGeralConfigBase<TParent, TVersaoDFe>
-        where TVersaoDFe : struct
+        where TVersaoDFe : Enum
         where TWebserviceConfig : DFeWebserviceConfigBase<TParent>
         where TCertificadosConfig : DFeCertificadosConfigBase<TParent>
         where TArquivosConfig : DFeArquivosConfigBase<TParent, TSchemas>
-        where TSchemas : struct
+        where TSchemas : Enum
         where TService : class
     {
         #region Fields

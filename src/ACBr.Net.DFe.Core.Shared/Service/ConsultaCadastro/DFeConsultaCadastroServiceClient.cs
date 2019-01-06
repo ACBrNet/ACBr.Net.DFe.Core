@@ -38,23 +38,24 @@ using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Extensions;
-using ExtraConstraints;
+
+using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-    public abstract class DFeConsultaCadastroServiceClient<TDFeConfig, TParent, TGeralConfig, [EnumConstraint] TVersaoDFe,
-         TWebserviceConfig, TCertificadosConfig, TArquivosConfig, [EnumConstraint] TSchemas> :
+    public abstract class DFeConsultaCadastroServiceClient<TDFeConfig, TParent, TGeralConfig, TVersaoDFe,
+         TWebserviceConfig, TCertificadosConfig, TArquivosConfig, TSchemas> :
         DFeServiceClient<TDFeConfig, TParent, TGeralConfig, TVersaoDFe, TWebserviceConfig,
             TCertificadosConfig, TArquivosConfig, TSchemas, IDFeCadConsultaCadastro>
         where TDFeConfig : DFeConfigBase<TParent, TGeralConfig, TVersaoDFe,
              TWebserviceConfig, TCertificadosConfig, TArquivosConfig, TSchemas>
         where TParent : ACBrComponent
         where TGeralConfig : DFeGeralConfigBase<TParent, TVersaoDFe>
-        where TVersaoDFe : struct
+        where TVersaoDFe : Enum
         where TWebserviceConfig : DFeWebserviceConfigBase<TParent>
         where TCertificadosConfig : DFeCertificadosConfigBase<TParent>
         where TArquivosConfig : DFeArquivosConfigBase<TParent, TSchemas>
-        where TSchemas : struct
+        where TSchemas : Enum
     {
         #region Constructors
 

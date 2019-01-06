@@ -6,8 +6,7 @@
 	<AssemblyName>ACBr.Net.DFe.Core</AssemblyName>
 	<RootNamespace>ACBr.Net.DFe.Core</RootNamespace>
 	<SignAssembly>true</SignAssembly>
-	<AssemblyOriginatorKeyFile>acbr.net.snk</AssemblyOriginatorKeyFile>
-	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<AssemblyOriginatorKeyFile>acbr.net.snk</AssemblyOriginatorKeyFile>	
 	<LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
@@ -24,12 +23,11 @@
   <Import Project="..\ACBr.Net.DFe.Core.Shared\ACBr.Net.DFe.Core.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <Compile Include="..\Shared\ACBr.Net.DFe.Core.AssemblyInfo.cs" Link="ACBr.Net.DFe.Core.AssemblyInfo.cs" />
+    <Compile Include="..\Shared\ACBr.Net.DFe.Core.AssemblyInfo.cs" Link="Properties\ACBr.Net.DFe.Core.AssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ACBr.Net.Core" Version="1.2.3.3" />
-    <PackageReference Include="ExtraConstraints.Fody" Version="1.13.3" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
   </ItemGroup>
@@ -42,6 +40,10 @@
 
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

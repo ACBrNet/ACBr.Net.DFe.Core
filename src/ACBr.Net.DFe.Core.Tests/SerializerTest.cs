@@ -132,20 +132,61 @@ namespace ACBr.Net.DFe.Core.Tests
         }
 
         [Fact]
-        public void TestDFeSericeSerializer()
+        public void TestDFeServiceSerializer()
         {
-            var services = new DFeService<DFeTipo>();
-            services.Webservices.Add(new DFeWebserviceInfo<DFeTipo>()
+            var services = new DFeServices<DFeTipo, DFeVersao>();
+            services.Webservices.Add(new DFeServiceInfo<DFeTipo, DFeVersao>()
             {
-                Tipo = DFeTipoService.CTe,
+                Versao = DFeVersao.v200,
+                Tipo = DFeTipoServico.CTe,
                 TipoEmissao = DFeTipoEmissao.Normal,
-                Enderecos = new DFeCollection<DFeServiceAddresses<DFeTipo>>()
+                Ambientes = new DFeCollection<DFeServiceEnvironment<DFeTipo>>()
                 {
-                    new DFeServiceAddresses<DFeTipo>()
+                    new DFeServiceEnvironment<DFeTipo>()
                     {
                         Ambiente = DFeTipoAmbiente.Homologacao,
-                        UF = DFeCodUF.MS,
-                        Endereco = new Dictionary<DFeTipo, string>()
+                        UF = DFeSiglaUF.MS,
+                        Enderecos = new Dictionary<DFeTipo, string>()
+                        {
+                            { DFeTipo.Envio, "Envio" },
+                            { DFeTipo.Consulta, "Consulta" }
+                        }
+                    },
+                    new DFeServiceEnvironment<DFeTipo>()
+                    {
+                        Ambiente = DFeTipoAmbiente.Producao,
+                        UF = DFeSiglaUF.MS,
+                        Enderecos = new Dictionary<DFeTipo, string>()
+                        {
+                            { DFeTipo.Envio, "Envio" },
+                            { DFeTipo.Consulta, "Consulta" }
+                        }
+                    }
+                }
+            });
+
+            services.Webservices.Add(new DFeServiceInfo<DFeTipo, DFeVersao>()
+            {
+                Versao = DFeVersao.v300,
+                Tipo = DFeTipoServico.CTe,
+                TipoEmissao = DFeTipoEmissao.Normal,
+                Ambientes = new DFeCollection<DFeServiceEnvironment<DFeTipo>>()
+                {
+                    new DFeServiceEnvironment<DFeTipo>()
+                    {
+                        Ambiente = DFeTipoAmbiente.Homologacao,
+                        UF = DFeSiglaUF.MS,
+                        Enderecos = new Dictionary<DFeTipo, string>()
+                        {
+                            { DFeTipo.Envio, "Envio" },
+                            { DFeTipo.Consulta, "Consulta" }
+                        }
+                    },
+                    new DFeServiceEnvironment<DFeTipo>()
+                    {
+                        Ambiente = DFeTipoAmbiente.Producao,
+                        UF = DFeSiglaUF.MS,
+                        Enderecos = new Dictionary<DFeTipo, string>()
                         {
                             { DFeTipo.Envio, "Envio" },
                             { DFeTipo.Consulta, "Consulta" }

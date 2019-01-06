@@ -33,7 +33,6 @@ using System;
 using System.Linq;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Common;
-using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
@@ -45,7 +44,7 @@ namespace ACBr.Net.DFe.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
         /// <returns>System.String.</returns>
-        public static string GetDFeValue<[EnumConstraint]T>(this T value) where T : struct
+        public static string GetDFeValue<T>(this T value) where T : Enum
         {
             var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
             var enumAttribute = member?.GetCustomAttributes(false).OfType<DFeEnumAttribute>().FirstOrDefault();

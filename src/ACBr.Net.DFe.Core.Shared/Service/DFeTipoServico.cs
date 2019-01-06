@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 04-01-2019
 // ***********************************************************************
-// <copyright file="DFeServices.cs" company="ACBr.Net">
+// <copyright file="DFeTipoServico.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,45 +29,25 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Linq;
 using ACBr.Net.DFe.Core.Attributes;
-using ACBr.Net.DFe.Core.Collection;
-using ACBr.Net.DFe.Core.Common;
-using ACBr.Net.DFe.Core.Document;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-    [DFeRoot("DFeServices", Namespace = "https://acbrnet.github.io")]
-    public class DFeServices<TTIpo, TVersao> : DFeDocument<DFeServices<TTIpo, TVersao>>
-        where TTIpo : Enum
-        where TVersao : Enum
+    public enum DFeTipoServico
     {
-        #region Constructors
+        [DFeEnum("CTe")]
+        CTe,
 
-        public DFeServices()
-        {
-            Webservices = new DFeCollection<DFeServiceInfo<TTIpo, TVersao>>();
-        }
+        [DFeEnum("MDFe")]
+        MDFe,
 
-        #endregion Constructors
+        [DFeEnum("NFe")]
+        NFe,
 
-        #region Properties
+        [DFeEnum("NFCe")]
+        NFCe,
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="versao"></param>
-        /// <param name="emissao"></param>
-        [DFeIgnore]
-        public DFeServiceInfo<TTIpo, TVersao> this[TVersao versao, DFeTipoEmissao emissao]
-        {
-            get { return Webservices?.SingleOrDefault(x => Equals(x.Versao, versao) && x.TipoEmissao == emissao); }
-        }
-
-        [DFeCollection("Services")]
-        public DFeCollection<DFeServiceInfo<TTIpo, TVersao>> Webservices { get; set; }
-
-        #endregion Properties
+        [DFeEnum("NFSe")]
+        NFSe
     }
 }

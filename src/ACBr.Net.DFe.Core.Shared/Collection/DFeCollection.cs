@@ -53,10 +53,17 @@ namespace ACBr.Net.DFe.Core.Collection
         /// <summary>
         /// Initializes a new instance of the <see cref="DFeCollection{T}"/> class.
         /// </summary>
-        /// <param name="source">The source.</param>
-        public DFeCollection(IEnumerable<TTipo> source)
+        /// <param name="capacity">The source.</param>
+        public DFeCollection(int capacity) : base(capacity)
         {
-            AddRange(source);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeCollection{T}"/> class.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        public DFeCollection(IEnumerable<TTipo> source) : base(source)
+        {
         }
 
         #endregion Constructors
@@ -70,7 +77,7 @@ namespace ACBr.Net.DFe.Core.Collection
         public virtual TTipo AddNew()
         {
             var item = (TTipo)Activator.CreateInstance(typeof(TTipo), true);
-            base.Add(item);
+            Add(item);
             return item;
         }
 

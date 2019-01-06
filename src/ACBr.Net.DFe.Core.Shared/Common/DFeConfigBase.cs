@@ -33,20 +33,19 @@ using System;
 using System.ComponentModel;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
-using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Common
 {
     [TypeConverter(typeof(ACBrExpandableObjectConverter))]
-    public abstract class DFeConfigBase<TParent, TGeralConfig, [EnumConstraint]TVersaoDFe, TWebserviceConfig,
-        TCertificadosConfig, TArquivosConfig, [EnumConstraint]TSchemas> : DFeConfigBase<TParent, TGeralConfig, TWebserviceConfig, TCertificadosConfig, TArquivosConfig>
+    public abstract class DFeConfigBase<TParent, TGeralConfig, TVersaoDFe, TWebserviceConfig,
+        TCertificadosConfig, TArquivosConfig, TSchemas> : DFeConfigBase<TParent, TGeralConfig, TWebserviceConfig, TCertificadosConfig, TArquivosConfig>
         where TParent : ACBrComponent
         where TGeralConfig : DFeGeralConfigBase<TParent, TVersaoDFe>
-        where TVersaoDFe : struct
+        where TVersaoDFe : Enum
         where TWebserviceConfig : DFeWebserviceConfigBase<TParent>
         where TCertificadosConfig : DFeCertificadosConfigBase<TParent>
         where TArquivosConfig : DFeArquivosConfigBase<TParent, TSchemas>
-        where TSchemas : struct
+        where TSchemas : Enum
     {
         #region Constructors
 

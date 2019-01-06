@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>ACBr.Net.DFe.Core</id>
-		<version>1.2.3.1</version>
+		<version>1.2.4.1</version>
 		<title>ACBr.Net.DFe.Core</title>
 		<authors>Grupo ACBr.Net</authors>
 		<owners>Grupo ACBr.Net</owners>
@@ -15,13 +15,13 @@
 		<tags>ACBr ACBr.Net Automação Comercial</tags>
 		<dependencies>
 			<group targetFramework="net452">
-				<dependency id="ACBr.Net.Core" version="1.2.3" />
+				<dependency id="ACBr.Net.Core" version="1.2.3.3" />
 			</group>
 			<group targetFramework=".NETStandard2.0">
                 <dependency id="NETStandard.Library" version="2.0.1" exclude="Build,Analyzers" />
                 <dependency id="System.Security.Cryptography.Xml" version="4.5.0" exclude="Build,Analyzers" />
                 <dependency id="System.ServiceModel.Http" version="4.5.3" exclude="Build,Analyzers" />
-                <dependency id="ACBr.Net.Core" version="1.2.3" exclude="Build,Analyzers" />
+                <dependency id="ACBr.Net.Core" version="1.2.3.3" exclude="Build,Analyzers" />
             </group>
 		</dependencies>
 	</metadata>

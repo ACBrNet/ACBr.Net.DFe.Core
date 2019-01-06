@@ -88,13 +88,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeMessageEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeMessageInspector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeResposta.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceAddresses.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceEnvironment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceClientBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeServiceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeSoap12ServiceClientBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeTipoService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DFeTipoServico.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeWsCabecalho.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SignDigest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XmlSchemaValidation.cs" />

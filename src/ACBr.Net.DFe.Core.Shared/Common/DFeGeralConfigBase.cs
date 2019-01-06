@@ -33,16 +33,15 @@ using System;
 using System.ComponentModel;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
-using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Common
 {
     /// <summary>
     ///
     /// </summary>
-    public abstract class DFeGeralConfigBase<TParent, [EnumConstraint]TVersaoDFe> : DFeGeralConfigBase<TParent>
+    public abstract class DFeGeralConfigBase<TParent, TVersaoDFe> : DFeGeralConfigBase<TParent>
     where TParent : ACBrComponent
-    where TVersaoDFe : struct
+    where TVersaoDFe : Enum
     {
         #region Constructor
 

@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 04-01-2019
 // ***********************************************************************
-// <copyright file="DFeServices.cs" company="ACBr.Net">
+// <copyright file="DFeServiceInfo.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -34,20 +34,19 @@ using System.Linq;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Collection;
 using ACBr.Net.DFe.Core.Common;
-using ACBr.Net.DFe.Core.Document;
+using ACBr.Net.DFe.Core.Serializer;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-    [DFeRoot("DFeServices", Namespace = "https://acbrnet.github.io")]
-    public class DFeServices<TTIpo, TVersao> : DFeDocument<DFeServices<TTIpo, TVersao>>
+    public class DFeServiceInfo<TTIpo, TVersao>
         where TTIpo : Enum
         where TVersao : Enum
     {
         #region Constructors
 
-        public DFeServices()
+        public DFeServiceInfo()
         {
-            Webservices = new DFeCollection<DFeServiceInfo<TTIpo, TVersao>>();
+            Ambientes = new DFeCollection<DFeServiceEnvironment<TTIpo>>();
         }
 
         #endregion Constructors
@@ -57,16 +56,25 @@ namespace ACBr.Net.DFe.Core.Service
         /// <summary>
         ///
         /// </summary>
-        /// <param name="versao"></param>
-        /// <param name="emissao"></param>
+        /// <param name="ambiente"></param>
+        /// <param name="uf"></param>
         [DFeIgnore]
-        public DFeServiceInfo<TTIpo, TVersao> this[TVersao versao, DFeTipoEmissao emissao]
+        public DFeServiceEnvironment<TTIpo> this[DFeTipoAmbiente ambiente, DFeSiglaUF uf]
         {
-            get { return Webservices?.SingleOrDefault(x => Equals(x.Versao, versao) && x.TipoEmissao == emissao); }
+            get { return Ambientes?.SingleOrDefault(x => x.Ambiente == ambiente && x.UF == uf); }
         }
 
-        [DFeCollection("Services")]
-        public DFeCollection<DFeServiceInfo<TTIpo, TVersao>> Webservices { get; set; }
+        [DFeAttribute(TipoCampo.Enum, "Tipo")]
+        public DFeTipoServico Tipo { get; set; }
+
+        [DFeAttribute(TipoCampo.Enum, "TipoEmissao")]
+        public DFeTipoEmissao TipoEmissao { get; set; }
+
+        [DFeAttribute(TipoCampo.Enum, "Versao")]
+        public TVersao Versao { get; set; }
+
+        [DFeCollection("Enderecos")]
+        public DFeCollection<DFeServiceEnvironment<TTIpo>> Ambientes { get; set; }
 
         #endregion Properties
     }

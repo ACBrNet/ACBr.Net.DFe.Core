@@ -38,13 +38,12 @@ using System.Reflection;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
-using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Common
 {
-    public abstract class DFeArquivosConfigBase<TParent, [EnumConstraint]TSchemas> : DFeArquivosConfigBase<TParent>
+    public abstract class DFeArquivosConfigBase<TParent, TSchemas> : DFeArquivosConfigBase<TParent>
         where TParent : ACBrComponent
-        where TSchemas : struct
+        where TSchemas : Enum
     {
         #region Constructors
 

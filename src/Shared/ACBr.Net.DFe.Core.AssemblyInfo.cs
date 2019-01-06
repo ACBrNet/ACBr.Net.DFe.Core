@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("ACBr.Net.DFe.Core")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ACBr.Net")]
-[assembly: AssemblyCopyright("Copyright © Grupo ACBr.Net 2014 - 2018")]
+[assembly: AssemblyCopyright("Copyright © Grupo ACBr.Net 2014 - 2019")]
 [assembly: AssemblyTrademark("Grupo ACBr.Net https://acbrnet.github.io")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -27,6 +27,9 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.4.0")]
-[assembly: AssemblyFileVersion("1.2.4.0")]
-[assembly: AssemblyInformationalVersion("1.2.4.0")]
+[assembly: AssemblyVersion("1.2.4.1")]
+[assembly: AssemblyFileVersion("1.2.4.1")]
+[assembly: AssemblyInformationalVersion("1.2.4.1")]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("d5613362-449b-4c9d-ac82-7e234cfe545a")]

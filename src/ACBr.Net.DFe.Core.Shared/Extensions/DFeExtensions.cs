@@ -35,7 +35,6 @@ using System;
 using System.Collections;
 using System.Reflection;
 using ACBr.Net.Core.Extensions;
-using ExtraConstraints;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
@@ -48,12 +47,12 @@ namespace ACBr.Net.DFe.Core.Extensions
                     : prop.GetAttribute<DFeAttributeAttribute>();
         }
 
-        public static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method) where TDelegate : class
+        public static TDelegate ToDelegate<TDelegate>(this MethodInfo method) where TDelegate : Delegate
         {
             return Delegate.CreateDelegate(typeof(TDelegate), method) as TDelegate;
         }
 
-        public static TDelegate ToDelegate<[DelegateConstraint]TDelegate>(this MethodInfo method, object item) where TDelegate : class
+        public static TDelegate ToDelegate<TDelegate>(this MethodInfo method, object item) where TDelegate : Delegate
         {
             return Delegate.CreateDelegate(typeof(TDelegate), item, method) as TDelegate;
         }
