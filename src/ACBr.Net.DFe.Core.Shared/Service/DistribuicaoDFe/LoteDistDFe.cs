@@ -1,12 +1,12 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 04-26-2016
+// Created          : 12-01-2019
 //
 // Last Modified By : RFTD
-// Last Modified On : 04-26-2016
+// Last Modified On : 12-01-2019
 // ***********************************************************************
-// <copyright file="DFeItemAttribute.cs" company="ACBr.Net">
+// <copyright file="LoteDistDFe.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,42 +29,20 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
+using ACBr.Net.DFe.Core.Attributes;
+using ACBr.Net.DFe.Core.Serializer;
 
-namespace ACBr.Net.DFe.Core.Attributes
+namespace ACBr.Net.DFe.Core.Service
 {
-    /// <summary>
-    /// Class DFeItemAttribute.
-    /// </summary>
-    /// <seealso cref="System.Attribute" />
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class DFeItemAttribute : Attribute
+    public sealed class LoteDistDFe
     {
-        #region Constructors
+        [DFeAttribute(TipoCampo.Int, "NSU", Ocorrencia = Ocorrencia.Obrigatoria)]
+        public long NSU { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DFeItemAttribute" /> class.
-        /// </summary>
-        /// <param name="tipo">The tipo.</param>
-        /// <param name="name">The name.</param>
-        public DFeItemAttribute(Type tipo, string name)
-        {
-            Tipo = tipo;
-            Name = name;
-        }
+        [DFeAttribute(TipoCampo.Str, "schema", Ocorrencia = Ocorrencia.Obrigatoria)]
+        public string schema { get; set; }
 
-        #endregion Constructors
-
-        #region Propriedades
-
-        public Type Tipo { get; set; }
-
-        public string Name { get; set; }
-
-        public string Namespace { get; set; }
-
-        public bool IsValue { get; set; }
-
-        #endregion Propriedades
+        [DFeItemValue(Tipo = TipoCampo.Str)]
+        public string Xml { get; set; }
     }
 }

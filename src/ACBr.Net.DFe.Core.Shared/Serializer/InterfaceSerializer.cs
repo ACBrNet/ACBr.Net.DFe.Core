@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 
@@ -14,7 +15,10 @@ namespace ACBr.Net.DFe.Core.Serializer
             var value = prop.GetValue(parentObject, null);
             var objectType = ObjectType.From(value);
             var attributes = prop.GetAttributes<DFeItemAttribute>();
-            var itemAttribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType()) ?? attributes[0];
+            var itemAttribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType());
+
+            Guard.Against<ACBrDFeException>(itemAttribute == null, $"Nenhum atributo [{nameof(DFeItemAttribute)}] encontrado " +
+                                                                     $"para o objeto: {nameof(value.GetType)}");
 
             if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
             {

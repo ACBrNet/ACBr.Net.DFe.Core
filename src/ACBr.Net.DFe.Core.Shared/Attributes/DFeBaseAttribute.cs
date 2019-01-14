@@ -58,21 +58,21 @@ namespace ACBr.Net.DFe.Core
 
         #region Properties
 
-        public string Descricao { get; set; }
+        public TipoCampo Tipo { get; set; }
 
         public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Descricao { get; set; }
+
+        public int Ordem { get; set; }
 
         public int Max { get; set; }
 
         public int Min { get; set; }
 
-        public int Ordem { get; set; }
-
-        public string Name { get; set; }
-
         public Ocorrencia Ocorrencia { get; set; }
-
-        public TipoCampo Tipo { get; set; }
 
         #endregion Properties
     }

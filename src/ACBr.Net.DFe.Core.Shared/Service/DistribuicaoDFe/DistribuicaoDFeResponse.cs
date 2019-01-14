@@ -1,12 +1,12 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 04-26-2016
+// Created          : 12-01-2019
 //
 // Last Modified By : RFTD
-// Last Modified On : 04-26-2016
+// Last Modified On : 12-01-2019
 // ***********************************************************************
-// <copyright file="DFeItemAttribute.cs" company="ACBr.Net">
+// <copyright file="DistribuicaoDFeResponse.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,42 +29,13 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-
-namespace ACBr.Net.DFe.Core.Attributes
+namespace ACBr.Net.DFe.Core.Service
 {
-    /// <summary>
-    /// Class DFeItemAttribute.
-    /// </summary>
-    /// <seealso cref="System.Attribute" />
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class DFeItemAttribute : Attribute
+    public sealed class DistribuicaoDFeResponse : DFeResposta<DistribuicaoDFeResult>
     {
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DFeItemAttribute" /> class.
-        /// </summary>
-        /// <param name="tipo">The tipo.</param>
-        /// <param name="name">The name.</param>
-        public DFeItemAttribute(Type tipo, string name)
+        public DistribuicaoDFeResponse(string xmlEnvio, string xmlRetorno, string envelopeSoap, string respostaWs) :
+            base(xmlEnvio, xmlRetorno, envelopeSoap, respostaWs)
         {
-            Tipo = tipo;
-            Name = name;
         }
-
-        #endregion Constructors
-
-        #region Propriedades
-
-        public Type Tipo { get; set; }
-
-        public string Name { get; set; }
-
-        public string Namespace { get; set; }
-
-        public bool IsValue { get; set; }
-
-        #endregion Propriedades
     }
 }

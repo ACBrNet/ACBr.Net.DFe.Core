@@ -90,7 +90,7 @@ namespace ACBr.Net.DFe.Core.Extensions
             return method.ToDelegate<Func<string, object>>(item);
         }
 
-        public static object GetValueOrIndex(this PropertyInfo prop, object parent, int index)
+        public static object GetValueOrIndex(this PropertyInfo prop, object parent, int index = -1)
         {
             var value = prop.GetValue(parent, null);
             if (index > -1)

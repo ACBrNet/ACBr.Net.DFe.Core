@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeEnumAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeIgnoreAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeItemAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeItemValueAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeRootAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DFeSignInfoElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\Ocorrencia.cs" />
@@ -96,6 +97,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeSoap12ServiceClientBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeTipoServico.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\DFeWsCabecalho.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DistribuicaoDFe\DFeDistribuicaoServiceClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DistribuicaoDFe\DistribuicaoDFeResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DistribuicaoDFe\DistribuicaoDFeResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\DistribuicaoDFe\LoteDistDFe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SignDigest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XmlSchemaValidation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XmlSigning.cs" />

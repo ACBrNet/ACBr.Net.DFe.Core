@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Serializer;
@@ -58,7 +57,8 @@ namespace ACBr.Net.DFe.Core.Service
         [DFeIgnore]
         public string this[TTIpo tipo]
         {
-            get { return Enderecos?.SingleOrDefault(x => Equals(x.Key, tipo)).Value ?? string.Empty; }
+            get => Enderecos[tipo];
+            set => Enderecos[tipo] = value;
         }
 
         [DFeAttribute(TipoCampo.Enum, "Ambiente")]

@@ -85,7 +85,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             }
         }
 
-        private static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, Ocorrencia ocorrencia, int min, PropertyInfo prop, object item)
+        public static string ProcessValue(ref bool estaVazio, TipoCampo tipo, object valor, Ocorrencia ocorrencia, int min, PropertyInfo prop, object item)
         {
             var conteudoProcessado = string.Empty;
 
@@ -331,7 +331,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             return GetValue(tag.Tipo, value, item, prop);
         }
 
-        private static object GetValue(TipoCampo tipo, string valor, object item, PropertyInfo prop)
+        public static object GetValue(TipoCampo tipo, string valor, object item, PropertyInfo prop)
         {
             if (valor.IsEmpty()) return null;
 
@@ -340,7 +340,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             switch (tipo)
             {
                 case TipoCampo.Int:
-                    ret = valor.ToInt32();
+                    ret = prop.PropertyType is long ? valor.ToInt64() : valor.ToInt32();
                     break;
 
                 case TipoCampo.DatHor:

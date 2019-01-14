@@ -27,9 +27,9 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.4.1")]
-[assembly: AssemblyFileVersion("1.2.4.1")]
-[assembly: AssemblyInformationalVersion("1.2.4.1")]
+[assembly: AssemblyVersion("1.2.4.2")]
+[assembly: AssemblyFileVersion("1.2.4.2")]
+[assembly: AssemblyInformationalVersion("1.2.4.2")]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("d5613362-449b-4c9d-ac82-7e234cfe545a")]
