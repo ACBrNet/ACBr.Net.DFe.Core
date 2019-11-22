@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
+#if NETFULL
+
 namespace ACBr.Net.DFe.Core.Cryptography
 {
     /// <summary>
@@ -136,3 +138,5 @@ namespace ACBr.Net.DFe.Core.Cryptography
         }
     }
 }
+
+#endif

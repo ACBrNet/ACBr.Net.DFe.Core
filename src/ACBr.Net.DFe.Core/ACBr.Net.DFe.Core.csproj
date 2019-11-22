@@ -1,71 +1,71 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D5613362-449B-4C9D-AC82-7E234CFE545A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ACBr.Net.DFe.Core</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <AssemblyName>ACBr.Net.DFe.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.None.IncrementOnDemand</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>None.None.None.IncrementOnDemand</AssemblyFileVersionSettings>
-    <AssemblyInfoVersionSettings>None.None.None.IncrementOnDemand</AssemblyInfoVersionSettings>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\Net452\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Debug\Net452\ACBr.Net.DFe.Core.XML</DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\Net452\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Release\Net452\ACBr.Net.DFe.Core.XML</DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'COM Interop|AnyCPU'">
-    <OutputPath>..\..\bin\COM Interop\</OutputPath>
-    <DefineConstants>TRACE;COM_INTEROP</DefineConstants>
-    <DocumentationFile>..\..\bin\COM Interop\ACBr.Net.DFe.Core.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
+    <RootNamespace>ACBr.Net.DFe.Core</RootNamespace>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>acbr.net.snk</AssemblyOriginatorKeyFile>
+    <Copyright>Copyright © Grupo ACBr.Net 2014 - 2019</Copyright>
+    <Company>Grupo ACBr.Net</Company>
+    <Authors>Rafael Dias</Authors>
+    <PackageProjectUrl>https://acbrnet.github.io</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/7342977?v=3&amp;amp;s=200</PackageIconUrl>
+    <RepositoryUrl>https://github.com/ACBrNet/ACBr.Net.DFe.Core</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>ACBr.Net DFe</PackageTags>
+    <Description>Biblioteca para serialização e deserialização de xml e comunicação com os webservices</Description>
+    <NeutralLanguage>pt-BR</NeutralLanguage>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyVersion>1.2.4.2</AssemblyVersion>
+    <FileVersion>1.2.4.2</FileVersion>
+    <Version>1.2.4.2</Version>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>NETCORE;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net452'">
+    <DefineConstants>NET45;NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net452|AnyCPU'">
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DocumentationFile>..\..\bin\Debug\net452\ACBr.Net.DFe.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net452|AnyCPU'">
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DocumentationFile>..\..\bin\Release\net452\ACBr.Net.DFe.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DocumentationFile>..\..\bin\Debug\netstandard2.0\ACBr.Net.DFe.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DocumentationFile>..\..\bin\Release\netstandard2.0\ACBr.Net.DFe.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ACBr.Net.Core, Version=1.2.3.3, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.2.3.3\lib\net452\ACBr.Net.Core.dll</HintPath>
-    </Reference>
+    <PackageReference Include="ACBr.Net.Core" Version="1.2.3.3" />
+    <PackageReference Include="ExtraConstraints.Fody" Version="1.14.0" />
+    <PackageReference Include="Fody" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.6.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -78,31 +78,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\Shared\ACBr.Net.DFe.Core.AssemblyInfo.cs">
-      <Link>Properties\ACBr.Net.DFe.Core.AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Common\DFeReportClass.cs">
-      <SubType>ACBr.Net</SubType>
-    </Compile>
-    <Compile Include="Cryptography\RSAPKCS1SHA256SignatureDescription.cs" />
-    <Compile Include="XmlSigning.cs" />
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="acbr.net.snk" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="..\ACBr.Net.DFe.Core.Shared\ACBr.Net.DFe.Core.Shared.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
