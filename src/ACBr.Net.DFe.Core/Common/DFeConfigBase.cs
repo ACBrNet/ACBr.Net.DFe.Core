@@ -32,7 +32,6 @@
 using System;
 using System.ComponentModel;
 using ACBr.Net.Core;
-using ACBr.Net.Core.Exceptions;
 
 namespace ACBr.Net.DFe.Core.Common
 {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using ACBr.Net.Core.Exceptions;
+using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 

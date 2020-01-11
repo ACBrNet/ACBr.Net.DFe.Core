@@ -34,11 +34,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 using ACBr.Net.Core;
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Common;
-using ACBr.Net.DFe.Core.Extensions;
-
 using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Service

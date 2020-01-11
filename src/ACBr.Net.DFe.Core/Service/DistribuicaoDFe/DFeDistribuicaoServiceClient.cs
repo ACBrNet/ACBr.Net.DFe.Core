@@ -35,7 +35,6 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Xml;
 using ACBr.Net.Core;
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.DFe.Core.Extensions;

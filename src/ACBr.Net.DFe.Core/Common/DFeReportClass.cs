@@ -31,8 +31,11 @@
 
 using System.ComponentModel;
 using ACBr.Net.Core;
-using System.Drawing;
 using ACBr.Net.Core.Logging;
+
+#if NETFULL
+using System.Drawing;
+#endif
 
 namespace ACBr.Net.DFe.Core.Common
 {

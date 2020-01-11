@@ -29,11 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.DFe.Core.Attributes;
 using System;
 using System.Collections;
 using System.Reflection;
+using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Extensions

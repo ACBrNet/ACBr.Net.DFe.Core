@@ -35,7 +35,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using ACBr.Net.Core;
-using ACBr.Net.Core.Exceptions;
+
+#if NETFULL
+using ACBr.Net.Core.Extensions;
+#endif
 
 namespace ACBr.Net.DFe.Core.Common
 {
@@ -178,7 +181,7 @@ namespace ACBr.Net.DFe.Core.Common
 
             var ret = CertificadoDigital.SelecionarCertificado(Certificado);
 
-#if !NETSTANDARD2_0
+#if NETFULL
             if (!Senha.IsEmpty())
             {
                 ret.SetPin(Senha);

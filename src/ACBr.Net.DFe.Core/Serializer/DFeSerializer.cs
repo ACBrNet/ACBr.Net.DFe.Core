@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Extensions;
@@ -38,6 +37,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using ACBr.Net.Core;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {

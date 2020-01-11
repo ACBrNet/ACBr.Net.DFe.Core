@@ -29,11 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using ACBr.Net.Core;
 
 namespace ACBr.Net.DFe.Core
 {

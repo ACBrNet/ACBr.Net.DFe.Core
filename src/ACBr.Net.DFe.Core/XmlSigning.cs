@@ -36,7 +36,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
-using ACBr.Net.Core.Exceptions;
+using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.Core.Logging;
 using ACBr.Net.DFe.Core.Attributes;

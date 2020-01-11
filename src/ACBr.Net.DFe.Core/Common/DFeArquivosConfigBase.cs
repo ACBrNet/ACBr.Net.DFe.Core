@@ -36,7 +36,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ACBr.Net.Core;
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Common

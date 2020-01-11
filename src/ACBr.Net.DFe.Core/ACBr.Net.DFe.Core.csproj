@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
     <AssemblyName>ACBr.Net.DFe.Core</AssemblyName>
     <RootNamespace>ACBr.Net.DFe.Core</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>acbr.net.snk</AssemblyOriginatorKeyFile>
-    <Copyright>Copyright © Grupo ACBr.Net 2014 - 2019</Copyright>
+    <Copyright>Copyright © Grupo ACBr.Net 2014 - 2020</Copyright>
     <Company>Grupo ACBr.Net</Company>
     <Authors>Rafael Dias</Authors>
     <PackageProjectUrl>https://acbrnet.github.io</PackageProjectUrl>
@@ -18,9 +18,9 @@
     <Description>Biblioteca para serialização e deserialização de xml e comunicação com os webservices</Description>
     <NeutralLanguage>pt-BR</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyVersion>1.2.4.2</AssemblyVersion>
-    <FileVersion>1.2.4.2</FileVersion>
-    <Version>1.2.4.2</Version>
+    <AssemblyVersion>1.2.4.3</AssemblyVersion>
+    <FileVersion>1.2.4.3</FileVersion>
+    <Version>1.2.4.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
@@ -52,17 +52,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ACBr.Net.Core" Version="1.2.3.3" />
+    <PackageReference Include="ACBr.Net.Core" Version="1.2.3.5" />
     <PackageReference Include="ExtraConstraints.Fody" Version="1.14.0" />
-    <PackageReference Include="Fody" Version="6.0.5">
+    <PackageReference Include="Fody" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.6.0" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.6.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
