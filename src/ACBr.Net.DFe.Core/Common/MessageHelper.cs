@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 20-01-2020
 // ***********************************************************************
-// <copyright file="MessageExtensions.cs" company="ACBr.Net">
+// <copyright file="MessageHelper.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -33,13 +33,16 @@ using System.ServiceModel.Channels;
 using System.Xml;
 using ACBr.Net.Core;
 
-namespace ACBr.Net.DFe.Core.Extensions
+namespace ACBr.Net.DFe.Core.Common
 {
-    public static class MessageExtensions
+    public static class MessageHelper
     {
-        public static string ToXmlString(this Message message)
+        public static string ToXml(ref Message message)
         {
-            using (var copy = message.CreateBufferedCopy(int.MaxValue).CreateMessage())
+            var buffer = message.CreateBufferedCopy(int.MaxValue);
+            message = buffer.CreateMessage();
+
+            using (var copy = buffer.CreateMessage())
             using (var sw = new ACBrStringWriter())
             using (var writer = XmlWriter.Create(sw))
             {

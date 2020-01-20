@@ -35,7 +35,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
 using ACBr.Net.Core.Extensions;
-using ACBr.Net.DFe.Core.Extensions;
+using ACBr.Net.DFe.Core.Common;
 
 namespace ACBr.Net.DFe.Core.Service
 {
@@ -53,7 +53,7 @@ namespace ACBr.Net.DFe.Core.Service
 
         public object BeforeSendRequest(ref Message request, IClientChannel channel)
         {
-            var dfeArgs = new DFeMessageEventArgs(request.ToXmlString());
+            var dfeArgs = new DFeMessageEventArgs(MessageHelper.ToXml(ref request));
             this.Log().Debug(dfeArgs.Message);
             BeforeSendDFeRequest.Raise(this, dfeArgs);
             return null;
@@ -61,7 +61,7 @@ namespace ACBr.Net.DFe.Core.Service
 
         public void AfterReceiveReply(ref Message reply, object correlationState)
         {
-            var dfeArgs = new DFeMessageEventArgs(reply.ToXmlString());
+            var dfeArgs = new DFeMessageEventArgs(MessageHelper.ToXml(ref reply));
             this.Log().Debug(dfeArgs.Message);
             AfterReceiveDFeReply.Raise(this, dfeArgs);
         }
