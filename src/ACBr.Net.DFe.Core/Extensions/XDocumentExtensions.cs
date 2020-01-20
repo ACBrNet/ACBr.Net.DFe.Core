@@ -31,6 +31,7 @@
 
 using System;
 using System.Xml.Linq;
+using ACBr.Net.DFe.Core.Service;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {

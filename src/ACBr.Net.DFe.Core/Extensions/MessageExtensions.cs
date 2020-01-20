@@ -1,12 +1,12 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : ACBr.Net.DFe.Core
 // Author           : RFTD
-// Created          : 07-28-2016
+// Created          : 20-01-2020
 //
 // Last Modified By : RFTD
-// Last Modified On : 07-28-2016
+// Last Modified On : 20-01-2020
 // ***********************************************************************
-// <copyright file="DFeMessageInspector.cs" company="ACBr.Net">
+// <copyright file="MessageExtensions.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2016 Grupo ACBr.Net
 //
@@ -29,43 +29,25 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using ACBr.Net.Core.Logging;
-using System.ServiceModel;
+using System.IO;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Dispatcher;
-using ACBr.Net.Core.Extensions;
-using ACBr.Net.DFe.Core.Extensions;
+using System.Xml;
 
-namespace ACBr.Net.DFe.Core.Service
+namespace ACBr.Net.DFe.Core.Extensions
 {
-    internal class DFeMessageInspector : IClientMessageInspector, IACBrLog
+    public static class MessageExtensions
     {
-        #region Events
-
-        public EventHandler<DFeMessageEventArgs> BeforeSendDFeRequest;
-
-        public EventHandler<DFeMessageEventArgs> AfterReceiveDFeReply;
-
-        #endregion Events
-
-        #region Methods
-
-        public object BeforeSendRequest(ref Message request, IClientChannel channel)
+        public static string ToXmlString(this Message message)
         {
-            var dfeArgs = new DFeMessageEventArgs(request.ToXmlString());
-            this.Log().Debug(dfeArgs.Message);
-            BeforeSendDFeRequest.Raise(this, dfeArgs);
-            return null;
-        }
+            using (var copy = message.CreateBufferedCopy(int.MaxValue).CreateMessage())
+            using (var sw = new StringWriter())
+            using (var writer = XmlWriter.Create(sw))
+            {
+                copy.WriteMessage(writer);
+                writer.Flush();
 
-        public void AfterReceiveReply(ref Message reply, object correlationState)
-        {
-            var dfeArgs = new DFeMessageEventArgs(reply.ToXmlString());
-            this.Log().Debug(dfeArgs.Message);
-            AfterReceiveDFeReply.Raise(this, dfeArgs);
+                return writer.ToString();
+            }
         }
-
-        #endregion Methods
     }
 }
