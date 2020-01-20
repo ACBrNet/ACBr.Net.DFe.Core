@@ -279,7 +279,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
             {
-                return tag is DFeElementAttribute eAttribute ? (XObject)new XElement(eAttribute.Name + (XNamespace)eAttribute.Namespace) : new XAttribute(tag.Name, "");
+                return tag is DFeElementAttribute eAttribute ? (XObject)new XElement((XNamespace)eAttribute.Namespace + eAttribute.Name, "") : new XAttribute(tag.Name, "");
             }
 
             var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
@@ -295,12 +295,12 @@ namespace ACBr.Net.DFe.Core.Serializer
                     if (elementValue.IsCData())
                     {
                         elementValue = elementValue.RemoveCData();
-                        return new XElement(eAttribute.Name + aw, new XCData(elementValue));
+                        return new XElement(aw + eAttribute.Name, new XCData(elementValue));
                     }
                     else
                     {
-                        return eAttribute.UseCData ? new XElement(eAttribute.Name + aw, new XCData(elementValue)) :
-                                                     new XElement(eAttribute.Name + aw, elementValue);
+                        return eAttribute.UseCData ? new XElement(aw + eAttribute.Name, new XCData(elementValue)) :
+                                                     new XElement(aw + eAttribute.Name, elementValue);
                     }
 
                 default:
