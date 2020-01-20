@@ -29,9 +29,9 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.IO;
 using System.ServiceModel.Channels;
 using System.Xml;
+using ACBr.Net.Core;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
@@ -40,13 +40,13 @@ namespace ACBr.Net.DFe.Core.Extensions
         public static string ToXmlString(this Message message)
         {
             using (var copy = message.CreateBufferedCopy(int.MaxValue).CreateMessage())
-            using (var sw = new StringWriter())
+            using (var sw = new ACBrStringWriter())
             using (var writer = XmlWriter.Create(sw))
             {
                 copy.WriteMessage(writer);
                 writer.Flush();
 
-                return writer.ToString();
+                return sw.GetStringBuilder().ToString();
             }
         }
     }

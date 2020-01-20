@@ -277,13 +277,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             options.AddAlerta(tag.Id, tag.Name, tag.Descricao, alerta);
 
-            XObject xmlTag = null;
             if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
             {
-                xmlTag = tag is DFeElementAttribute ? (XObject)new XElement(tag.Name) : new XAttribute(tag.Name, "");
+                return tag is DFeElementAttribute eAttribute ? (XObject)new XElement(eAttribute.Name + (XNamespace)eAttribute.Namespace) : new XAttribute(tag.Name, "");
             }
-
-            if (estaVazio) return xmlTag;
 
             var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
             elementValue = options.RemoverEspacos ? elementValue.Trim() : elementValue;
@@ -292,16 +289,18 @@ namespace ACBr.Net.DFe.Core.Serializer
             {
                 case DFeAttributeAttribute _: return new XAttribute(tag.Name, elementValue);
                 case DFeDictionaryKeyAttribute keyAtt when keyAtt.AsAttribute: return new XAttribute(keyAtt.Name, elementValue);
-                case DFeElementAttribute elementAtt:
+                case DFeElementAttribute eAttribute:
+                    XNamespace aw = eAttribute.Namespace ?? string.Empty;
+
                     if (elementValue.IsCData())
                     {
                         elementValue = elementValue.RemoveCData();
-                        return new XElement(tag.Name, new XCData(elementValue));
+                        return new XElement(eAttribute.Name + aw, new XCData(elementValue));
                     }
                     else
                     {
-                        return elementAtt.UseCData ? new XElement(tag.Name, new XCData(elementValue)) :
-                                                 new XElement(tag.Name, elementValue);
+                        return eAttribute.UseCData ? new XElement(eAttribute.Name + aw, new XCData(elementValue)) :
+                                                     new XElement(eAttribute.Name + aw, elementValue);
                     }
 
                 default:
