@@ -29,6 +29,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System.IO;
 using System.ServiceModel.Channels;
 using System.Xml;
 using ACBr.Net.Core;
@@ -37,6 +38,11 @@ namespace ACBr.Net.DFe.Core.Common
 {
     public static class MessageHelper
     {
+        /// <summary>
+        /// Converte a message em uma Xml string.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public static string ToXml(ref Message message)
         {
             var buffer = message.CreateBufferedCopy(int.MaxValue);
@@ -50,6 +56,25 @@ namespace ACBr.Net.DFe.Core.Common
                 writer.Flush();
 
                 return sw.GetStringBuilder().ToString();
+            }
+        }
+
+        public static void SaveXml(ref Message message, string file)
+        {
+            using (var fs = new FileStream(file, FileMode.CreateNew))
+                SaveXml(ref message, fs);
+        }
+
+        public static void SaveXml(ref Message message, Stream stream)
+        {
+            var buffer = message.CreateBufferedCopy(int.MaxValue);
+            message = buffer.CreateMessage();
+
+            using (var copy = buffer.CreateMessage())
+            {
+                var writer = XmlWriter.Create(stream);
+                copy.WriteMessage(writer);
+                writer.Flush();
             }
         }
     }

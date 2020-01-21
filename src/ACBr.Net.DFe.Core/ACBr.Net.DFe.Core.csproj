@@ -18,9 +18,9 @@
     <Description>Biblioteca para serialização e deserialização de xml e comunicação com os webservices</Description>
     <NeutralLanguage>pt-BR</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyVersion>1.2.5.3</AssemblyVersion>
-    <FileVersion>1.2.5.3</FileVersion>
-    <Version>1.2.5.3</Version>
+    <AssemblyVersion>1.2.5.4</AssemblyVersion>
+    <FileVersion>1.2.5.4</FileVersion>
+    <Version>1.2.5.4</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">

@@ -195,24 +195,24 @@ namespace ACBr.Net.DFe.Core.Serializer
                     break;
 
                 case TipoCampo.Int:
-                    if (valor is int vInt)
+                    switch (valor)
                     {
-                        if (ocorrencia == Ocorrencia.MaiorQueZero && vInt == 0)
-                        {
+                        case long vLong when ocorrencia == Ocorrencia.MaiorQueZero && vLong == 0:
+                        case int vInt when ocorrencia == Ocorrencia.MaiorQueZero && vInt == 0:
                             estaVazio = true;
-                        }
-                        else
-                        {
+                            break;
+
+                        case long _:
+                        case int _:
                             conteudoProcessado = valor.ToString();
                             if (conteudoProcessado.Length < min)
-                            {
                                 conteudoProcessado = conteudoProcessado.ZeroFill(min);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        estaVazio = true;
+
+                            break;
+
+                        default:
+                            estaVazio = true;
+                            break;
                     }
                     break;
 
@@ -335,11 +335,10 @@ namespace ACBr.Net.DFe.Core.Serializer
             if (valor.IsEmpty()) return null;
 
             object ret;
-            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (tipo)
             {
                 case TipoCampo.Int:
-                    ret = prop.PropertyType is long ? valor.ToInt64() : valor.ToInt32();
+                    ret = prop.PropertyType == typeof(long) ? valor.ToInt64() : valor.ToInt32();
                     break;
 
                 case TipoCampo.DatHor:
