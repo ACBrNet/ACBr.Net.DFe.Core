@@ -251,7 +251,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 var element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault() ??
                               (XObject)parentElement.Attributes(tag.Name).FirstOrDefault();
 
-                return PrimitiveSerializer.Deserialize(tag, element, item, prop, options);
+                return PrimitiveSerializer.Deserialize(tag, element, item, prop);
             }
             catch (Exception e)
             {

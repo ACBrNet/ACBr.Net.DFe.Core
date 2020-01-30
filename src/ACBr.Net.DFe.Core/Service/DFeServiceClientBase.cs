@@ -37,79 +37,79 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Service
 {
-	/// <summary>
-	/// Class DFeServiceClientBase.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <seealso cref="System.ServiceModel.ClientBase{T}" />
-	/// <seealso cref="ACBr.Net.Core.Logging.IACBrLog" />
+    /// <summary>
+    /// Class DFeServiceClientBase.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="ClientBase{T}" />
+    /// <seealso cref="IACBrLog" />
 
-	public abstract class DFeServiceClientBase<T> : ClientBase<T>, IACBrLog, IDisposable where T : class
-	{
-		#region Constructors
+    public abstract class DFeServiceClientBase<T> : ClientBase<T>, IACBrLog, IDisposable where T : class
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Inicializa uma nova instancia da classe <see cref="DFeServiceClientBase{T}"/>.
-		/// </summary>
-		/// <param name="url"></param>
-		/// <param name="timeOut"></param>
-		/// <param name="certificado"></param>
-		protected DFeServiceClientBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(new BasicHttpBinding(), new EndpointAddress(url))
-		{
-			((BasicHttpBinding)Endpoint.Binding).UseDefaultWebProxy = true;
+        /// <summary>
+        /// Inicializa uma nova instancia da classe <see cref="DFeServiceClientBase{T}"/>.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="timeOut"></param>
+        /// <param name="certificado"></param>
+        protected DFeServiceClientBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(new BasicHttpBinding(), new EndpointAddress(url))
+        {
+            ((BasicHttpBinding)Endpoint.Binding).UseDefaultWebProxy = true;
 
-			if (ClientCredentials != null)
-			{
-				ClientCredentials.ClientCertificate.Certificate = certificado;
-				if (certificado != null)
-				{
-					((BasicHttpBinding)Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
-					((BasicHttpBinding)Endpoint.Binding).Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
-				}
-			}
+            if (ClientCredentials != null)
+            {
+                ClientCredentials.ClientCertificate.Certificate = certificado;
+                if (certificado != null)
+                {
+                    ((BasicHttpBinding)Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+                    ((BasicHttpBinding)Endpoint.Binding).Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+                }
+            }
 
-			var endpointInspector = new DFeInspectorBehavior((sender, args) => BeforeSendDFeRequest(args.Message),
-				(sender, args) => AfterReceiveDFeReply(args.Message));
+            var endpointInspector = new DFeInspectorBehavior((sender, args) => BeforeSendDFeRequest(args.Message),
+                (sender, args) => AfterReceiveDFeReply(args.Message));
 #if NETSTANDARD2_0
 			Endpoint.EndpointBehaviors.Add(endpointInspector);
 #else
-			Endpoint.Behaviors.Add(endpointInspector);
+            Endpoint.Behaviors.Add(endpointInspector);
 #endif
 
-			if (!timeOut.HasValue) return;
-			Endpoint.Binding.OpenTimeout = timeOut.Value;
-			Endpoint.Binding.ReceiveTimeout = timeOut.Value;
-			Endpoint.Binding.SendTimeout = timeOut.Value;
-		}
+            if (!timeOut.HasValue) return;
+            Endpoint.Binding.OpenTimeout = timeOut.Value;
+            Endpoint.Binding.ReceiveTimeout = timeOut.Value;
+            Endpoint.Binding.SendTimeout = timeOut.Value;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Methods
+        #region Methods
 
-		protected virtual void BeforeSendDFeRequest(string message)
-		{
-		}
+        protected virtual void BeforeSendDFeRequest(string message)
+        {
+        }
 
-		protected virtual void AfterReceiveDFeReply(string message)
-		{
-		}
+        protected virtual void AfterReceiveDFeReply(string message)
+        {
+        }
 
-		#endregion Methods
+        #endregion Methods
 
-		#region IDisposable
+        #region IDisposable
 
-		public void Dispose()
-		{
-			if (State == CommunicationState.Faulted)
-			{
-				((ICommunicationObject)this).Abort();
-			}
+        public void Dispose()
+        {
+            if (State == CommunicationState.Faulted)
+            {
+                ((ICommunicationObject)this).Abort();
+            }
 
-			if (State.IsIn(CommunicationState.Closed, CommunicationState.Closing)) return;
+            if (State.IsIn(CommunicationState.Closed, CommunicationState.Closing)) return;
 
-			((ICommunicationObject)this).Close();
-		}
+            ((ICommunicationObject)this).Close();
+        }
 
-		#endregion IDisposable
-	}
+        #endregion IDisposable
+    }
 }

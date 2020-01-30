@@ -195,6 +195,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     break;
 
                 case TipoCampo.Int:
+                case TipoCampo.Long:
                     switch (valor)
                     {
                         case long vLong when ocorrencia == Ocorrencia.MaiorQueZero && vLong == 0:
@@ -207,7 +208,6 @@ namespace ACBr.Net.DFe.Core.Serializer
                             conteudoProcessado = valor.ToString();
                             if (conteudoProcessado.Length < min)
                                 conteudoProcessado = conteudoProcessado.ZeroFill(min);
-
                             break;
 
                         default:
@@ -321,7 +321,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         /// <param name="prop">The property.</param>
         /// <param name="options">The options.</param>
         /// <returns>The deserialized fundamental primitive from the XElement.</returns>
-        public static object Deserialize(DFeBaseAttribute tag, XObject parentElement, object item, PropertyInfo prop, SerializerOptions options, int idx = -1)
+        public static object Deserialize(DFeBaseAttribute tag, XObject parentElement, object item, PropertyInfo prop)
         {
             if (parentElement == null) return null;
 
@@ -338,7 +338,11 @@ namespace ACBr.Net.DFe.Core.Serializer
             switch (tipo)
             {
                 case TipoCampo.Int:
-                    ret = prop.PropertyType == typeof(long) ? valor.ToInt64() : valor.ToInt32();
+                    ret = valor.ToInt32();
+                    break;
+
+                case TipoCampo.Long:
+                    ret = valor.ToInt64();
                     break;
 
                 case TipoCampo.DatHor:

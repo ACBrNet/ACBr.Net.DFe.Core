@@ -207,7 +207,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                         foreach (var property in properties.Where(x => x.HasAttribute<DFeAttributeAttribute>()))
                         {
                             var attTag = property.GetAttribute<DFeAttributeAttribute>();
-                            value = PrimitiveSerializer.Deserialize(attTag, element, obj, property, options);
+                            value = PrimitiveSerializer.Deserialize(attTag, element, obj, property);
                             property.SetValue(obj, value);
                         }
                     }
@@ -225,7 +225,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 {
                     foreach (var element in parent)
                     {
-                        var obj = PrimitiveSerializer.Deserialize(elementAtt, element, parentItem, prop, options);
+                        var obj = PrimitiveSerializer.Deserialize(elementAtt, element, parentItem, prop);
                         list.Add(obj);
                     }
                 }

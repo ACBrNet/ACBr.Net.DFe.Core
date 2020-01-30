@@ -150,19 +150,19 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (keyAtt.AsAttribute)
                 {
                     var keyElement = (XObject)element.Attributes(keyAtt.Name).FirstOrDefault();
-                    key = PrimitiveSerializer.Deserialize(keyAtt, keyElement, null, prop, options);
+                    key = PrimitiveSerializer.Deserialize(keyAtt, keyElement, null, prop);
                     value = valueType == ObjectType.PrimitiveType ?
-                        PrimitiveSerializer.Deserialize(valueAtt, element, parentItem, prop, options) :
+                        PrimitiveSerializer.Deserialize(valueAtt, element, parentItem, prop) :
                         ObjectSerializer.Deserialize(args[1], element, options);
                 }
                 else
                 {
                     key = keyType == ObjectType.PrimitiveType ?
-                        PrimitiveSerializer.Deserialize(keyAtt, element.ElementAnyNs(keyAtt.Name), parentItem, prop, options) :
+                        PrimitiveSerializer.Deserialize(keyAtt, element.ElementAnyNs(keyAtt.Name), parentItem, prop) :
                         ObjectSerializer.Deserialize(args[0], element.ElementAnyNs(keyAtt.Name), options);
 
                     value = valueType == ObjectType.PrimitiveType ?
-                        PrimitiveSerializer.Deserialize(valueAtt, element.ElementAnyNs(valueAtt.Name), parentItem, prop, options) :
+                        PrimitiveSerializer.Deserialize(valueAtt, element.ElementAnyNs(valueAtt.Name), parentItem, prop) :
                         ObjectSerializer.Deserialize(args[1], element.ElementAnyNs(valueAtt.Name), options);
                 }
 
