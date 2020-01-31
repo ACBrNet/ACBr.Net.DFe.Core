@@ -31,6 +31,7 @@
 
 using System.IO;
 using System.ServiceModel.Channels;
+using System.Text;
 using System.Xml;
 using ACBr.Net.Core;
 
@@ -45,18 +46,19 @@ namespace ACBr.Net.DFe.Core.Common
         /// <returns></returns>
         public static string ToXml(ref Message message)
         {
-            var buffer = message.CreateBufferedCopy(int.MaxValue);
-            message = buffer.CreateMessage();
-
-            using (var copy = buffer.CreateMessage())
+            string messageXml;
             using (var sw = new ACBrStringWriter())
             using (var writer = XmlWriter.Create(sw))
             {
-                copy.WriteMessage(writer);
+                message.WriteMessage(writer);
                 writer.Flush();
 
-                return sw.GetStringBuilder().ToString();
+                messageXml = sw.GetStringBuilder().ToString();
             }
+
+            var reader = XmlReader.Create(new StringReader(messageXml));
+            message = Message.CreateMessage(reader, int.MaxValue, message.Version);
+            return messageXml;
         }
 
         public static void SaveXml(ref Message message, string file)
