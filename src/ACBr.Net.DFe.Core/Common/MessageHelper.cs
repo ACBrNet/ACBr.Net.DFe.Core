@@ -57,7 +57,19 @@ namespace ACBr.Net.DFe.Core.Common
             }
 
             var reader = XmlReader.Create(new StringReader(messageXml));
-            message = Message.CreateMessage(reader, int.MaxValue, message.Version);
+            var copy = Message.CreateMessage(reader, int.MaxValue, message.Version);
+
+            copy.Headers.Clear();
+            copy.Headers.CopyHeadersFrom(message);
+
+            foreach (var property in message.Properties)
+            {
+                copy.Properties[property.Key] = property.Value;
+            }
+
+            message.Close();
+            message = copy;
+
             return messageXml;
         }
 
