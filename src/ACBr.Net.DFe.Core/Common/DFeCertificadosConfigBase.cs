@@ -213,14 +213,18 @@ namespace ACBr.Net.DFe.Core.Common
                 {
                     if (cert != null && cert.IsA3())
                     {
+#if NETFULL
                         cert.ForceUnload();
+#else
+                        cert.Dispose();
+#endif
                     }
                     else
                     {
                         cert?.Reset();
                     }
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     //
                 }
