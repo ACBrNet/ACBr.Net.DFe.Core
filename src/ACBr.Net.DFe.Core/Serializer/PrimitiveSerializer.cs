@@ -282,6 +282,8 @@ namespace ACBr.Net.DFe.Core.Serializer
                 return tag is DFeElementAttribute eAttribute ? (XObject)new XElement((XNamespace)eAttribute.Namespace + eAttribute.Name, "") : new XAttribute(tag.Name, "");
             }
 
+            if (estaVazio) return null;
+
             var elementValue = options.RemoverAcentos ? conteudoProcessado.RemoveAccent() : conteudoProcessado;
             elementValue = options.RemoverEspacos ? elementValue.Trim() : elementValue;
 

@@ -69,7 +69,7 @@ namespace ACBr.Net.DFe.Core
                 store.Open(OpenFlags.MaxAllowed | OpenFlags.ReadOnly);
 
                 var certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now, true)
-                    .Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
+                                                     .Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
 
                 X509Certificate2Collection certificadosSelecionados;
 
@@ -129,7 +129,7 @@ namespace ACBr.Net.DFe.Core
             return cert;
         }
 
-#if !NETSTANDARD2_0
+#if NETFULL
 
         /// <summary>
         /// Exibi o certificado usando a ui nativa do windows.
