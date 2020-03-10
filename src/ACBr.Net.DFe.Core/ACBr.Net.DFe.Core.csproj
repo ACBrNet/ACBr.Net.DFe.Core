@@ -18,8 +18,8 @@
     <Description>Biblioteca para serialização e deserialização de xml e comunicação com os webservices</Description>
     <NeutralLanguage>pt-BR</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyVersion>1.2.7.0</AssemblyVersion>
-    <FileVersion>1.2.7.0</FileVersion>
+    <AssemblyVersion>1.2.7.1</AssemblyVersion>
+    <FileVersion>1.2.7.1</FileVersion>
     <Version>1.2.7.0</Version>
   </PropertyGroup>
 
@@ -52,11 +52,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ACBr.Net.Core" Version="1.2.4" />
+    <PackageReference Include="ACBr.Net.Core" Version="1.2.4.1" />
     <PackageReference Include="ExtraConstraints.Fody" Version="1.14.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Fody" Version="6.1.0">
+    <PackageReference Include="Fody" Version="6.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
