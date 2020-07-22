@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
+#if NETFULL
+
 namespace ACBr.Net.DFe.Core.Cryptography
 {
     /// <summary>
@@ -71,13 +73,13 @@ namespace ACBr.Net.DFe.Core.Cryptography
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SHA", Justification = "This casing is to match the use of SHA throughout the framework")]
     public sealed class RSAPKCS1SHA256SignatureDescription : SignatureDescription
     {
-        #region Fields
+#region Fields
 
         private const int PROV_RSA_AES = 24;
 
-        #endregion Fields
+#endregion Fields
 
-        #region Constructors
+#region Constructors
 
         /// <inheritdoc />
         /// <summary>
@@ -98,7 +100,7 @@ namespace ACBr.Net.DFe.Core.Cryptography
             DeformatterAlgorithm = typeof(RSAPKCS1SignatureDeformatter).FullName;
         }
 
-        #endregion Constructors
+#endregion Constructors
 
         /// <inheritdoc />
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
@@ -136,3 +138,5 @@ namespace ACBr.Net.DFe.Core.Cryptography
         }
     }
 }
+
+#endif
