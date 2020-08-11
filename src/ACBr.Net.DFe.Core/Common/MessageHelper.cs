@@ -31,7 +31,6 @@
 
 using System.IO;
 using System.ServiceModel.Channels;
-using System.Text;
 using System.Xml;
 using ACBr.Net.Core;
 
