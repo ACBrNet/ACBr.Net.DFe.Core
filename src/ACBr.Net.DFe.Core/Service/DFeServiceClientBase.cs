@@ -56,20 +56,21 @@ namespace ACBr.Net.DFe.Core.Service
         /// <param name="certificado"></param>
         protected DFeServiceClientBase(string url, TimeSpan? timeOut = null, X509Certificate2 certificado = null) : base(new BasicHttpBinding(), new EndpointAddress(url))
         {
-            ((BasicHttpBinding)Endpoint.Binding).UseDefaultWebProxy = true;
+            if (!(Endpoint?.Binding is BasicHttpBinding binding)) return;
+
+            binding.UseDefaultWebProxy = true;
 
             if (ClientCredentials != null)
-            {
                 ClientCredentials.ClientCertificate.Certificate = certificado;
-                if (certificado != null)
-                {
-                    ((BasicHttpBinding)Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
-                    ((BasicHttpBinding)Endpoint.Binding).Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
-                }
-            }
+
+            if (url.Trim().ToLower().StartsWith("https"))
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
+
+            if (certificado != null)
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
             var endpointInspector = new DFeInspectorBehavior((sender, args) => BeforeSendDFeRequest(args.Message),
-                (sender, args) => AfterReceiveDFeReply(args.Message));
+                                                             (sender, args) => AfterReceiveDFeReply(args.Message));
 #if NETSTANDARD2_0
 			Endpoint.EndpointBehaviors.Add(endpointInspector);
 #else
@@ -77,19 +78,28 @@ namespace ACBr.Net.DFe.Core.Service
 #endif
 
             if (!timeOut.HasValue) return;
-            Endpoint.Binding.OpenTimeout = timeOut.Value;
-            Endpoint.Binding.ReceiveTimeout = timeOut.Value;
-            Endpoint.Binding.SendTimeout = timeOut.Value;
+
+            binding.OpenTimeout = timeOut.Value;
+            binding.ReceiveTimeout = timeOut.Value;
+            binding.SendTimeout = timeOut.Value;
         }
 
         #endregion Constructors
 
         #region Methods
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
         protected virtual void BeforeSendDFeRequest(string message)
         {
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
         protected virtual void AfterReceiveDFeReply(string message)
         {
         }
@@ -98,16 +108,15 @@ namespace ACBr.Net.DFe.Core.Service
 
         #region IDisposable
 
+        /// <inheritdoc />
         public void Dispose()
         {
             if (State == CommunicationState.Faulted)
-            {
-                ((ICommunicationObject)this).Abort();
-            }
+                Abort();
 
             if (State.IsIn(CommunicationState.Closed, CommunicationState.Closing)) return;
 
-            ((ICommunicationObject)this).Close();
+            Close();
         }
 
         #endregion IDisposable
