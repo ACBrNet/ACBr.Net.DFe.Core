@@ -97,7 +97,14 @@ namespace ACBr.Net.DFe.Core
                     }
                 });
 
-                var settings = new XmlReaderSettings { ValidationType = ValidationType.Schema };
+                var settings = new XmlReaderSettings
+                {
+                    ValidationType = ValidationType.Schema,
+                    Schemas =
+                    {
+                        XmlResolver = new XmlUrlResolver()
+                    }
+                };
                 settings.Schemas.Add(xmlSchema);
 
                 using (var xmlReader = XmlReader.Create(new StringReader(arquivoXml), settings))

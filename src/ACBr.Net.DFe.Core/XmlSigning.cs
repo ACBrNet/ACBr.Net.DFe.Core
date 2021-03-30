@@ -4,7 +4,7 @@
 // Created          : 12-27-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 12-27-2017
+// Last Modified On : 09-22-2020
 // ***********************************************************************
 // <copyright file="XmlSigning.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -81,19 +81,21 @@ namespace ACBr.Net.DFe.Core
         /// <param name="infoElement">O elemento a ser assinado.</param>
         /// <param name="pCertificado">O certificado.</param>
         /// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
+        /// <param name="identado">Se for <c>true</c> vai identar o xml de retorno</param>
+        /// <param name="showDeclaration">Se for <c>true</c> vai incluir a declaração do xml</param>
         /// <param name="digest">Algoritmo usando para gerar o hash por padrão SHA1.</param>
         /// <returns>System.String.</returns>
         /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
         /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
         public static string AssinarXml(string xml, string docElement, string infoElement, X509Certificate2 pCertificado,
-            bool comments = false, SignDigest digest = SignDigest.SHA1)
+            bool comments = false, bool identado = false, bool showDeclaration = true, SignDigest digest = SignDigest.SHA1)
         {
             try
             {
                 var xmlDoc = new XmlDocument { PreserveWhitespace = true };
                 xmlDoc.LoadXml(xml);
-                AssinarDocumento(xmlDoc, docElement, infoElement, "Id", pCertificado, comments);
-                return xmlDoc.AsString();
+                AssinarDocumento(xmlDoc, docElement, infoElement, "Id", pCertificado, comments, digest);
+                return xmlDoc.AsString(identado, showDeclaration);
             }
             catch (Exception ex)
             {
@@ -109,12 +111,14 @@ namespace ACBr.Net.DFe.Core
         /// <param name="infoElement">O elemento a ser assinado.</param>
         /// <param name="certificado">O certificado.</param>
         /// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
+        /// <param name="identado">Se for <c>true</c> vai identar o xml de retorno</param>
+        /// <param name="showDeclaration">Se for <c>true</c> vai incluir a declaração do xml</param>
         /// <param name="digest">Algoritmo usando para gerar o hash por padrão SHA1.</param>
         /// <returns>System.String.</returns>
         /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
         /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
         public static string AssinarXmlTodos(string xml, string docElement, string infoElement, X509Certificate2 certificado,
-            bool comments = false, SignDigest digest = SignDigest.SHA1)
+            bool comments = false, bool identado = false, bool showDeclaration = true, SignDigest digest = SignDigest.SHA1)
         {
             try
             {
@@ -129,14 +133,14 @@ namespace ACBr.Net.DFe.Core
                 {
                     var xmlDoc = new XmlDocument { PreserveWhitespace = true };
                     xmlDoc.LoadXml(element.OuterXml);
-                    AssinarDocumento(xmlDoc, docElement, infoElement, "Id", certificado, comments);
+                    AssinarDocumento(xmlDoc, docElement, infoElement, "Id", certificado, comments, digest);
 
                     // ReSharper disable once AssignNullToNotNullAttribute
                     var signedElement = doc.ImportNode(xmlDoc.DocumentElement, true);
                     element.ParentNode?.ReplaceChild(signedElement, element);
                 }
 
-                return doc.AsString();
+                return doc.AsString(identado, showDeclaration);
             }
             catch (Exception ex)
             {
@@ -181,8 +185,9 @@ namespace ACBr.Net.DFe.Core
         /// <param name="comments">if set to <c>true</c> [comments].</param>
         /// <param name="digest">The digest.</param>
         /// <param name="options">The options.</param>
+        /// <param name="signedXml"></param>
         /// <returns>DFeSignature.</returns>
-        public static DFeSignature AssinarDocumento<TDocument>(DFeSignDocument<TDocument> document,
+        public static DFeSignature AssinarDocumento<TDocument>(this DFeSignDocument<TDocument> document,
             X509Certificate2 certificado, bool comments, SignDigest digest,
             DFeSaveOptions options, out string signedXml) where TDocument : class
         {
@@ -197,13 +202,20 @@ namespace ACBr.Net.DFe.Core
 
             // Adiciona a assinatura no documento e retorna o xml assinado no parametro signedXml
             var element = xmlDoc.ImportNode(xmlSignature, true);
-            xmlDoc.DocumentElement.AppendChild(element);
-            signedXml = xmlDoc.AsString();
+            xmlDoc.DocumentElement?.AppendChild(element);
+            signedXml = xmlDoc.AsString(!options.HasFlag(DFeSaveOptions.DisableFormatting), !options.HasFlag(DFeSaveOptions.OmitDeclaration));
 
             return DFeSignature.Load(xmlSignature.OuterXml);
         }
 
-        public static bool ValidarAssinatura<TDocument>(DFeSignDocument<TDocument> document, bool gerarXml) where TDocument : class
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="gerarXml"></param>
+        /// <typeparam name="TDocument"></typeparam>
+        /// <returns></returns>
+        public static bool ValidarAssinatura<TDocument>(this DFeSignDocument<TDocument> document, bool gerarXml) where TDocument : class
         {
             var xml = document.Xml.IsEmpty() || gerarXml ? document.GetXml(DFeSaveOptions.DisableFormatting, Encoding.UTF8) : document.Xml;
             var xmlDoc = new XmlDocument { PreserveWhitespace = true };
@@ -212,7 +224,7 @@ namespace ACBr.Net.DFe.Core
         }
 
         private static XmlElement GerarAssinatura(XmlDocument doc, string infoElement, string signAtribute,
-            X509Certificate2 certificado, bool comments = false, SignDigest digest = SignDigest.SHA1)
+            X509Certificate2 certificado, bool comments, SignDigest digest)
         {
             Guard.Against<ArgumentException>(!infoElement.IsEmpty() && doc.GetElementsByTagName(infoElement).Count != 1, "Referencia invalida ou não é unica.");
 
@@ -255,6 +267,38 @@ namespace ACBr.Net.DFe.Core
             return signedDocument.GetXml();
         }
 
+        /// <summary>
+        /// Validar a assinatura do Xml
+        /// </summary>
+        /// <param name="doc">o documento xml</param>
+        /// <returns></returns>
+        public static bool ValidarAssinatura(XmlDocument doc)
+        {
+            try
+            {
+                var signElement = doc.GetElementsByTagName("Signature");
+                Guard.Against<ACBrDFeException>(signElement.Count < 1, "Verificação falhou: Elemento [Signature] não encontrado no documento.");
+                Guard.Against<ACBrDFeException>(signElement.Count > 1, "Verificação falhou: Mais de um elemento [Signature] encontrado no documento.");
+
+                var certificateElement = doc.GetElementsByTagName("X509Certificate");
+                Guard.Against<ACBrDFeException>(certificateElement.Count < 1, "Verificação falhou: Elemento [X509Certificate] não encontrado no documento.");
+                Guard.Against<ACBrDFeException>(certificateElement.Count > 1, "Verificação falhou: Mais de um elemento [X509Certificate] encontrado no documento.");
+
+                var signedXml = new SignedXml(doc);
+                signedXml.LoadXml((XmlElement)signElement[0]);
+
+                var certificate = new X509Certificate2(Convert.FromBase64String(certificateElement[0].InnerText));
+
+                return signedXml.CheckSignature(certificate, true);
+            }
+            catch (Exception exception)
+            {
+                var log = LoggerProvider.LoggerFor(typeof(XmlSigning));
+                log.Error("Erro ao validar a assinatura.", exception);
+                return false;
+            }
+        }
+
         private static string GetSignatureMethod(SignDigest digest)
         {
             switch (digest)
@@ -282,39 +326,6 @@ namespace ACBr.Net.DFe.Core
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(digest), digest, null);
-            }
-        }
-
-        /// <summary>
-        /// Validar a assinatura do Xml
-        /// </summary>
-        /// <param name="doc">o documento xml</param>
-        /// <param name="docElement">O elemento principal do xml onde esta a tag Signature.</param>
-        /// <returns></returns>
-        public static bool ValidarAssinatura(XmlDocument doc)
-        {
-            try
-            {
-                var signElement = doc.GetElementsByTagName("Signature");
-                Guard.Against<ACBrDFeException>(signElement.Count < 1, "Verificação falhou: Elemento [Signature] não encontrado no documento.");
-                Guard.Against<ACBrDFeException>(signElement.Count > 1, "Verificação falhou: Mais de um elemento [Signature] encontrado no documento.");
-
-                var certificateElement = doc.GetElementsByTagName("X509Certificate");
-                Guard.Against<ACBrDFeException>(certificateElement.Count < 1, "Verificação falhou: Elemento [X509Certificate] não encontrado no documento.");
-                Guard.Against<ACBrDFeException>(certificateElement.Count > 1, "Verificação falhou: Mais de um elemento [X509Certificate] encontrado no documento.");
-
-                var signedXml = new SignedXml(doc);
-                signedXml.LoadXml((XmlElement)signElement[0]);
-
-                var certificate = new X509Certificate2(Convert.FromBase64String(certificateElement[0].InnerText));
-
-                return signedXml.CheckSignature(certificate, true);
-            }
-            catch (Exception exception)
-            {
-                var log = LoggerProvider.LoggerFor(typeof(XmlSigning));
-                log.Error("Erro ao validar a assinatura.", exception);
-                return false;
             }
         }
 
