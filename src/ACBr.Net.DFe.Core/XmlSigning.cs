@@ -90,11 +90,32 @@ namespace ACBr.Net.DFe.Core
         public static string AssinarXml(string xml, string docElement, string infoElement, X509Certificate2 pCertificado,
             bool comments = false, bool identado = false, bool showDeclaration = true, SignDigest digest = SignDigest.SHA1)
         {
+            return AssinarXml(xml, docElement, infoElement, "Id", pCertificado, comments, identado, showDeclaration, digest);
+        }
+
+        /// <summary>
+        /// Assina a XML usando o certificado informado.
+        /// </summary>
+        /// <param name="xml">O Xml.</param>
+        /// <param name="docElement">O elemento principal do xml a ser assinado.</param>
+        /// <param name="infoElement">O elemento a ser assinado.</param>
+        /// <param name="signAtribute">O atributo do elemento a ser assinado.</param>
+        /// <param name="pCertificado">O certificado.</param>
+        /// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
+        /// <param name="identado">Se for <c>true</c> vai identar o xml de retorno</param>
+        /// <param name="showDeclaration">Se for <c>true</c> vai incluir a declaração do xml</param>
+        /// <param name="digest">Algoritmo usando para gerar o hash por padrão SHA1.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+        /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+        public static string AssinarXml(string xml, string docElement, string infoElement, string signAtribute, X509Certificate2 pCertificado,
+            bool comments = false, bool identado = false, bool showDeclaration = true, SignDigest digest = SignDigest.SHA1)
+        {
             try
             {
                 var xmlDoc = new XmlDocument { PreserveWhitespace = true };
                 xmlDoc.LoadXml(xml);
-                AssinarDocumento(xmlDoc, docElement, infoElement, "Id", pCertificado, comments, digest);
+                AssinarDocumento(xmlDoc, docElement, infoElement, signAtribute, pCertificado, comments, digest);
                 return xmlDoc.AsString(identado, showDeclaration);
             }
             catch (Exception ex)
@@ -120,20 +141,50 @@ namespace ACBr.Net.DFe.Core
         public static string AssinarXmlTodos(string xml, string docElement, string infoElement, X509Certificate2 certificado,
             bool comments = false, bool identado = false, bool showDeclaration = true, SignDigest digest = SignDigest.SHA1)
         {
+            return AssinarXmlTodos(xml, docElement, infoElement, "Id", certificado, comments, identado, showDeclaration, digest);
+        }
+
+        /// <summary>
+        /// Assina Multiplos elementos dentro da Xml.
+        /// </summary>
+        /// <param name="xml">O Xml.</param>
+        /// <param name="docElement">O elemento principal do xml a ser assinado.</param>
+        /// <param name="infoElement">O elemento a ser assinado.</param>
+        /// <param name="signAtribute">O atributo do elemento a ser assinado.</param>
+        /// <param name="certificado">O certificado.</param>
+        /// <param name="comments">Se for <c>true</c> vai inserir a tag #withcomments no transform.</param>
+        /// <param name="identado">Se for <c>true</c> vai identar o xml de retorno</param>
+        /// <param name="showDeclaration">Se for <c>true</c> vai incluir a declaração do xml</param>
+        /// <param name="digest">Algoritmo usando para gerar o hash por padrão SHA1.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+        /// <exception cref="ACBrDFeException">Erro ao efetuar assinatura digital.</exception>
+        public static string AssinarXmlTodos(string xml, string docElement, string infoElement, string signAtribute, X509Certificate2 certificado,
+            bool comments = false, bool identado = false, bool showDeclaration = true, SignDigest digest = SignDigest.SHA1)
+        {
             try
             {
                 var doc = new XmlDocument();
                 doc.LoadXml(xml);
 
-                var xmlElements = doc.GetElementsByTagName(docElement).Cast<XmlElement>()
-                    .Where(x => x.GetElementsByTagName(infoElement).Count == 1).ToArray();
-                Guard.Against<ACBrDFeException>(!xmlElements.Any(), "Nome do elemento de assinatura incorreto");
+                XmlElement[] xmlElements;
+
+                if (infoElement.IsEmpty())
+                {
+                    xmlElements = doc.GetElementsByTagName(docElement).Cast<XmlElement>().ToArray();
+                }
+                else
+                {
+                    xmlElements = doc.GetElementsByTagName(docElement).Cast<XmlElement>()
+                        .Where(x => x.GetElementsByTagName(infoElement).Count == 1).ToArray();
+                    Guard.Against<ACBrDFeException>(!xmlElements.Any(), "Nome do elemento de assinatura incorreto");
+                }
 
                 foreach (var element in xmlElements)
                 {
                     var xmlDoc = new XmlDocument { PreserveWhitespace = true };
                     xmlDoc.LoadXml(element.OuterXml);
-                    AssinarDocumento(xmlDoc, docElement, infoElement, "Id", certificado, comments, digest);
+                    AssinarDocumento(xmlDoc, docElement, infoElement, signAtribute, certificado, comments, digest);
 
                     // ReSharper disable once AssignNullToNotNullAttribute
                     var signedElement = doc.ImportNode(xmlDoc.DocumentElement, true);
