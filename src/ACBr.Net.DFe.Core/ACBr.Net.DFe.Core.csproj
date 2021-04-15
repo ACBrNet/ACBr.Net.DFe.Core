@@ -20,7 +20,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyVersion>1.2.8.0</AssemblyVersion>
     <FileVersion>1.2.8.0</FileVersion>
-    <Version>1.2.8.2</Version>
+    <Version>1.2.8.3</Version>
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
@@ -61,7 +61,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ACBr.Net.Core" Version="1.2.4.1" />
+    <PackageReference Include="ACBr.Net.Core" Version="1.2.5" />
     <PackageReference Include="ExtraConstraints.Fody" Version="1.14.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
