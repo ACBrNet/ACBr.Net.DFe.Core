@@ -71,5 +71,11 @@ namespace ACBr.Net.DFe.Core.Attributes
         }
 
         #endregion Constructors
+
+        #region Prperties
+
+        public string ElementName { get; set; }
+
+        #endregion Prperties
     }
 }

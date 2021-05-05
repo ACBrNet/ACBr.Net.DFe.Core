@@ -61,10 +61,8 @@ namespace ACBr.Net.DFe.Core.Common
             copy.Headers.Clear();
             copy.Headers.CopyHeadersFrom(message);
 
-            foreach (var property in message.Properties)
-            {
-                copy.Properties[property.Key] = property.Value;
-            }
+            copy.Properties.Clear();
+            copy.Properties.CopyProperties(message.Properties);
 
             message.Close();
             message = copy;
@@ -75,20 +73,33 @@ namespace ACBr.Net.DFe.Core.Common
         public static void SaveXml(ref Message message, string file)
         {
             using (var fs = new FileStream(file, FileMode.CreateNew))
+            {
                 SaveXml(ref message, fs);
+                fs.Flush();
+            }
         }
 
         public static void SaveXml(ref Message message, Stream stream)
         {
-            var buffer = message.CreateBufferedCopy(int.MaxValue);
-            message = buffer.CreateMessage();
-
-            using (var copy = buffer.CreateMessage())
+            using (var sw = new ACBrStringWriter())
+            using (var writer = XmlWriter.Create(stream))
             {
-                var writer = XmlWriter.Create(stream);
-                copy.WriteMessage(writer);
+                message.WriteMessage(writer);
                 writer.Flush();
             }
+
+            stream.Position = 0;
+            var reader = XmlReader.Create(stream);
+            var copy = Message.CreateMessage(reader, int.MaxValue, message.Version);
+
+            copy.Headers.Clear();
+            copy.Headers.CopyHeadersFrom(message);
+
+            copy.Properties.Clear();
+            copy.Properties.CopyProperties(message.Properties);
+
+            message.Close();
+            message = copy;
         }
     }
 }

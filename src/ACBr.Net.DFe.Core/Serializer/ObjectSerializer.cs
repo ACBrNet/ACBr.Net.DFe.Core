@@ -66,7 +66,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
                     .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
 
-                foreach (var prop in properties)
+                foreach (var prop in properties.Where(x => !x.HasAttribute<DFeAttributeAttribute>()).AsParallel())
                 {
                     if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
 
@@ -79,6 +79,28 @@ namespace ACBr.Net.DFe.Core.Serializer
                             objectElement.AddChild(child);
                         else
                             objectElement.AddAttribute((XAttribute)element);
+                    }
+                }
+
+                foreach (var prop in properties.Where(x => x.HasAttribute<DFeAttributeAttribute>()).AsParallel())
+                {
+                    if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
+
+                    var elements = (IEnumerable<XAttribute>)Serialize(prop, value, options);
+                    if (elements == null) continue;
+
+                    var att = prop.GetAttribute<DFeAttributeAttribute>();
+
+                    foreach (var element in elements)
+                    {
+                        if (att.ElementName.IsEmpty())
+                        {
+                            objectElement.AddAttribute(element);
+                            continue;
+                        }
+
+                        var attElement = objectElement.ElementAnyNs(att.ElementName);
+                        attElement.AddAttribute(element);
                     }
                 }
 
@@ -185,7 +207,8 @@ namespace ACBr.Net.DFe.Core.Serializer
         {
             try
             {
-                var tag = prop.HasAttribute<DFeElementAttribute>() ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>() : prop.GetAttribute<DFeAttributeAttribute>();
+                var tag = prop.HasAttribute<DFeElementAttribute>() ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>() :
+                                                                                       prop.GetAttribute<DFeAttributeAttribute>();
 
                 var objectType = ObjectType.From(prop.PropertyType);
                 if (objectType == ObjectType.DictionaryType)
@@ -248,8 +271,19 @@ namespace ACBr.Net.DFe.Core.Serializer
                     return Deserialize(prop.PropertyType, xElement, options);
                 }
 
-                var element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault() ??
-                              (XObject)parentElement.Attributes(tag.Name).FirstOrDefault();
+                XObject element;
+
+                if (tag is DFeAttributeAttribute att)
+                {
+                    if (att.ElementName.IsEmpty())
+                        element = (XObject)parentElement.Attributes(att.Name).FirstOrDefault();
+                    else
+                        element = (XObject)parentElement.ElementAnyNs(att.ElementName).Attributes(att.Name).FirstOrDefault();
+                }
+                else
+                {
+                    element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
+                }
 
                 return PrimitiveSerializer.Deserialize(tag, element, item, prop);
             }
