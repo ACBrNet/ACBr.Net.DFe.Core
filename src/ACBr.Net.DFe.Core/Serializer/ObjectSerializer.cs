@@ -66,35 +66,19 @@ namespace ACBr.Net.DFe.Core.Serializer
                     .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
                     .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
 
-                foreach (var prop in properties.Where(x => x.HasAttribute<DFeElementAttribute>()).AsParallel())
+                foreach (var prop in properties.AsParallel())
                 {
                     if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
 
                     var elements = Serialize(prop, value, options);
                     if (elements == null) continue;
 
-                    objectElement.AddChild(elements.Cast<XElement>().ToArray());
-                }
-
-                foreach (var prop in properties.Where(x => x.HasAttribute<DFeAttributeAttribute>()).AsParallel())
-                {
-                    if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
-
-                    var elements = Serialize(prop, value, options);
-                    if (elements == null) continue;
-
-                    var att = prop.GetAttribute<DFeAttributeAttribute>();
-
-                    foreach (var element in elements.Cast<XAttribute>())
+                    foreach (var element in elements)
                     {
-                        if (att.ElementName.IsEmpty())
-                        {
-                            objectElement.AddAttribute(element);
-                            continue;
-                        }
-
-                        var attElement = objectElement.ElementAnyNs(att.ElementName);
-                        attElement.AddAttribute(element);
+                        if (element is XElement child)
+                            objectElement.AddChild(child);
+                        else
+                            objectElement.AddAttribute((XAttribute)element);
                     }
                 }
 
@@ -129,6 +113,8 @@ namespace ACBr.Net.DFe.Core.Serializer
                 {
                     var attribute = prop.GetAttribute<DFeElementAttribute>();
                     if (attribute.Ocorrencia == Ocorrencia.NaoObrigatoria && value == null) return null;
+                    if (attribute.IsValue) prop.PropertyType.ValidateValueType();
+
                     return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, attribute.Namespace, options) };
                 }
 
@@ -266,9 +252,8 @@ namespace ACBr.Net.DFe.Core.Serializer
                 }
 
                 XObject element;
-
-                if (tag is DFeAttributeAttribute att)
-                    element = att.ElementName.IsEmpty() ? parentElement.Attributes(att.Name).FirstOrDefault() : parentElement.ElementAnyNs(att.ElementName).Attributes(att.Name).FirstOrDefault();
+                if (tag is DFeAttributeAttribute)
+                    element = parentElement.Attributes(tag.Name).FirstOrDefault();
                 else
                     element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
 

@@ -32,6 +32,7 @@
 using ACBr.Net.DFe.Core.Attributes;
 using System;
 using System.Collections;
+using System.Linq;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
 

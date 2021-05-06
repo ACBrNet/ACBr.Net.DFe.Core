@@ -82,6 +82,11 @@ namespace ACBr.Net.DFe.Core.Attributes
         public string Namespace { get; set; }
 
         /// <summary>
+        /// Define/Retorna se o element é um valor e não um child.
+        /// </summary>
+        public bool IsValue { get; set; }
+
+        /// <summary>
         ///
         /// </summary>
         public bool UseCData { get; set; }

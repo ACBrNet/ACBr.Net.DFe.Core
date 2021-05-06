@@ -78,7 +78,11 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         public static XObject[] SerializeChild(ICollection values, DFeCollectionAttribute tag, DFeItemAttribute[] itemTags, SerializerOptions options)
         {
-            var arrayElement = new XElement(tag.Name);
+            XElement arrayElement = null;
+            if (tag.IsValue)
+                arrayElement = new XElement(tag.Name);
+
+            var childElements = new List<XElement>();
 
             foreach (var value in values)
             {
@@ -88,16 +92,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                 XElement childElement;
                 if (itemTag.IsValue)
                 {
-                    var properties = value.GetType().GetProperties()
-                        .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
-                        .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
-
-                    Guard.Against<ACBrDFeException>(!properties.All(x => x.HasAttribute<DFeItemValueAttribute>() || x.HasAttribute<DFeAttributeAttribute>()),
-                       $"Item {value.GetType().Name} é do tipo [ItemValue] e so pode ter atributo do tipo [DFeAttributeAttribute] ou [DFeItemValueAttribute].");
-
-                    Guard.Against<ACBrDFeException>(properties.Count(x => x.HasAttribute<DFeItemValueAttribute>()) != 1,
-                        $"Item {value.GetType().Name} é do tipo [ItemValue] e não tem presente o atributo [DFeItemValueAttribute] ou possui mais de um atributo.");
-
+                    var properties = value.GetType().GetPropsAndValidate(value);
                     var valueProp = properties.SingleOrDefault(x => x.HasAttribute<DFeItemValueAttribute>());
                     var valueAtt = valueProp.GetAttribute<DFeItemValueAttribute>();
 
@@ -121,10 +116,13 @@ namespace ACBr.Net.DFe.Core.Serializer
                     childElement = ObjectSerializer.Serialize(value, value.GetType(), itemTag.Name, itemTag.Namespace, options);
                 }
 
-                arrayElement.AddChild(childElement);
+                childElements.Add(childElement);
             }
 
-            return new XObject[] { arrayElement };
+            if (!tag.IsValue)
+                arrayElement.AddChild(childElements.ToArray());
+
+            return tag.IsValue ? childElements.ToArray() : new XObject[] { arrayElement };
         }
 
         public static XObject[] SerializeObjects(ICollection values, DFeCollectionAttribute tag, SerializerOptions options)
@@ -183,40 +181,31 @@ namespace ACBr.Net.DFe.Core.Serializer
                     Guard.Against<ACBrDFeException>(itemTag == null, $"Nenhum atributo [{nameof(DFeItemAttribute)}] encontrado " +
                                                                      $"para o elemento: {element.Name.LocalName}");
 
-                    object obj;
+                    object item;
                     if (itemTag.IsValue)
                     {
-                        obj = itemTag.Tipo.HasCreate() ? itemTag.Tipo.GetCreate().Invoke() : Activator.CreateInstance(itemTag.Tipo);
+                        item = itemTag.Tipo.HasCreate() ? itemTag.Tipo.GetCreate().Invoke() : Activator.CreateInstance(itemTag.Tipo);
 
-                        var properties = itemTag.Tipo.GetProperties()
-                       .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(obj))
-                       .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
-
-                        Guard.Against<ACBrDFeException>(!properties.All(x => x.HasAttribute<DFeItemValueAttribute>() || x.HasAttribute<DFeAttributeAttribute>()),
-                           $"Item {itemTag.Tipo.Name} é do tipo [ItemValue] e so pode ter atributo do tipo [DFeAttributeAttribute] ou [DFeItemValueAttribute].");
-
-                        Guard.Against<ACBrDFeException>(properties.Count(x => x.HasAttribute<DFeItemValueAttribute>()) != 1,
-                            $"Item {itemTag.Tipo.Name} é do tipo [ItemValue] e não tem presente o atributo [DFeItemValueAttribute] ou possui mais de um atributo.");
-
+                        var properties = itemTag.Tipo.GetPropsAndValidate(item);
                         var valueProp = properties.SingleOrDefault(x => x.HasAttribute<DFeItemValueAttribute>());
                         var valueAtt = valueProp.GetAttribute<DFeItemValueAttribute>();
 
-                        var value = PrimitiveSerializer.GetValue(valueAtt.Tipo, element.Value, obj, prop);
-                        valueProp.SetValue(obj, value);
+                        var value = PrimitiveSerializer.GetValue(valueAtt.Tipo, element.Value, item, prop);
+                        valueProp.SetValue(item, value);
 
                         foreach (var property in properties.Where(x => x.HasAttribute<DFeAttributeAttribute>()))
                         {
                             var attTag = property.GetAttribute<DFeAttributeAttribute>();
-                            value = PrimitiveSerializer.Deserialize(attTag, element, obj, property);
-                            property.SetValue(obj, value);
+                            value = PrimitiveSerializer.Deserialize(attTag, element, item, property);
+                            property.SetValue(item, value);
                         }
                     }
                     else
                     {
-                        obj = ObjectSerializer.Deserialize(itemTag.Tipo, element, options);
+                        item = ObjectSerializer.Deserialize(itemTag.Tipo, element, options);
                     }
 
-                    list.Add(obj);
+                    list.Add(item);
                 }
             }
             else
