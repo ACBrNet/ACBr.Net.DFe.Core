@@ -60,38 +60,32 @@ namespace ACBr.Net.DFe.Core.Serializer
             try
             {
                 XNamespace aw = nameSpace ?? string.Empty;
-                var objectElement = new XElement(aw + name);
+                var objectElement = name.IsEmpty() ? new XElement(name) : new XElement(aw + name);
 
                 var properties = tipo.GetProperties()
                     .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
                     .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
 
-                foreach (var prop in properties.Where(x => !x.HasAttribute<DFeAttributeAttribute>()).AsParallel())
+                foreach (var prop in properties.Where(x => x.HasAttribute<DFeElementAttribute>()).AsParallel())
                 {
                     if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
 
                     var elements = Serialize(prop, value, options);
                     if (elements == null) continue;
 
-                    foreach (var element in elements)
-                    {
-                        if (element is XElement child)
-                            objectElement.AddChild(child);
-                        else
-                            objectElement.AddAttribute((XAttribute)element);
-                    }
+                    objectElement.AddChild(elements.Cast<XElement>().ToArray());
                 }
 
                 foreach (var prop in properties.Where(x => x.HasAttribute<DFeAttributeAttribute>()).AsParallel())
                 {
                     if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
 
-                    var elements = (IEnumerable<XAttribute>)Serialize(prop, value, options);
+                    var elements = Serialize(prop, value, options);
                     if (elements == null) continue;
 
                     var att = prop.GetAttribute<DFeAttributeAttribute>();
 
-                    foreach (var element in elements)
+                    foreach (var element in elements.Cast<XAttribute>())
                     {
                         if (att.ElementName.IsEmpty())
                         {
@@ -274,16 +268,9 @@ namespace ACBr.Net.DFe.Core.Serializer
                 XObject element;
 
                 if (tag is DFeAttributeAttribute att)
-                {
-                    if (att.ElementName.IsEmpty())
-                        element = (XObject)parentElement.Attributes(att.Name).FirstOrDefault();
-                    else
-                        element = (XObject)parentElement.ElementAnyNs(att.ElementName).Attributes(att.Name).FirstOrDefault();
-                }
+                    element = att.ElementName.IsEmpty() ? parentElement.Attributes(att.Name).FirstOrDefault() : parentElement.ElementAnyNs(att.ElementName).Attributes(att.Name).FirstOrDefault();
                 else
-                {
                     element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
-                }
 
                 return PrimitiveSerializer.Deserialize(tag, element, item, prop);
             }
