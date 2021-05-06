@@ -268,7 +268,14 @@ namespace ACBr.Net.DFe.Core.Serializer
                 XObject element;
 
                 if (tag is DFeAttributeAttribute att)
-                    element = att.ElementName.IsEmpty() ? parentElement.Attributes(att.Name).FirstOrDefault() : parentElement.ElementAnyNs(att.ElementName).Attributes(att.Name).FirstOrDefault();
+                {
+                    if (att.ElementName.IsEmpty())
+                        element = parentElement.Attributes(att.Name).FirstOrDefault();
+                    else if (parentElement.ElementAnyNs(att.ElementName) != null)
+                        element = parentElement.ElementAnyNs(att.ElementName).Attributes(att.Name).FirstOrDefault();
+                    else
+                        return null;
+                }
                 else
                     element = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
 
