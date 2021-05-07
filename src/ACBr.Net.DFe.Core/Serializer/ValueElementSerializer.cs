@@ -63,22 +63,22 @@ namespace ACBr.Net.DFe.Core.Serializer
             return new[] { Serialize(attribute.Name, attribute.Namespace, value, options, valueProp, attProps) };
         }
 
-        public static XObject Serialize(string name, string nameSpace, object value, SerializerOptions options, PropertyInfo valueProp, PropertyInfo[] attProps)
+        public static XObject Serialize(string name, string nameSpace, object parentObject, SerializerOptions options, PropertyInfo valueProp, PropertyInfo[] attProps)
         {
             XNamespace aw = nameSpace;
             var element = nameSpace.IsEmpty() ? new XElement(name) : new XElement(aw + name);
 
             var valueAtt = valueProp.GetAttribute<DFeItemValueAttribute>();
 
-            var childValue = valueProp.GetValueOrIndex(value);
+            var childValue = valueProp.GetValueOrIndex(parentObject);
             var estaVazio = childValue == null || childValue.ToString().IsEmpty();
-            element.Value = PrimitiveSerializer.ProcessValue(ref estaVazio, valueAtt.Tipo, valueProp,
-                valueAtt.Ocorrencia, valueAtt.Min, valueProp, value);
+            element.Value = PrimitiveSerializer.ProcessValue(ref estaVazio, valueAtt.Tipo, childValue,
+                valueAtt.Ocorrencia, valueAtt.Min, valueProp, parentObject);
 
             foreach (var property in attProps)
             {
                 var attTag = property.GetAttribute<DFeAttributeAttribute>();
-                var att = (XAttribute)PrimitiveSerializer.Serialize(attTag, value, property, options);
+                var att = (XAttribute)PrimitiveSerializer.Serialize(attTag, parentObject, property, options);
                 element.AddAttribute(att);
             }
 

@@ -39,7 +39,7 @@ using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
-    internal struct ObjectType
+    internal readonly struct ObjectType
     {
         #region ObjectsTypes
 
@@ -69,7 +69,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         private ObjectType(int id)
         {
-            Guard.Against<ArgumentException>(!id.IsBetween(0, 8), "Tipo de objeto desconhecido.");
+            Guard.Against<ArgumentException>(!id.IsBetween(0, 9), "Tipo de objeto desconhecido.");
 
             Id = id;
         }
