@@ -186,7 +186,9 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         private static bool IsValueElement(Type type)
         {
-            return type.IsClass && type.GetProperties().All(x => x.HasAttribute<DFeItemValueAttribute>() || x.HasAttribute<DFeAttributeAttribute>());
+            return type.IsClass && type.GetProperties().All(x => x.HasAttribute<DFeItemValueAttribute>() ||
+                                                                 x.HasAttribute<DFeAttributeAttribute>() ||
+                                                                 x.HasAttribute<DFeIgnoreAttribute>());
         }
 
         #endregion Methods
