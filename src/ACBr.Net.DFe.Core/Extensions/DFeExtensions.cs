@@ -32,17 +32,15 @@
 using ACBr.Net.DFe.Core.Attributes;
 using System;
 using System.Collections;
-using System.Linq;
 using System.Reflection;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
-using ACBr.Net.DFe.Core.Serializer;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
     internal static class DFeExtensions
     {
-        public static DFeBaseAttribute GetTag(this PropertyInfo prop)
+        public static DFeBaseAttribute GetElementAtt(this PropertyInfo prop)
         {
             return prop.HasAttribute<DFeElementAttribute>()
                     ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>()
@@ -151,43 +149,6 @@ namespace ACBr.Net.DFe.Core.Extensions
             if (value.IsEmpty()) return false;
 
             return value.StartsWith("<![CDATA[") && value.EndsWith("]]>");
-        }
-
-        public static void ValidateValueType(this Type tipo)
-        {
-            var props = tipo.GetProperties();
-            Guard.Against<ACBrDFeException>(!props.All(x => x.HasAttribute<DFeItemValueAttribute>() || x.HasAttribute<DFeAttributeAttribute>()),
-                $"Item {tipo.Name} é do tipo [ItemValue] e so pode ter atributo do tipo [DFeAttributeAttribute] ou [DFeItemValueAttribute].");
-
-            var prop = props.SingleOrDefault(x => x.HasAttribute<DFeItemValueAttribute>());
-
-            Guard.Against<ACBrDFeException>(prop == null,
-                $"Item {tipo.Name} é do tipo [ItemValue] e não tem presente o atributo [DFeItemValueAttribute] ou possui mais de um atributo.");
-
-            var valueType = ObjectType.From(prop.PropertyType);
-            Guard.Against<ACBrDFeException>(valueType != ObjectType.PrimitiveType,
-                $"Item {tipo.Name} é do tipo [ItemValue] e o [DFeItemValueAttribute] não é do tipo primitivo");
-        }
-
-        public static PropertyInfo[] GetPropsAndValidate(this Type tipo, object obj)
-        {
-            var props = tipo.GetProperties()
-                .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(obj))
-                .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
-
-            Guard.Against<ACBrDFeException>(!props.All(x => x.HasAttribute<DFeItemValueAttribute>() || x.HasAttribute<DFeAttributeAttribute>()),
-                $"Item {tipo.Name} é do tipo [ItemValue] e so pode ter atributo do tipo [DFeAttributeAttribute] ou [DFeItemValueAttribute].");
-
-            var prop = props.SingleOrDefault(x => x.HasAttribute<DFeItemValueAttribute>());
-
-            Guard.Against<ACBrDFeException>(prop == null,
-                $"Item {tipo.Name} é do tipo [ItemValue] e não tem presente o atributo [DFeItemValueAttribute] ou possui mais de um atributo.");
-
-            var valueType = ObjectType.From(prop.PropertyType);
-            Guard.Against<ACBrDFeException>(valueType != ObjectType.PrimitiveType,
-                $"Item {tipo.Name} é do tipo [ItemValue] e o [DFeItemValueAttribute] não é do tipo primitivo");
-
-            return props;
         }
     }
 }

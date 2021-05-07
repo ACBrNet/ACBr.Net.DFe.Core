@@ -64,6 +64,12 @@ namespace ACBr.Net.DFe.Core
 
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name space.
+        /// </summary>
+        /// <value>The name space.</value>
+        public string Namespace { get; set; }
+
         public string Descricao { get; set; }
 
         public int Ordem { get; set; }

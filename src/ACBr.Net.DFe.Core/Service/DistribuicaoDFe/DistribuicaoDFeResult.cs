@@ -66,7 +66,7 @@ namespace ACBr.Net.DFe.Core.Service
         [DFeElement(TipoCampo.Int, "maxNSU", Ocorrencia = Ocorrencia.Obrigatoria)]
         public int maxNSU { get; set; }
 
-        [DFeItem(typeof(LoteDistDFe), "docZip", IsValue = true)]
+        [DFeItem(typeof(LoteDistDFe), "docZip")]
         [DFeCollection("loteDistDFeInt", MinSize = 0, MaxSize = 50, Ocorrencia = Ocorrencia.NaoObrigatoria)]
         public LoteDistDFe[] LoteDistDFe { get; set; }
 

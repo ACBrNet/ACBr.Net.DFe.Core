@@ -34,12 +34,12 @@ using System;
 namespace ACBr.Net.DFe.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class DFeDictionaryAttribute : Attribute
+    public sealed class DFeDictionaryAttribute : DFeBaseAttribute
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeCollectionAttribute" /> class.
+        /// Initializes a new instance of the <see cref="DFeDictionaryAttribute" /> class.
         /// </summary>
         public DFeDictionaryAttribute()
         {
@@ -53,7 +53,7 @@ namespace ACBr.Net.DFe.Core.Attributes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeCollectionAttribute" /> class.
+        /// Initializes a new instance of the <see cref="DFeDictionaryAttribute" /> class.
         /// </summary>
         /// <param name="tag">The Name.</param>
         public DFeDictionaryAttribute(string tag) : this()
@@ -62,7 +62,7 @@ namespace ACBr.Net.DFe.Core.Attributes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DFeCollectionAttribute" /> class.
+        /// Initializes a new instance of the <see cref="DFeDictionaryAttribute" /> class.
         /// </summary>
         /// <param name="tag">The Name.</param>
         /// <param name="itemName">The Name.</param>
@@ -77,24 +77,6 @@ namespace ACBr.Net.DFe.Core.Attributes
         #region Properties
 
         /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>The identifier.</value>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the descricao.
-        /// </summary>
-        /// <value>The descricao.</value>
-        public string Descricao { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Name.
-        /// </summary>
-        /// <value>The Name.</value>
-        public string Name { get; set; }
-
-        /// <summary>
         /// Gets or sets the Name.
         /// </summary>
         /// <value>The Name.</value>
@@ -105,12 +87,6 @@ namespace ACBr.Net.DFe.Core.Attributes
         /// </summary>
         /// <value>The name space.</value>
         public string Namespace { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ocorrencias.
-        /// </summary>
-        /// <value>The ocorrencias.</value>
-        public Ocorrencia Ocorrencia { get; set; }
 
         /// <summary>
         ///

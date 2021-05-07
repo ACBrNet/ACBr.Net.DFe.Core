@@ -30,14 +30,18 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Xml.Linq;
+using ACBr.Net.Core.Extensions;
+using ACBr.Net.DFe.Core.Attributes;
 using ACBr.Net.DFe.Core.Service;
 
 namespace ACBr.Net.DFe.Core.Extensions
 {
     internal static class XDocumentExtensions
     {
-        internal static Type GetElementType(this XElement element, Type parentType, int genericArgumentIndex)
+        public static Type GetElementType(this XElement element, Type parentType, int genericArgumentIndex)
         {
             Type type = null;
             var typeELement = element.Attribute("Type");
@@ -55,6 +59,26 @@ namespace ACBr.Net.DFe.Core.Extensions
             }
 
             return type;
+        }
+
+        public static XElement[] GetElements(this XElement element, PropertyInfo prop)
+        {
+            var listElement = new List<XElement>();
+
+            var tag = prop.GetAttribute<DFeBaseAttribute>();
+
+            var itemElement = element.ElementsAnyNs(tag.Name);
+            if (!itemElement.IsNullOrEmpty())
+                listElement.AddRange(itemElement);
+
+            foreach (var att in prop.GetAttributes<DFeItemAttribute>())
+            {
+                itemElement = element.ElementsAnyNs(att.Name);
+                if (!itemElement.IsNullOrEmpty())
+                    listElement.AddRange(itemElement);
+            }
+
+            return listElement.ToArray();
         }
     }
 }

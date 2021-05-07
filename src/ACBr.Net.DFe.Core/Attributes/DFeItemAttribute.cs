@@ -63,8 +63,6 @@ namespace ACBr.Net.DFe.Core.Attributes
 
         public string Namespace { get; set; }
 
-        public bool IsValue { get; set; }
-
         #endregion Propriedades
     }
 }

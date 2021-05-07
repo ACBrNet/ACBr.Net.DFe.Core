@@ -35,7 +35,7 @@ using ACBr.Net.DFe.Core.Serializer;
 namespace ACBr.Net.DFe.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class DFeCollectionAttribute : DFeElementAttribute
+    public sealed class DFeCollectionAttribute : DFeBaseAttribute
     {
         #region Constructors
 

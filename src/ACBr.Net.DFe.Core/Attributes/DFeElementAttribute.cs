@@ -73,24 +73,10 @@ namespace ACBr.Net.DFe.Core.Attributes
 
         #endregion Constructors
 
-        #region Propriedades
+        #region Properties
 
-        /// <summary>
-        /// Gets or sets the name space.
-        /// </summary>
-        /// <value>The name space.</value>
-        public string Namespace { get; set; }
-
-        /// <summary>
-        /// Define/Retorna se o element é um valor e não um child.
-        /// </summary>
-        public bool IsValue { get; set; }
-
-        /// <summary>
-        ///
-        /// </summary>
         public bool UseCData { get; set; }
 
-        #endregion Propriedades
+        #endregion Properties
     }
 }

@@ -60,16 +60,14 @@ namespace ACBr.Net.DFe.Core.Serializer
             try
             {
                 XNamespace aw = nameSpace ?? string.Empty;
-                var objectElement = name.IsEmpty() ? new XElement(name) : new XElement(aw + name);
+                var objectElement = nameSpace.IsEmpty() ? new XElement(name) : new XElement(aw + name);
 
                 var properties = tipo.GetProperties()
                     .Where(x => !x.ShouldIgnoreProperty() && x.ShouldSerializeProperty(value))
                     .OrderBy(x => x.GetAttribute<DFeBaseAttribute>()?.Ordem ?? 0).ToArray();
 
-                foreach (var prop in properties.AsParallel())
+                foreach (var prop in properties)
                 {
-                    if (prop.ShouldIgnoreProperty() || !prop.ShouldSerializeProperty(value)) continue;
-
                     var elements = Serialize(prop, value, options);
                     if (elements == null) continue;
 
@@ -109,11 +107,13 @@ namespace ACBr.Net.DFe.Core.Serializer
                 if (objectType.IsIn(ObjectType.InterfaceType, ObjectType.AbstractType))
                     return value == null ? null : InterfaceSerializer.Serialize(prop, parentObject, options);
 
+                if (objectType == ObjectType.ValueElementType)
+                    return value == null ? null : ValueElementSerializer.Serialize(prop, parentObject, options);
+
                 if (objectType == ObjectType.ClassType)
                 {
                     var attribute = prop.GetAttribute<DFeElementAttribute>();
                     if (attribute.Ocorrencia == Ocorrencia.NaoObrigatoria && value == null) return null;
-                    if (attribute.IsValue) prop.PropertyType.ValidateValueType();
 
                     return new XObject[] { Serialize(value, prop.PropertyType, attribute.Name, attribute.Namespace, options) };
                 }
@@ -141,7 +141,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     return new XObject[] { rootElement };
                 }
 
-                var tag = prop.GetTag();
+                var tag = prop.GetElementAtt();
                 return new[] { PrimitiveSerializer.Serialize(tag, parentObject, prop, options) };
             }
             catch (Exception e)
@@ -187,8 +187,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         {
             try
             {
-                var tag = prop.HasAttribute<DFeElementAttribute>() ? (DFeBaseAttribute)prop.GetAttribute<DFeElementAttribute>() :
-                                                                                       prop.GetAttribute<DFeAttributeAttribute>();
+                var tag = prop.GetElementAtt();
 
                 var objectType = ObjectType.From(prop.PropertyType);
                 if (objectType == ObjectType.DictionaryType)
@@ -200,7 +199,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 
                 if (objectType.IsIn(ObjectType.ArrayType, ObjectType.EnumerableType))
                 {
-                    var listElement = parentElement.ElementsAnyNs(tag.Name);
+                    var listElement = parentElement.GetElements(prop);
+
                     var list = (ArrayList)CollectionSerializer.Deserialize(typeof(ArrayList), listElement.ToArray(), prop, item, options);
                     var type = prop.PropertyType.IsArray ? prop.PropertyType.GetElementType() : prop.PropertyType.GetGenericArguments()[0];
                     return objectType == ObjectType.ArrayType ? list.ToArray(type) : list.Cast(type);
@@ -208,13 +208,19 @@ namespace ACBr.Net.DFe.Core.Serializer
 
                 if (objectType == ObjectType.ListType)
                 {
-                    var listElement = parentElement.ElementsAnyNs(tag.Name);
+                    var listElement = parentElement.GetElements(prop);
                     return CollectionSerializer.Deserialize(prop.PropertyType, listElement.ToArray(), prop, item, options);
                 }
 
                 if (objectType.IsIn(ObjectType.InterfaceType, ObjectType.AbstractType))
                 {
                     return InterfaceSerializer.Deserialize(prop, parentElement, item, options);
+                }
+
+                if (objectType == ObjectType.ValueElementType)
+                {
+                    var xElement = parentElement.ElementsAnyNs(tag.Name).FirstOrDefault();
+                    return ValueElementSerializer.Deserialize(prop.PropertyType, xElement, options);
                 }
 
                 if (objectType == ObjectType.RootType)

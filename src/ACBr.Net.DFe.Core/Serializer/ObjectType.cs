@@ -35,6 +35,7 @@ using System.Collections;
 using System.Linq;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
+using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
@@ -59,6 +60,8 @@ namespace ACBr.Net.DFe.Core.Serializer
         public static ObjectType EnumerableType => new ObjectType(7);
 
         public static ObjectType AbstractType => new ObjectType(8);
+
+        public static ObjectType ValueElementType => new ObjectType(9);
 
         #endregion ObjectsTypes
 
@@ -109,6 +112,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             if (IsDictionary(type)) return DictionaryType;
             if (IsArray(type)) return ArrayType;
             if (IsEnumerable(type)) return EnumerableType;
+            if (IsValueElement(type)) return ValueElementType;
 
             return IsRoot(type) ? RootType : ClassType;
         }
@@ -178,6 +182,11 @@ namespace ACBr.Net.DFe.Core.Serializer
         public static bool IsDictionary(Type type)
         {
             return typeof(IDictionary).IsAssignableFrom(type);
+        }
+
+        private static bool IsValueElement(Type type)
+        {
+            return type.IsClass && type.GetProperties().All(x => x.HasAttribute<DFeItemValueAttribute>() || x.HasAttribute<DFeAttributeAttribute>());
         }
 
         #endregion Methods
