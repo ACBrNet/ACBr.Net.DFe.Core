@@ -105,7 +105,8 @@ namespace ACBr.Net.DFe.Core.Serializer
             foreach (var property in attProps)
             {
                 var attTag = property.GetAttribute<DFeAttributeAttribute>();
-                value = PrimitiveSerializer.Deserialize(attTag, element, item, property);
+                var attElement = element.Attribute(attTag.Name);
+                value = PrimitiveSerializer.Deserialize(attTag, attElement, item, property);
                 property.SetValue(item, value);
             }
 
