@@ -8,7 +8,11 @@ namespace ACBr.Net.DFe.Core.Attributes
     {
         #region Constructors
 
-        public DFeItemValueAttribute(TipoCampo tipo = TipoCampo.Str)
+        public DFeItemValueAttribute()
+        {
+        }
+
+        public DFeItemValueAttribute(TipoCampo tipo)
         {
             Tipo = tipo;
         }

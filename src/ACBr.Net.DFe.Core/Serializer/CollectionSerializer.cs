@@ -67,7 +67,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             if (list.Count == 0 && tag.MinSize == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
 
             XElement arrayElement = null;
-            if (tag.Name.IsEmpty())
+            if (!tag.Name.IsEmpty())
                 arrayElement = new XElement(tag.Name);
 
             var itemType = GetItemType(prop.PropertyType) ?? GetItemType(list.GetType());
