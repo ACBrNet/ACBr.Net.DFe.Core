@@ -80,5 +80,16 @@ namespace ACBr.Net.DFe.Core.Extensions
 
             return listElement.ToArray();
         }
+
+        public static void AddChilds(this XElement element, params XObject[] childs)
+        {
+            foreach (var child in childs)
+            {
+                if (child is XElement childElement)
+                    element.AddChild(childElement);
+                else
+                    element.AddAttribute((XAttribute)child);
+            }
+        }
     }
 }

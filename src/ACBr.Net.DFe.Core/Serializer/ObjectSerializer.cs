@@ -71,13 +71,7 @@ namespace ACBr.Net.DFe.Core.Serializer
                     var elements = Serialize(prop, value, options);
                     if (elements == null) continue;
 
-                    foreach (var element in elements)
-                    {
-                        if (element is XElement child)
-                            objectElement.AddChild(child);
-                        else
-                            objectElement.AddAttribute((XAttribute)element);
-                    }
+                    objectElement.AddChilds(elements.ToArray());
                 }
 
                 return objectElement;

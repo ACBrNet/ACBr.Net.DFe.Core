@@ -63,7 +63,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             return new[] { Serialize(attribute.Name, attribute.Namespace, value, options, valueProp, attProps) };
         }
 
-        public static XObject Serialize(string name, string nameSpace, object parentObject, SerializerOptions options, PropertyInfo valueProp, PropertyInfo[] attProps)
+        public static XElement Serialize(string name, string nameSpace, object parentObject, SerializerOptions options, PropertyInfo valueProp, PropertyInfo[] attProps)
         {
             XNamespace aw = nameSpace;
             var element = nameSpace.IsEmpty() ? new XElement(name) : new XElement(aw + name);
