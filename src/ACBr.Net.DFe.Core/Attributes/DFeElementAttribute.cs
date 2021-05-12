@@ -55,7 +55,7 @@ namespace ACBr.Net.DFe.Core.Attributes
         /// Initializes a new instance of the <see cref="DFeElementAttribute" /> class.
         /// </summary>
         /// <param name="tag">The Name.</param>
-        public DFeElementAttribute(string tag) : this()
+        public DFeElementAttribute(string tag)
         {
             Name = tag;
         }
@@ -65,7 +65,7 @@ namespace ACBr.Net.DFe.Core.Attributes
         /// </summary>
         /// <param name="tipo">The tipo.</param>
         /// <param name="name">The name.</param>
-        public DFeElementAttribute(TipoCampo tipo, string name) : this()
+        public DFeElementAttribute(TipoCampo tipo, string name)
         {
             Tipo = tipo;
             Name = name;

@@ -34,10 +34,17 @@ using ACBr.Net.DFe.Core.Serializer;
 
 namespace ACBr.Net.DFe.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class DFeCollectionAttribute : DFeBaseAttribute
     {
         #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DFeCollectionAttribute" /> class.
+        /// </summary>
+        public DFeCollectionAttribute()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DFeCollectionAttribute" /> class.
