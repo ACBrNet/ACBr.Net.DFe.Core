@@ -35,7 +35,6 @@ using System.Collections;
 using System.Linq;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Extensions;
-using ACBr.Net.DFe.Core.Extensions;
 
 namespace ACBr.Net.DFe.Core.Serializer
 {
@@ -186,9 +185,10 @@ namespace ACBr.Net.DFe.Core.Serializer
 
         private static bool IsValueElement(Type type)
         {
-            return type.IsClass && type.GetProperties().All(x => x.HasAttribute<DFeItemValueAttribute>() ||
-                                                                 x.HasAttribute<DFeAttributeAttribute>() ||
-                                                                 x.HasAttribute<DFeIgnoreAttribute>());
+            return type.IsClass && !IsPrimitive(type) &&
+                   type.GetProperties().All(x => x.HasAttribute<DFeItemValueAttribute>() ||
+                                                 x.HasAttribute<DFeAttributeAttribute>() ||
+                                                 x.HasAttribute<DFeIgnoreAttribute>());
         }
 
         #endregion Methods

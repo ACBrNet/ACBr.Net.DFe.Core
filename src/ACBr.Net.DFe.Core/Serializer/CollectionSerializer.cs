@@ -67,7 +67,7 @@ namespace ACBr.Net.DFe.Core.Serializer
             if (list.Count == 0 && tag.MinSize == 0 && tag.Ocorrencia == Ocorrencia.NaoObrigatoria) return null;
 
             XElement arrayElement = null;
-            if (!tag.Name.IsEmpty())
+            if (!tag.Name.IsEmpty() && prop.HasAttribute<DFeItemAttribute>())
                 arrayElement = new XElement(tag.Name);
 
             var itemType = GetItemType(prop.PropertyType) ?? GetItemType(list.GetType());
@@ -82,10 +82,9 @@ namespace ACBr.Net.DFe.Core.Serializer
                 childs = !prop.HasAttribute<DFeItemAttribute>() ? SerializeObjects(list, tag, options) :
                                                                   SerializeChild(list, tag, prop.GetAttributes<DFeItemAttribute>(), options);
 
-            if (!tag.Name.IsEmpty())
-                arrayElement.AddChild(childs.ToArray());
+            arrayElement?.AddChild(childs.ToArray());
 
-            return tag.Name.IsEmpty() ? childs.Cast<XObject>().ToArray() : new XObject[] { arrayElement };
+            return arrayElement != null ? childs.Cast<XObject>().ToArray() : new XObject[] { arrayElement };
         }
 
         public static XElement[] SerializeChild(ICollection values, DFeCollectionAttribute tag, DFeItemAttribute[] itemTags, SerializerOptions options)
@@ -105,11 +104,6 @@ namespace ACBr.Net.DFe.Core.Serializer
         }
 
         public static XElement[] SerializeObjects(ICollection values, DFeCollectionAttribute tag, SerializerOptions options)
-        {
-            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.Namespace, options)).ToArray();
-        }
-
-        public static XElement[] SerializeObjects(ICollection values, DFeItemAttribute tag, SerializerOptions options)
         {
             return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.Namespace, options)).ToArray();
         }

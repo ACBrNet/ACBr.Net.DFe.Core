@@ -18,15 +18,13 @@ namespace ACBr.Net.DFe.Core.Serializer
             var itemAttribute = attributes.SingleOrDefault(x => x.Tipo == value.GetType());
 
             Guard.Against<ACBrDFeException>(itemAttribute == null, $"Nenhum atributo [{nameof(DFeItemAttribute)}] encontrado " +
-                                                                     $"para o objeto: {nameof(value.GetType)}");
+                                                                   $"para o objeto: {nameof(value.GetType)}");
 
             if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
-            {
-                var list = (ICollection)prop.GetValue(parentObject, null);
-                return CollectionSerializer.SerializeObjects(list, itemAttribute, options);
-            }
+                return CollectionSerializer.Serialize(prop, parentObject, options);
 
-            return new XObject[] { ObjectSerializer.Serialize(value, value.GetType(), itemAttribute.Name, itemAttribute.Namespace, options) };
+            return objectType == ObjectType.ValueElementType ? ValueElementSerializer.Serialize(prop, parentObject, options) :
+                                                               new XObject[] { ObjectSerializer.Serialize(value, value.GetType(), itemAttribute.Name, itemAttribute.Namespace, options) };
         }
 
         public static object Deserialize(PropertyInfo prop, XElement parentElement, object item, SerializerOptions options)
@@ -52,7 +50,8 @@ namespace ACBr.Net.DFe.Core.Serializer
                     return CollectionSerializer.Deserialize(att.Tipo, listElement, options);
                 }
 
-                return ObjectSerializer.Deserialize(att.Tipo, node, options);
+                return objectType == ObjectType.ValueElementType ? ValueElementSerializer.Deserialize(att.Tipo, parentElement, options) :
+                                                                   ObjectSerializer.Deserialize(att.Tipo, node, options);
             }
 
             return null;
