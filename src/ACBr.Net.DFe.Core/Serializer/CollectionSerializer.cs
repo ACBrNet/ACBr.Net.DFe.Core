@@ -84,7 +84,7 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             arrayElement?.AddChild(childs.ToArray());
 
-            return arrayElement != null ? childs.Cast<XObject>().ToArray() : new XObject[] { arrayElement };
+            return arrayElement != null ? new XObject[] { arrayElement } : childs.Cast<XObject>().ToArray();
         }
 
         public static XElement[] SerializeChild(ICollection values, DFeCollectionAttribute tag, DFeItemAttribute[] itemTags, SerializerOptions options)
@@ -101,6 +101,11 @@ namespace ACBr.Net.DFe.Core.Serializer
             }
 
             return childElements.ToArray();
+        }
+
+        public static XElement[] SerializeObjects(ICollection values, DFeItemAttribute tag, SerializerOptions options)
+        {
+            return (from object value in values select ObjectSerializer.Serialize(value, value.GetType(), tag.Name, tag.Namespace, options)).ToArray();
         }
 
         public static XElement[] SerializeObjects(ICollection values, DFeCollectionAttribute tag, SerializerOptions options)

@@ -186,6 +186,7 @@ namespace ACBr.Net.DFe.Core.Serializer
         private static bool IsValueElement(Type type)
         {
             return type.IsClass && !IsPrimitive(type) &&
+                   type.GetProperties().Count(x => x.HasAttribute<DFeItemValueAttribute>()) == 1 &&
                    type.GetProperties().All(x => x.HasAttribute<DFeItemValueAttribute>() ||
                                                  x.HasAttribute<DFeAttributeAttribute>() ||
                                                  x.HasAttribute<DFeIgnoreAttribute>());

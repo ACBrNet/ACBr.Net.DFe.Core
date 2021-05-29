@@ -21,7 +21,10 @@ namespace ACBr.Net.DFe.Core.Serializer
                                                                    $"para o objeto: {nameof(value.GetType)}");
 
             if (objectType.IsIn(ObjectType.ListType, ObjectType.ArrayType, ObjectType.EnumerableType))
-                return CollectionSerializer.Serialize(prop, parentObject, options);
+            {
+                var list = (ICollection)prop.GetValue(parentObject, null);
+                return CollectionSerializer.SerializeObjects(list, itemAttribute, options);
+            }
 
             return objectType == ObjectType.ValueElementType ? ValueElementSerializer.Serialize(prop, parentObject, options) :
                                                                new XObject[] { ObjectSerializer.Serialize(value, value.GetType(), itemAttribute.Name, itemAttribute.Namespace, options) };
