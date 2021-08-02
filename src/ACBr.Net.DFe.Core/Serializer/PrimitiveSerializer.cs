@@ -279,7 +279,8 @@ namespace ACBr.Net.DFe.Core.Serializer
 
             if (tag.Ocorrencia == Ocorrencia.Obrigatoria && estaVazio)
             {
-                return tag is DFeElementAttribute eAttribute ? (XObject)new XElement((XNamespace)eAttribute.Namespace + eAttribute.Name, "") : new XAttribute(tag.Name, "");
+                XNamespace aw = tag.Namespace ?? string.Empty;
+                return tag is DFeElementAttribute ? (XObject)new XElement(aw + tag.Name, "") : new XAttribute(tag.Name, "");
             }
 
             if (estaVazio) return null;
