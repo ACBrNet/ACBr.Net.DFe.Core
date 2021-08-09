@@ -113,9 +113,7 @@ namespace ACBr.Net.DFe.Core.Collection
         public override void InsertRange(int index, IEnumerable<TTipo> collection)
         {
             foreach (var item in collection)
-            {
                 item.Parent = Parent;
-            }
 
             base.InsertRange(index, collection);
         }
